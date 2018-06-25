@@ -147,6 +147,14 @@ functions:
           method: post
           cors: true
 
+  contacts-update:
+    handler: index.handler
+    events:
+      - http:
+          path: '/contacts'
+          method: put
+          cors: true
+
   contacts-list:
     handler: index.handler
     events:
