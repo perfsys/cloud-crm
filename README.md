@@ -1,2 +1,2 @@
-# cloud-cam
+# Cloud CRM
 Serverless CRM
