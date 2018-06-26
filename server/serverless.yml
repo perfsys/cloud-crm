@@ -163,13 +163,13 @@ functions:
           method: get
           cors: true
 
-#  contacts-get-one:
-#    handler: index.handler
-#    events:
-#      - http:
-#          path: '/contacts/{proxy+}'
-#          method: get
-#          cors: true
+  contacts-list-group:
+    handler: index.handler
+    events:
+      - http:
+          path: '/contacts/{proxy+}'
+          method: get
+          cors: true
 #
 #  contacts-delete:
 #    handler: index.handler

@@ -278,6 +278,7 @@ router.post('', function (req, res) {
 
 
 });
+
 router.put('', function (req, res) {
     console.log('contacts-update - starting');
 
@@ -309,6 +310,56 @@ router.put('', function (req, res) {
             res.status(400).json(error);
         })
 
+});
+
+router.get('/:group_id', function (req, res) {
+
+    const {group_id} = req.params
+
+    var params = {
+        TableName: CONTACTS_TABLE,
+        // IndexName: 'Index',
+        KeyConditionExpression: 'group_id = :hkey',
+        ExpressionAttributeValues: {
+            ':hkey': group_id,
+        }
+    };
+
+    dynamoDb.query(params, (error, result) => {
+        if (error) {
+            console.log(error);
+            res.status(400).json({error: 'Could not query contacts'});
+        }
+        if (result.Items) {
+            res.json(result.Items);
+        }
+        else {
+            res.status(404).json({error: "Contact are empty"});
+        }
+    });
+
+
+})
+
+router.get('', function (req, res) {
+
+    console.log('contacts-list - starting');
+    const params = {
+        TableName: CONTACTS_TABLE,
+    };
+
+    dynamoDb.scan(params, (error, result) => {
+        if (error) {
+            console.log(error);
+            res.status(400).json({error: 'Could not scan contacts'});
+        }
+        if (result.Items) {
+            res.json(result.Items);
+        }
+        else {
+            res.status(404).json({error: "Contact are empty"});
+        }
+    });
 });
 
 router.put('/:group_id/:name', function (req, res) {
@@ -343,27 +394,6 @@ router.get('/:group_id/:name', function (req, res) {
             console.log(error);
             res.status(400).json({error: 'Could not get contact'});
         })
-});
-
-router.get('', function (req, res) {
-
-    console.log('contacts-list - starting');
-    const params = {
-        TableName: CONTACTS_TABLE,
-    };
-
-    dynamoDb.scan(params, (error, result) => {
-        if (error) {
-            console.log(error);
-            res.status(400).json({error: 'Could not scan contacts'});
-        }
-        if (result.Items) {
-            res.json(result.Items);
-        }
-        else {
-            res.status(404).json({error: "Contact are empty"});
-        }
-    });
 });
 
 router.delete('/:group_id/:name', function (req, res) {
