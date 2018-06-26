@@ -16,7 +16,6 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json({strict: false}));
 
-
 app.use('/contacts', contacts)
 app.use('/sources', sources)
 app.use('/groups', groups)

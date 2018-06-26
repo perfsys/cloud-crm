@@ -29,7 +29,7 @@ const getOne = function (req) {
                 console.log('getOne - error');
                 reject(error)
             }
-            if (result.Item) {
+            if (result && result.Item) {
                 console.log(result.Item);
                 req.item = result.Item
                 resolve(req)
@@ -362,6 +362,26 @@ router.get('', function (req, res) {
     });
 });
 
+router.get('/:group_id/:name', function (req, res) {
+    console.log('contacts-get-one - starting');
+    console.log(req.params)
+
+    const {group_id, name} = req.params
+
+    req.item = {}
+    req.item.group_id = group_id
+    req.item.name = name
+
+    getOne(req)
+        .then(req => {
+            res.json(req.item)
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(400).json({error: 'Could not get a contact'});
+        })
+});
+
 router.put('/:group_id/:name', function (req, res) {
 
     console.log('contacts-update - starting');
@@ -383,17 +403,6 @@ router.put('/:group_id/:name', function (req, res) {
             res.status(400).json({error: 'Could not create a contact'});
         })
 
-});
-
-router.get('/:group_id/:name', function (req, res) {
-    console.log('contact-get - starting');
-
-    getOne(req.params)
-        .then(res.json)
-        .catch(error => {
-            console.log(error);
-            res.status(400).json({error: 'Could not get contact'});
-        })
 });
 
 router.delete('/:group_id/:name', function (req, res) {

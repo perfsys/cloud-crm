@@ -167,17 +167,27 @@ functions:
     handler: index.handler
     events:
       - http:
-          path: '/contacts/{proxy+}'
+          path: '/contacts/{group_id}'
           method: get
           cors: true
-#
-#  contacts-delete:
-#    handler: index.handler
-#    events:
-#      - http:
-#          path: '/contacts'
-#          method: delete
-#          cors: true
+
+
+  contacts-get-one:
+    handler: index.handler
+    events:
+      - http:
+          path: '/contacts/{group_id}/{proxy+}'
+          method: get
+          cors: true
+
+  contacts-delete-one:
+    handler: index.handler
+    events:
+      - http:
+          path: '/contacts/{group_id}/{proxy+}'
+          method: delete
+          cors: true
+
 
 # you can add CloudFormation resource templates here
 #resources:
