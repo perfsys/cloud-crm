@@ -1,23 +1,24 @@
 service: perfsys-cloud-crm-ui
 
 plugins:
+  - serverless-scriptable-plugin
   - serverless-s3-sync
-  - serverless-plugin-scripts
 
 custom:
   bucketName: perfsys-cloud-crm-ui-${opt:stage, 'dev'}
   s3Sync:
     - bucketName: ${self:custom.bucketName}
-      bucketPrefix: dist/
+#      bucketPrefix: dist/
       localDir: dist
-  scripts:
-    hooks:
-      'deploy:deploy': aws s3 cp index.html s3://${self:custom.bucketName}/
+
+  scriptHooks:
+    before:deploy:createDeploymentArtifacts: npm run build
+
 
 provider:
   name: aws
   stage: ${opt:stage, 'dev'}
-  region: us-east-1
+  region: eu-west-1
 
   environment:
     UI_DIST_BUCKET_NAME: ${self:custom.bucketName}
@@ -88,6 +89,20 @@ resources:
             -
               - Ref: 'AWS::StackName'
               - 'S3UIDistBucketArnMask'
+
+    S3UIDistBucketWebsiteURL:
+      Value:
+        Fn::Join:
+         - ""
+         - - "Fn::GetAtt": ["S3UIDistBucket", "WebsiteURL" ]
+           - "/*"
+      Export:
+        Name:
+          "Fn::Join":
+            - ':'
+            -
+              - Ref: 'AWS::StackName'
+              - 'S3UIDistBucketWebsiteURL'
 
 
 
