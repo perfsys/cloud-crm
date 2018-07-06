@@ -90,7 +90,7 @@ export default {
       this.$store.dispatch('contactsSaveOne', R.merge(this.form_general, this.form_company, this.form_links))
         .then(() => {
           _self.reset()
-          _self.successSnackbar = true
+          // _self.successSnackbar = true
           _self.showDialog = false
         })
         .catch((err) => {
