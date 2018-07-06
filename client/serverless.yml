@@ -12,7 +12,7 @@ custom:
       localDir: dist
 
   scriptHooks:
-    before:deploy:createDeploymentArtifacts: npm run build
+    before:deploy:createDeploymentArtifacts: node_modules/.bin/cross-env API_BASE_URL=${cf:perfsys-cloud-crm-api-${opt:stage, 'dev'}.ServiceEndpoint} npm run build
 
 
 provider:

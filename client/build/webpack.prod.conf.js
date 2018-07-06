@@ -15,6 +15,8 @@ const env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
   : require('../config/prod.env')
 
+console.log(`process.env.API_BASE_URL=${process.env.API_BASE_URL}`)
+
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({

@@ -10,6 +10,7 @@ npm install
 
 # serve with hot reload at localhost:8080
 npm run dev
+node_modules/.bin/cross-env API_BASE_URL=base_url npm run dev
 
 # build for production with minification
 npm run build

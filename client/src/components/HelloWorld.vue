@@ -5,81 +5,41 @@
     <ul>
       <li>
         <a
-          href="https://vuejs.org"
+          href="https://perfsys.com"
           target="_blank"
         >
-          Core Docs
+          About Us
         </a>
       </li>
       <li>
         <a
-          href="https://forum.vuejs.org"
+          href="https://facebook.com/perfsys"
           target="_blank"
         >
-          Forum
+          Facebook
         </a>
       </li>
       <li>
         <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
+          href="https://twitter.com/perfsysnet"
           target="_blank"
         >
           Twitter
         </a>
       </li>
       <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
     </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
+    <!--<h2>Other Projects</h2>-->
+    <!--<ul>-->
+      <!--<li>-->
+        <!--<a-->
+          <!--href="http://router.vuejs.org/"-->
+          <!--target="_blank"-->
+        <!--&gt;-->
+          <!--vue-router-->
+        <!--</a>-->
+      <!--</li>-->
+    <!--</ul>-->
   </div>
 </template>
 
@@ -88,7 +48,7 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Cloud CRM App'
     }
   }
 }
