@@ -2,6 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import contacts from './modules/contacts'
+import groups from './modules/groups'
+import countries from './modules/countries'
+import sources from './modules/sources'
+import types from './modules/types'
 
 // import createLogger from '../../../src/plugins/logger'
 
@@ -11,7 +15,11 @@ const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store({
   modules: {
-    contacts
+    contacts,
+    groups,
+    countries,
+    sources,
+    types,
   },
   strict: debug
   // plugins: debug ? [createLogger()] : []

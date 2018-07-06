@@ -6,7 +6,7 @@
     </md-button>
 
     <md-dialog :md-active.sync="showDialog">
-      <md-dialog-title>Create New {{organization_name}} Coupon Type</md-dialog-title>
+      <md-dialog-title>Create New Contact</md-dialog-title>
 
       <form novalidate @submit="onSubmit">
         <md-dialog-content>
@@ -14,34 +14,23 @@
           <div class="md-layout md-gutter">
             <div class="md-layout-item md-small-size-100">
               <md-field>
+                <label for="group_id">Group</label>
+                <md-select v-model="form.group_id" name="group_id" id="group_id">
+
+                  <md-option   v-for="group in groups" :value="group.id" :key="group.id">{{ group.name }}</md-option>
+
+                </md-select>
+              </md-field>
+            </div>
+          </div>
+
+          <div class="md-layout md-gutter">
+            <div class="md-layout-item md-small-size-100">
+              <md-field>
                 <label for="name">Name</label>
-                <md-input name="first-name" id="name" autocomplete="name" v-model="form.name"/>
+                <md-input name="name" id="name" autocomplete="name" v-model="form.name"/>
                 <!--<span class="md-error" v-if="!$v.form.firstName.required">The first name is required</span>-->
                 <!--<span class="md-error" v-else-if="!$v.form.firstName.minlength">Invalid first name</span>-->
-              </md-field>
-            </div>
-          </div>
-
-          <div class="md-layout md-gutter">
-            <div class="md-layout-item md-small-size-100">
-              <md-field>
-                <label for="discount">Discount</label>
-                <md-input type="number" name="discount" id="discount" autocomplete="discount" v-model="form.discount"/>
-                <!--<span class="md-error" v-if="!$v.form.lastName.required">The last name is required</span>-->
-                <!--<span class="md-error" v-else-if="!$v.form.lastName.minlength">Invalid last name</span>-->
-              </md-field>
-            </div>
-            <div class="md-layout-item md-small-size-100">
-            </div>
-          </div>
-
-          <div class="md-layout md-gutter">
-            <div class="md-layout-item md-small-size-100">
-              <md-field>
-                <label for="description">Description</label>
-                <md-input v-model="form.description" name="description" id="description"></md-input>
-                <!--<span class="md-error" v-if="!$v.form.email.required">The email is required</span>-->
-                <!--<span class="md-error" v-else-if="!$v.form.email.email">Invalid email</span>-->
               </md-field>
             </div>
           </div>
@@ -64,20 +53,35 @@
 </template>
 
 <script>
+  import { mapGetters, mapActions } from 'vuex'
+
 export default {
-  name: 'coupon-templates-form',
-  props: ['organization_name'],
+  name: 'contacts-form',
   data () {
     return {
       showDialog: false,
       form: {
-        name: '',
-        discount: null,
-        description: null
+        group_id: null,
+        name: null
       },
       errors: []
     }
   },
+  computed:
+    mapGetters({
+      groups: 'groupsAll',
+      sources: 'sourcesAll',
+      types: 'typesAll',
+      countries: 'countriesAll',
+    }),
+
+  created() {
+    this.$store.dispatch('countriesGetAll')
+    this.$store.dispatch('groupsGetAll')
+    this.$store.dispatch('sourcesGetAll')
+    this.$store.dispatch('typesGetAll')
+  },
+
   methods: {
 
     onSubmit (evt) {
@@ -85,16 +89,16 @@ export default {
 
       const _self = this
 
-      this.$store.dispatch('couponSave', this.form)
+      this.$store.dispatch('contactsSaveOne', this.form)
         .then(() => {
           _self.reset()
           _self.showDialog = false
         })
     },
     reset () {
-      this.form.name = ''
-      this.form.discount = null
-      this.form.description = null
+      // this.form.name = ''
+      // this.form.discount = null
+      // this.form.description = null
     }
 
   }
