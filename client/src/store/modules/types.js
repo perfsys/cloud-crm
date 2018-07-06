@@ -18,8 +18,7 @@ const actions = {
   typesGetAll ({commit}) {
     api.getAll()
       .then(types => commit('setTypes', types))
-  },
-
+  }
 
 }
 

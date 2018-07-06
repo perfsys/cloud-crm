@@ -18,8 +18,7 @@ const actions = {
   sourcesGetAll ({commit}) {
     api.getAll()
       .then(sources => commit('setSources', sources))
-  },
-
+  }
 
 }
 

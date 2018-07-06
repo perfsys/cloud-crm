@@ -19,7 +19,7 @@ export default new Vuex.Store({
     groups,
     countries,
     sources,
-    types,
+    types
   },
   strict: debug
   // plugins: debug ? [createLogger()] : []

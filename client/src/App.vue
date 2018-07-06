@@ -12,8 +12,25 @@
               <md-icon>menu</md-icon>
             </md-button>
 
-            <span class="md-title">Cloud CRM</span>
+            <span class="md-title">Cloud CRM &nbsp;&nbsp;</span>
 
+          </div>
+          <md-autocomplete
+            class="search"
+            v-model="selectedEmployee"
+            :md-options="employees"
+            md-layout="box">
+            <label>Search...</label>
+          </md-autocomplete>
+
+          <div class="md-toolbar-section-end">
+            <md-button class="md-icon-button">
+              <md-icon>refresh</md-icon>
+            </md-button>
+
+            <md-button class="md-icon-button">
+              <md-icon>more_vert</md-icon>
+            </md-button>
           </div>
 
         </div>
@@ -42,7 +59,9 @@ export default {
   name: 'App',
   data () {
     return {
-      menuVisible: false
+      menuVisible: false,
+      selectedEmployee: null,
+      employees: []
     }
   },
   components: {

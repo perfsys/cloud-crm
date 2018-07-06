@@ -11,29 +11,17 @@
       <form novalidate @submit="onSubmit">
         <md-dialog-content>
 
-          <div class="md-layout md-gutter">
-            <div class="md-layout-item md-small-size-100">
-              <md-field>
-                <label for="group_id">Group</label>
-                <md-select v-model="form.group_id" name="group_id" id="group_id">
-
-                  <md-option   v-for="group in groups" :value="group.id" :key="group.id">{{ group.name }}</md-option>
-
-                </md-select>
-              </md-field>
-            </div>
-          </div>
-
-          <div class="md-layout md-gutter">
-            <div class="md-layout-item md-small-size-100">
-              <md-field>
-                <label for="name">Name</label>
-                <md-input name="name" id="name" autocomplete="name" v-model="form.name"/>
-                <!--<span class="md-error" v-if="!$v.form.firstName.required">The first name is required</span>-->
-                <!--<span class="md-error" v-else-if="!$v.form.firstName.minlength">Invalid first name</span>-->
-              </md-field>
-            </div>
-          </div>
+          <md-tabs md-dynamic-height>
+            <md-tab md-label="General">
+              <general v-model="form_general"/>
+            </md-tab>
+            <md-tab md-label="Company">
+              <company v-model="form_company"/>
+            </md-tab>
+            <md-tab md-label="Links">
+              <links v-model="form_links"/>
+            </md-tab>
+          </md-tabs>
 
           <!--<md-progress-bar md-mode="indeterminate" v-if="sending" />-->
           <!--:disabled="sending"-->
@@ -47,39 +35,49 @@
           <md-button class="md-primary" type="submit">Save</md-button>
         </md-dialog-actions>
 
+        <md-dialog-alert
+          :md-active.sync="successSnackbar"
+          md-content="Contact was created"
+          md-confirm-text="Close"/>
+
+        <md-dialog-alert
+          :md-active.sync="failedSnackbar"
+          :md-content="failedSnackbarReason"
+          md-confirm-text="Close"/>
+
       </form>
     </md-dialog>
   </div>
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
+
+import links from '@/components/contacts/form-links'
+import company from '@/components/contacts/form-company'
+import general from '@/components/contacts/form-general'
+
+const R = require('ramda')
 
 export default {
   name: 'contacts-form',
   data () {
     return {
+
       showDialog: false,
-      form: {
-        group_id: null,
-        name: null
-      },
-      errors: []
+
+      form_general: {},
+      form_company: {},
+      form_links: {},
+
+      successSnackbar: false,
+      failedSnackbar: false,
+      failedSnackbarReason: 'Failed to create a contact'
     }
   },
-  computed:
-    mapGetters({
-      groups: 'groupsAll',
-      sources: 'sourcesAll',
-      types: 'typesAll',
-      countries: 'countriesAll',
-    }),
-
-  created() {
-    this.$store.dispatch('countriesGetAll')
-    this.$store.dispatch('groupsGetAll')
-    this.$store.dispatch('sourcesGetAll')
-    this.$store.dispatch('typesGetAll')
+  components: {
+    links,
+    company,
+    general
   },
 
   methods: {
@@ -89,10 +87,17 @@ export default {
 
       const _self = this
 
-      this.$store.dispatch('contactsSaveOne', this.form)
+      this.$store.dispatch('contactsSaveOne', R.merge(this.form_general, this.form_company, this.form_links))
         .then(() => {
           _self.reset()
+          _self.successSnackbar = true
           _self.showDialog = false
+        })
+        .catch((err) => {
+          if (err.response && err.response.data) {
+            this.failedSnackbarReason = err.response.data.error
+          }
+          _self.failedSnackbar = true
         })
     },
     reset () {
@@ -104,3 +109,6 @@ export default {
   }
 }
 </script>
+<style scoped>
+
+</style>

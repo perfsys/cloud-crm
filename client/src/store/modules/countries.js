@@ -18,8 +18,7 @@ const actions = {
   countriesGetAll ({commit}) {
     api.getAll()
       .then(countries => commit('setCountries', countries))
-  },
-
+  }
 
 }
 

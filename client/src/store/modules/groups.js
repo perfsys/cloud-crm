@@ -18,8 +18,7 @@ const actions = {
   groupsGetAll ({commit}) {
     api.getAll()
       .then(groups => commit('setGroups', groups))
-  },
-
+  }
 
 }
 
