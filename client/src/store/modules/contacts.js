@@ -30,7 +30,7 @@ const actions = {
     }
   },
 
-  couponsSaveOne ({state, commit, dispatch}, item) {
+  contactsSaveOne ({state, commit, dispatch}, item) {
     return new Promise((resolve, reject) => {
       api.saveOne(item)
         .then(() => {
