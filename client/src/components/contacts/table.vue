@@ -28,36 +28,36 @@
 </template>
 
 <script>
-  import {mapGetters, mapActions} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 
-  export default {
-    name: 'contacts-table',
+export default {
+  name: 'contacts-table',
 
-    computed:
+  computed:
       mapGetters({
         contacts: 'contactsAll'
       }),
 
-    created() {
-      // Get Contacts on Created
-      this.$store.dispatch('contactsGetAll')
-    },
+  created () {
+    // Get Contacts on Created
+    this.$store.dispatch('contactsGetAll')
+  },
 
-    methods: {
+  methods: {
 
-      ...mapActions([
-        'contactsDeleteOne'
-      ]),
+    ...mapActions([
+      'contactsDeleteOne'
+    ]),
 
-      onSelect(contact) {
-        this.$router.push({
-          name: 'contact-datails',
-          params: {group: contact.group_id, name: contact.name}
-        }
-        )
+    onSelect (contact) {
+      this.$router.push({
+        name: 'contact-datails',
+        params: {group: contact.group_id, name: contact.name}
       }
-
+      )
     }
 
   }
+
+}
 </script>

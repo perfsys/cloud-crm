@@ -43,7 +43,6 @@
 
             </md-list-item>
 
-
             <md-divider></md-divider>
             <md-subheader>Links</md-subheader>
 
@@ -104,74 +103,70 @@
 
             </md-list-item>
 
-
-
           </md-list>
         </div>
       </div>
     </md-card-content>
   </md-card>
 
-
 </template>
 
 <script>
-  import api from '../../api/contacts'
+import api from '../../api/contacts'
 
-  export default {
-    name: "contact-details-index",
-    props: ['group', 'name'],
-    data() {
-      return {
-        contact: {
-          group_id: null,
-          group_name: null,
-          name: null,
-          first_name: null,
-          last_name: null,
+export default {
+  name: 'contact-details-index',
+  props: ['group', 'name'],
+  data () {
+    return {
+      contact: {
+        group_id: null,
+        group_name: null,
+        name: null,
+        first_name: null,
+        last_name: null,
 
-          source_id: null,
-          source_name: null,
-          country_code: null,
-          country: null,
-          type_id: null,
-          type_name: null,
+        source_id: null,
+        source_name: null,
+        country_code: null,
+        country: null,
+        type_id: null,
+        type_name: null,
 
-          company_name: null,
-          company_www: null,
-          position: null,
-          facebook_link: null,
-          twitter_link: null,
-          linkedin_link: null
-        }
+        company_name: null,
+        company_www: null,
+        position: null,
+        facebook_link: null,
+        twitter_link: null,
+        linkedin_link: null
       }
-    },
-    created() {
+    }
+  },
+  created () {
+    api.getOne(this.group, this.name)
+      .then(data => {
+        this.contact.group_id = data.group_id
+        this.contact.group_name = data.group_name
+        this.contact.name = data.name
+        this.contact.first_name = data.first_name
+        this.contact.last_name = data.last_name
 
-      api.getOne(this.group, this.name)
-        .then(data => {
-          this.contact.group_id = data.group_id
-          this.contact.group_name = data.group_name
-          this.contact.name = data.name
-          this.contact.first_name = data.first_name
-          this.contact.last_name = data.last_name
+        this.contact.source_name = data.source_name
+        this.contact.type_name = data.type_name
 
-          this.contact.source_name = data.source_name
-          this.contact.type_name = data.type_name
+        this.contact.country = data.country
+        this.contact.country_code = data.country_code
 
-          this.contact.country = data.country
-          this.contact.country_code = data.country_code
+        this.contact.company_name = data.company_name
+        this.contact.company_www = data.company_www
 
-          this.contact.company_name = data.company_name
-          this.contact.company_www = data.company_www
-
-          this.contact.facebook_link = data.facebook_link
-          this.contact.twitter_link = data.twitter_link
-          this.contact.linkedin_link = data.linkedin_link
-        })
-    },
-    methods: {}
-  }
+        this.contact.facebook_link = data.facebook_link
+        this.contact.twitter_link = data.twitter_link
+        this.contact.linkedin_link = data.linkedin_link
+      })
+  },
+  methods: {}
+}
 </script>
 
 <style scoped>
