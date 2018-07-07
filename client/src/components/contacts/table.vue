@@ -1,13 +1,13 @@
 <template>
 
-  <md-table v-model="contacts" md-card>
+  <md-table v-model="contacts" md-card @md-selected="onSelect">
 
     <md-table-toolbar>
       <h1 class="md-title">All Contacts</h1>
       <slot name="form"></slot>
     </md-table-toolbar>
 
-    <md-table-row slot="md-table-row" slot-scope="{ item }">
+    <md-table-row slot="md-table-row" slot-scope="{ item }" md-selectable="single">
       <md-table-cell md-label="Group">{{ item.group_name }}</md-table-cell>
       <md-table-cell md-label="Name">{{ item.name }}</md-table-cell>
       <md-table-cell md-label="Source">{{ item.source_name }}</md-table-cell>
@@ -23,29 +23,41 @@
       </md-table-cell>
     </md-table-row>
 
-    </md-table>
+  </md-table>
 
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+  import {mapGetters, mapActions} from 'vuex'
 
-export default {
-  name: 'contacts-table',
+  export default {
+    name: 'contacts-table',
 
-  computed:
+    computed:
       mapGetters({
         contacts: 'contactsAll'
       }),
 
-  created () {
-    // Get Contacts on Created
-    this.$store.dispatch('contactsGetAll')
-  },
+    created() {
+      // Get Contacts on Created
+      this.$store.dispatch('contactsGetAll')
+    },
 
-  methods: mapActions([
-    'contactsDeleteOne'
-  ])
+    methods: {
 
-}
+      ...mapActions([
+        'contactsDeleteOne'
+      ]),
+
+      onSelect(contact) {
+        this.$router.push({
+          name: 'contact-datails',
+          params: {group: contact.group_id, name: contact.name}
+        }
+        )
+      }
+
+    }
+
+  }
 </script>
