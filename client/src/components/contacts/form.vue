@@ -15,9 +15,9 @@
             <md-tab md-label="General">
               <general v-model="form_general"/>
             </md-tab>
-            <md-tab md-label="Company">
-              <company v-model="form_company"/>
-            </md-tab>
+            <!--<md-tab md-label="Company">-->
+              <!--<company v-model="form_company"/>-->
+            <!--</md-tab>-->
             <md-tab md-label="Links">
               <links v-model="form_links"/>
             </md-tab>

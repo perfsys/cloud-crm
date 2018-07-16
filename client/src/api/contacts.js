@@ -66,6 +66,7 @@ export default {
       first_name: item.first_name,
       last_name: item.last_name,
       type_id: item.type_id,
+      status_id: item.status_id,
       company_name: item.company_name,
       company_www: item.company_www,
       position: item.position,

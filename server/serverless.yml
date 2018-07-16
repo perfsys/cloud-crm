@@ -139,6 +139,14 @@ functions:
           method: get
           cors: true
 
+  statuses-list:
+    handler: index.handler
+    events:
+      - http:
+          path: '/statuses'
+          method: get
+          cors: true
+
   contacts-create:
     handler: index.handler
     events:
