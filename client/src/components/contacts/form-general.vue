@@ -102,11 +102,9 @@ export default {
         groups: 'groupsAll',
         sources: 'sourcesAll',
         types: 'typesAll',
-        // countries: 'countriesAll',
         statuses: 'statusesAll'
       }),
   created () {
-    // this.$store.dispatch('countriesGetAll')
     this.$store.dispatch('groupsGetAll')
     this.$store.dispatch('sourcesGetAll')
     this.$store.dispatch('typesGetAll')
