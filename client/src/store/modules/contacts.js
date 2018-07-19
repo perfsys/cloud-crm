@@ -40,6 +40,18 @@ const actions = {
           resolve()
         }, reject)
     })
+  },
+
+  contactsUpdateOne ({state, commit, dispatch}, item) {
+    return new Promise((resolve, reject) => {
+      api.updateOne(item)
+        .then(() => {
+          // refresh contacts list
+          dispatch('contactsGetAll')
+          // callback
+          resolve()
+        }, reject)
+    })
   }
 
 }
