@@ -302,19 +302,19 @@ router.post('', function (req, res) {
 
 });
 
-router.put('', function (req, res) {
+router.put('/:group_id/:name', function (req, res) {
     console.log('contacts-update - starting');
 
-    const preUpdate = function (item) {
+    const preUpdate = function (req) {
         return new Promise(function (resolve, reject) {
-            item.update_dt = new Date().toISOString();
-            resolve(item)
+            req.item.update_dt = new Date().toISOString();
+            resolve(req)
         })
     }
     const {
         group_id, // partition key
         name, // sort key
-    } = req.body;
+    } = req.params;
 
     req.item = {}
     req.item.group_id = group_id
@@ -405,28 +405,6 @@ router.get('/:group_id/:name', function (req, res) {
         })
 });
 
-router.put('/:group_id/:name', function (req, res) {
-
-    console.log('contacts-update - starting');
-
-    const preUpdate = function (item) {
-        return new Promise(function (resolve, reject) {
-            item.update_dt = new Date().toISOString();
-            resolve(item)
-        })
-    }
-
-    getOne(req.params)
-        .then(preUpdate)
-        .then(saveContact)
-        .then(getOne)
-        .then(res.json)
-        .catch(error => {
-            console.log(error);
-            res.status(400).json({error: 'Could not create a contact'});
-        })
-
-});
 
 router.delete('/:group_id/:name', function (req, res) {
     console.log('contact-delete - starting');

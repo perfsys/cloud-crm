@@ -15,18 +15,12 @@
             <md-tab md-label="General">
               <general v-model="form_general"/>
             </md-tab>
-            <!--<md-tab md-label="Company">-->
-              <!--<company v-model="form_company"/>-->
-            <!--</md-tab>-->
+
             <md-tab md-label="Links">
               <links v-model="form_links"/>
             </md-tab>
           </md-tabs>
 
-          <!--<md-progress-bar md-mode="indeterminate" v-if="sending" />-->
-          <!--:disabled="sending"-->
-
-          <!--<md-snackbar :md-active.sync="userSaved">The user {{ lastUser }} was saved with success!</md-snackbar>-->
 
         </md-dialog-content>
 

@@ -3,7 +3,7 @@ import {HTTP} from '../libs/http-common'
 export default {
 
   /**
-   * Get all sources
+   * Get all statuses
    *
    * @returns {Promise<any>}
    */
