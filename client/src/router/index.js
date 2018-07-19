@@ -20,7 +20,7 @@ export default new Router({
       component: contacts
     },
     {
-      path: '/contacts/:group/:name',
+      path: '/contacts/:group/:name/view',
       name: 'contact-details',
       props: true,
       component: contacts_details

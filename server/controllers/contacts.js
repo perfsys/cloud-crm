@@ -314,7 +314,7 @@ router.put('/:group_id/:name', function (req, res) {
     const {
         group_id, // partition key
         name, // sort key
-    } = req.body;
+    } = req.params;
 
     req.item = {}
     req.item.group_id = group_id

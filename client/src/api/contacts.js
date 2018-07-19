@@ -85,8 +85,6 @@ export default {
    */
   updateOne (item) {
     return HTTP.put(`/contacts/${item.group_id}/${item.name}`, {
-        group_id: item.group_id,
-        name: item.name,
         source_id: item.source_id,
         first_name: item.first_name,
         last_name: item.last_name,
