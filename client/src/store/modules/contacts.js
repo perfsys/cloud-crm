@@ -20,6 +20,11 @@ const actions = {
       .then(contacts => commit('setContacts', contacts))
   },
 
+  contactsGetAllInGroup ({state, commit, dispatch}, item) {
+    api.getAllInGroup(item)
+      .then(contacts => commit('setContacts', contacts))
+  },
+
   contactsDeleteOne ({state, commit, dispatch}, item) {
     let group = item.group_id
     let name = item.name
@@ -33,6 +38,18 @@ const actions = {
   contactsSaveOne ({state, commit, dispatch}, item) {
     return new Promise((resolve, reject) => {
       api.saveOne(item)
+        .then(() => {
+          // refresh contacts list
+          dispatch('contactsGetAll')
+          // callback
+          resolve()
+        }, reject)
+    })
+  },
+
+  contactsUpdateOne ({state, commit, dispatch}, item) {
+    return new Promise((resolve, reject) => {
+      api.updateOne(item)
         .then(() => {
           // refresh contacts list
           dispatch('contactsGetAll')

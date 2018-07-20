@@ -3,7 +3,7 @@ const
     express = require('express'),
     randomstring = require("randomstring"),
     router = express.Router(),
-    parse_link = require('parse-link')
+    parse_link = require('parse-link'),
 R = require('ramda');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
@@ -47,6 +47,7 @@ const populateContactItem = function (req) {
     const
         types = require('../data/types.json'),
         sources = require('../data/sources.json'),
+        statuses = require('../data/statuses.json'),
         countries = require('../data/country-by-abbreviation.json')
 
     return new Promise(function (resolve, reject) {
@@ -59,6 +60,7 @@ const populateContactItem = function (req) {
             source_id,
             country_code,
             type_id,
+            status_id,
 
             company_name,
             company_www,
@@ -117,6 +119,21 @@ const populateContactItem = function (req) {
             if (type_name) {
                 item.type_id = type_id
                 item.type_name = type_name
+            }
+        }
+
+        if (status_id) {
+            let status_name = R.pipe(
+                // find
+                R.find(R.propEq('id', status_id)),
+
+                // get name
+                R.prop('name')
+            )(statuses)
+
+            if (status_name) {
+                item.status_id = status_id
+                item.status_name = status_name
             }
         }
 
@@ -180,7 +197,8 @@ const constructContactItem = function (req) {
             name, // sort key
             first_name,
             last_name,
-            source_id
+            source_id,
+            status_id
         } = req.body;
 
         const item = {};
@@ -219,10 +237,14 @@ const constructContactItem = function (req) {
             reject({error: '"source_id" must be a string'})
         }
 
+        if (typeof status_id!=='string'){
+            reject({error: '"status_id" must be a string'})
+        }
 
         req.item = item
-        resolve(req)
 
+
+        resolve(req)
 
     })
 }
@@ -256,10 +278,11 @@ const saveContact = function (req) {
 router.post('', function (req, res) {
     console.log('contacts-create - starting');
 
-    const preCreate = function (item) {
+    const preCreate = function (req) {
+        console.log(req);
         return new Promise(function (resolve, reject) {
-            item.create_dt = new Date().toISOString();
-            resolve(item)
+            req.item.create_dt = new Date().toISOString();
+            resolve(req)
         })
     }
 
@@ -279,19 +302,19 @@ router.post('', function (req, res) {
 
 });
 
-router.put('', function (req, res) {
+router.put('/:group_id/:name', function (req, res) {
     console.log('contacts-update - starting');
 
-    const preUpdate = function (item) {
+    const preUpdate = function (req) {
         return new Promise(function (resolve, reject) {
-            item.update_dt = new Date().toISOString();
-            resolve(item)
+            req.item.update_dt = new Date().toISOString();
+            resolve(req)
         })
     }
     const {
         group_id, // partition key
         name, // sort key
-    } = req.body;
+    } = req.params;
 
     req.item = {}
     req.item.group_id = group_id
@@ -382,28 +405,6 @@ router.get('/:group_id/:name', function (req, res) {
         })
 });
 
-router.put('/:group_id/:name', function (req, res) {
-
-    console.log('contacts-update - starting');
-
-    const preUpdate = function (item) {
-        return new Promise(function (resolve, reject) {
-            item.update_dt = new Date().toISOString();
-            resolve(item)
-        })
-    }
-
-    getOne(req.params)
-        .then(preUpdate)
-        .then(saveContact)
-        .then(getOne)
-        .then(res.json)
-        .catch(error => {
-            console.log(error);
-            res.status(400).json({error: 'Could not create a contact'});
-        })
-
-});
 
 router.delete('/:group_id/:name', function (req, res) {
     console.log('contact-delete - starting');

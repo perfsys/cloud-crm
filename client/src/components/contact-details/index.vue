@@ -29,6 +29,17 @@
 
             <md-list-item>
               <div class="md-list-item-text">
+                <span>{{contact.create_dt}}</span>
+                <span>Created</span>
+              </div>
+
+            </md-list-item>
+
+
+
+            <md-list-item>
+              <div class="md-list-item-text">
+
                 <span>{{contact.source_name}}</span>
                 <span>Source</span>
               </div>
@@ -42,6 +53,15 @@
               </div>
 
             </md-list-item>
+
+            <md-list-item>
+              <div class="md-list-item-text">
+                <span>{{contact.status_name}}</span>
+                <span>Status</span>
+              </div>
+
+            </md-list-item>
+
 
             <md-divider></md-divider>
             <md-subheader>Links</md-subheader>
@@ -77,7 +97,7 @@
             <md-list-item>
               <div class="md-list-item-text">
                 <span>{{contact.company_name}}</span>
-                <span>Name</span>
+                <span>Company Name</span>
               </div>
             </md-list-item>
 
@@ -97,7 +117,7 @@
 
             <md-list-item>
               <div class="md-list-item-text">
-                <span>{{contact.country}} {{contact.country_code}}</span>
+                <span>{{contact.country_name}} {{contact.country_code}}</span>
                 <span>Country</span>
               </div>
 
@@ -107,12 +127,21 @@
         </div>
       </div>
     </md-card-content>
+
+    <md-card-actions>
+      <md-button class="md-primary" @click="onClose">Close</md-button>
+      <md-button class="md-primary" @click="deleteOne">Delete</md-button>
+      <md-button class="md-primary" @click="editOne">Edit</md-button>
+    </md-card-actions>
+
   </md-card>
 
 </template>
 
 <script>
 import api from '../../api/contacts'
+import {mapGetters, mapActions} from 'vuex'
+
 
 export default {
   name: 'contact-details-index',
@@ -125,6 +154,7 @@ export default {
         name: null,
         first_name: null,
         last_name: null,
+        create_dt: null,
 
         source_id: null,
         source_name: null,
@@ -132,6 +162,8 @@ export default {
         country: null,
         type_id: null,
         type_name: null,
+        status_id: null,
+        status_name: null,
 
         company_name: null,
         company_www: null,
@@ -150,22 +182,45 @@ export default {
         this.contact.name = data.name
         this.contact.first_name = data.first_name
         this.contact.last_name = data.last_name
+        this.contact.create_dt = data.create_dt
 
         this.contact.source_name = data.source_name
         this.contact.type_name = data.type_name
 
-        this.contact.country = data.country
+        this.contact.country_name = data.country_name
         this.contact.country_code = data.country_code
 
         this.contact.company_name = data.company_name
         this.contact.company_www = data.company_www
+        this.contact.position = data.position
+        this.contact.status_name = data.status_name
 
         this.contact.facebook_link = data.facebook_link
         this.contact.twitter_link = data.twitter_link
         this.contact.linkedin_link = data.linkedin_link
       })
   },
-  methods: {}
+  methods: {
+
+    ...mapActions([
+      'contactsDeleteOne'
+    ]),
+
+    deleteOne(event) {
+      this.contactsDeleteOne(this.contact)
+      this.$router.push({
+        name: 'contacts'
+      })
+    },
+    editOne(event) {
+      this.$router.push({
+        name: 'contact-update'
+      })
+    },
+    onClose (){
+      this.$router.go(-1)
+    }
+  }
 }
 </script>
 
