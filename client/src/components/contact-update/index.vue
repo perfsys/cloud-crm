@@ -259,8 +259,7 @@
       },
 
       onClose (){
-
-        this.$router.push({ name: 'contacts'})
+        this.$router.go(-1)
       },
       reset () {
       }

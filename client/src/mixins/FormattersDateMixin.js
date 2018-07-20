@@ -5,7 +5,9 @@ export default {
 
   filters: {
     fromISO: function (value) {
-      return moment(value).format("L LTS")
+      if(value) {
+        return moment(value).format("L LTS")
+      }
     },
 
 

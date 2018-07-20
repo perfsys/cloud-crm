@@ -20,6 +20,11 @@ const actions = {
       .then(contacts => commit('setContacts', contacts))
   },
 
+  contactsGetAllInGroup ({state, commit, dispatch}, item) {
+    api.getAllInGroup(item)
+      .then(contacts => commit('setContacts', contacts))
+  },
+
   contactsDeleteOne ({state, commit, dispatch}, item) {
     let group = item.group_id
     let name = item.name

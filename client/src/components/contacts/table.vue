@@ -10,13 +10,11 @@
     <md-table-row slot="md-table-row" slot-scope="{ item }" md-selectable="single">
       <md-table-cell md-label="Group" md-sort-by="group_name" >{{ item.group_name }}</md-table-cell>
       <md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
-      <md-table-cell md-label="Company" md-sort-by="first_name">{{ item.company_name }}</md-table-cell>
-      <md-table-cell md-label="Position" md-sort-by="type_name">{{ item.position }}</md-table-cell>
-
-      <md-table-cell md-label="Created" md-sort-by="last_name">{{ item.create_dt | fromISO}}</md-table-cell>
+      <md-table-cell md-label="Company" md-sort-by="company_name">{{ item.company_name }}</md-table-cell>
+      <md-table-cell md-label="Position" md-sort-by="position">{{ item.position }}</md-table-cell>
+      <md-table-cell md-label="Created" md-sort-by="create_dt">{{ item.create_dt | fromISO}}</md-table-cell>
       <md-table-cell md-label="Type" md-sort-by="type_name">{{ item.type_name }}</md-table-cell>
-      <md-table-cell md-label="Status" md-sort-by="company_name">{{ item.status_name
-        }}</md-table-cell>
+      <md-table-cell md-label="Status" md-sort-by="status_name">{{ item.status_name}}</md-table-cell>
       <md-table-cell md-label="Source" md-sort-by="source_name" >{{ item.source_name }}</md-table-cell>
 
       <md-table-cell>
@@ -43,7 +41,7 @@ import dateMixin from '@/mixins/FormattersDateMixin'
 export default {
   name: 'contacts-table',
   mixins: [dateMixin],
-
+  props: ['group_id'],
 
   computed:
       mapGetters({
@@ -51,8 +49,13 @@ export default {
       }),
 
   created () {
+    if (this.group_id) {
+      this.$store.dispatch('contactsGetAllInGroup', this.group_id)
+    }
+    else {
     // Get Contacts on Created
-    this.$store.dispatch('contactsGetAll')
+      this.$store.dispatch('contactsGetAll')
+    }
   },
 
   methods: {
@@ -76,7 +79,6 @@ export default {
         }
       )
     }
-
   }
 
 }

@@ -129,6 +129,7 @@
     </md-card-content>
 
     <md-card-actions>
+      <md-button class="md-primary" @click="onClose">Close</md-button>
       <md-button class="md-primary" @click="deleteOne">Delete</md-button>
       <md-button class="md-primary" @click="editOne">Edit</md-button>
     </md-card-actions>
@@ -215,6 +216,9 @@ export default {
       this.$router.push({
         name: 'contact-update'
       })
+    },
+    onClose (){
+      this.$router.go(-1)
     }
   }
 }
