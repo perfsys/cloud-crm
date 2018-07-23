@@ -128,7 +128,7 @@
 
         <md-dialog-alert
           :md-active.sync="successSnackbar"
-          md-content="Contact was created"
+          md-content="Contact was updated"
           md-confirm-text="Close"/>
 
         <md-dialog-alert

@@ -11,39 +11,29 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient()
 const CONTACTS_TABLE = process.env.CONTACTS_TABLE;
 
 const getOne = function (req) {
+    console.log(req);
     return new Promise(function (resolve, reject) {
         console.log('getOne - starting');
-        const {item} = req,
-            {group_id, name} = item
-
-        const params = {
-            TableName: CONTACTS_TABLE,
-            Key: {
-                group_id: group_id,
-                name: name
+        findOne(req)
+            .then(result => {
+                if (result && result.Item) {
+                    console.log(result.Item);
+                    req.item = result.Item
+                    resolve(req)
+                }
+                else {
+                    reject({error: "Contact not found"})
+                }
             },
-        };
-
-        dynamoDb.get(params, (error, result) => {
-            if (error) {
-                console.log('getOne - error');
-                reject(error)
-            }
-            if (result && result.Item) {
-                console.log(result.Item);
-                req.item = result.Item
-                resolve(req)
-            }
-            else {
-                reject({error: "Contact not found"})
-            }
-        });
+                error =>{
+                    reject(error)
+            })
     })
 }
 
-const checkItemNotExist = function (req) {
+const findOne = function (req) {
     return new Promise(function (resolve, reject) {
-        console.log('getOne - starting');
+        console.log('findOne - starting');
         const {item} = req,
             {group_id, name} = item
 
@@ -59,19 +49,15 @@ const checkItemNotExist = function (req) {
             console.log(result);
 
             if (error) {
-                console.log('checkItemNotExist - error');
+                console.log('findOne - error');
                 reject(error)
             }
-            if (result && !result.Item) {
-                resolve(req)
-            }
-            else {
-                reject({error: "Contact already exists"})
+            if (result) {
+                resolve(result)
             }
         });
     })
 }
-
 const populateContactItem = function (req) {
     const {item} = req
 
@@ -314,6 +300,27 @@ router.post('', function (req, res) {
         return new Promise(function (resolve, reject) {
             req.item.create_dt = new Date().toISOString();
             resolve(req)
+        })
+    }
+
+    const checkItemNotExist = function (req) {
+        console.log(req);
+        return new Promise(function (resolve, reject) {
+
+            findOne(req)
+                .then(result => {
+                    if (result && !result.Item) {
+                        resolve(req)
+                    }
+                    else {
+                        reject({error: "Contact already exists"})
+                    }
+
+                    },
+                    err =>{
+                        reject(err)
+                    }
+                )
         })
     }
 
