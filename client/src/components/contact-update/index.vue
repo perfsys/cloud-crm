@@ -13,7 +13,7 @@
         <div class="md-title">Last updated: {{contact.update_dt | fromISO}}</div>
 
 
-        <form novalidate @submit="onSubmit" >
+        <form novalidate @submit.prevent="onSubmit" >
 
           <md-field>
             <label for="status_id">Status</label>
@@ -153,7 +153,7 @@
   const R = require('ramda')
 
   export default {
-    name: 'contacts-form',
+    name: 'contact-update',
     props: ['group', 'name'],
     mixins: [dateMixin],
     data () {
@@ -240,7 +240,6 @@
       },
 
       onSubmit (evt) {
-        evt.preventDefault()
 
         const _self = this
 

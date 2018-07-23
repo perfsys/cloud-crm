@@ -41,6 +41,37 @@ const getOne = function (req) {
     })
 }
 
+const checkItemNotExist = function (req) {
+    return new Promise(function (resolve, reject) {
+        console.log('getOne - starting');
+        const {item} = req,
+            {group_id, name} = item
+
+        const params = {
+            TableName: CONTACTS_TABLE,
+            Key: {
+                group_id: group_id,
+                name: name
+            },
+        };
+
+        dynamoDb.get(params, (error, result) => {
+            console.log(result);
+
+            if (error) {
+                console.log('checkItemNotExist - error');
+                reject(error)
+            }
+            if (result && !result.Item) {
+                resolve(req)
+            }
+            else {
+                reject({error: "Contact already exists"})
+            }
+        });
+    })
+}
+
 const populateContactItem = function (req) {
     const {item} = req
 
@@ -287,6 +318,7 @@ router.post('', function (req, res) {
     }
 
     constructContactItem(req)
+        .then(checkItemNotExist)
         .then(populateContactItem)
         .then(preCreate)
         .then(saveContact)
@@ -298,7 +330,6 @@ router.post('', function (req, res) {
             console.log(error);
             res.status(400).json(error);
         })
-
 
 });
 

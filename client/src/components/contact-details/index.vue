@@ -29,7 +29,7 @@
 
             <md-list-item>
               <div class="md-list-item-text">
-                <span>{{contact.create_dt}}</span>
+                <span>{{contact.create_dt | fromISO}}</span>
                 <span>Created</span>
               </div>
 
@@ -140,11 +140,15 @@
 <script>
 import api from '../../api/contacts'
 import {mapGetters, mapActions} from 'vuex'
+import dateMixin from '@/mixins/FormattersDateMixin'
+
 
 
 export default {
   name: 'contact-details-index',
   props: ['group', 'name'],
+  mixins: [dateMixin],
+
   data () {
     return {
       contact: {
@@ -207,9 +211,11 @@ export default {
 
     deleteOne(event) {
       this.contactsDeleteOne(this.contact)
-      this.$router.push({
-        name: 'contacts'
-      })
+        .then(() => {
+          this.$router.push({
+            name: 'contacts'
+          })
+        })
     },
     editOne(event) {
       this.$router.push({

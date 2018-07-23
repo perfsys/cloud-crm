@@ -21,13 +21,15 @@ const actions = {
   },
 
   contactsDeleteOne ({state, commit, dispatch}, item) {
-    let group = item.group_id
-    let name = item.name
+    return new Promise((resolve, reject) => {
+      let group = item.group_id
+      let name = item.name
 
-    if (group && name) {
-      api.deleteOne(group, name)
-        .then(() => dispatch('contactsGetAll'))
-    }
+      if (group && name) {
+        api.deleteOne(group, name)
+          .then(() => dispatch('contactsGetAll'))
+      }
+    })
   },
 
   contactsSaveOne ({state, commit, dispatch}, item) {
