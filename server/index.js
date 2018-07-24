@@ -8,6 +8,7 @@ const sources = require('./controllers/sources')
 const groups = require('./controllers/groups')
 const types = require('./controllers/types')
 const countries = require('./controllers/countries')
+const statuses = require('./controllers/statuses')
 
 const app = express()
 
@@ -19,6 +20,7 @@ app.use('/sources', sources)
 app.use('/groups', groups)
 app.use('/types', types)
 app.use('/countries', countries)
+app.use('/statuses', statuses)
 
 app.get('/', function (req, res) {
   res.send('HEALTHY')

@@ -6,6 +6,7 @@ import groups from './modules/groups'
 import countries from './modules/countries'
 import sources from './modules/sources'
 import types from './modules/types'
+import statuses from './modules/statuses'
 
 // import createLogger from '../../../src/plugins/logger'
 
@@ -19,7 +20,8 @@ export default new Vuex.Store({
     groups,
     countries,
     sources,
-    types
+    types,
+    statuses
   },
   strict: debug
   // plugins: debug ? [createLogger()] : []
