@@ -4,20 +4,20 @@
 
 <script>
 
-  import contacts from '@/components/contacts/index.vue'
+import contacts from '@/components/contacts/index.vue'
 
-  export default {
-    name: 'contacts-group',
-    props: ['group'],
+export default {
+  name: 'contacts-group',
+  props: ['group'],
 
-    components:{
-      'contacts' : contacts
-    },
+  components: {
+    'contacts': contacts
+  },
 
-    beforeRouteUpdate (to, from, next) {
-      this.$store.dispatch('contactsGetAllInGroup', to.params.group)
-      next()
-    }
-
+  beforeRouteUpdate (to, from, next) {
+    this.$store.dispatch('contactsGetAllInGroup', to.params.group)
+    next()
   }
+
+}
 </script>

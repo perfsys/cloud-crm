@@ -51,8 +51,7 @@ export default {
   created () {
     if (this.group_id) {
       this.$store.dispatch('contactsGetAllInGroup', this.group_id)
-    }
-    else {
+    } else {
     // Get Contacts on Created
       this.$store.dispatch('contactsGetAll')
     }

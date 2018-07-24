@@ -268,11 +268,11 @@ export default {
         })
     },
 
-      onClose () {
-        this.$router.go(-1)
-      },
-      reset () {
-      }
+    onClose () {
+      this.$router.go(-1)
+    },
+    reset () {
+    }
 
   }
 }
