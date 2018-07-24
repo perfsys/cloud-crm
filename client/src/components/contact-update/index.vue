@@ -133,7 +133,6 @@
             </md-step>
           </md-steppers>
 
-
         <md-dialog-actions>
           <md-button class="md-primary" @click="onClose">Close</md-button>
           <md-button class="md-primary" type="submit">Save</md-button>
@@ -149,7 +148,6 @@
           :md-content="failedSnackbarReason"
           md-confirm-text="Close"/>
 
-
       </form>
       </md-card-content>
       </div>
@@ -162,126 +160,123 @@
 
 <script>
 
-  import api from '../../api/contacts'
-  import {mapGetters} from 'vuex'
-  import dateMixin from '@/mixins/FormattersDateMixin'
+import api from '../../api/contacts'
+import {mapGetters} from 'vuex'
+import dateMixin from '@/mixins/FormattersDateMixin'
 
-  const R = require('ramda')
+export default {
+  name: 'contact-update',
+  props: ['group', 'name'],
+  mixins: [dateMixin],
+  data () {
+    return {
 
-  export default {
-    name: 'contact-update',
-    props: ['group', 'name'],
-    mixins: [dateMixin],
-    data () {
-      return {
+      contact: {
+        group_id: null,
+        group_name: null,
+        name: null,
 
-        contact:{
-          group_id: null,
-          group_name: null,
-          name: null,
+        first_name: null,
+        last_name: null,
 
-          first_name: null,
-          last_name: null,
+        position: null,
+        company_name: null,
+        company_www: null,
 
-          position: null,
-          company_name: null,
-          company_www: null,
+        source_id: null,
+        country_code: null,
+        type_id: null,
+        status_id: null,
 
-          source_id: null,
-          country_code: null,
-          type_id: null,
-          status_id: null,
+        facebook_link: null,
+        twitter_link: null,
+        linkedin_link: null
 
-          facebook_link: null,
-          twitter_link: null,
-          linkedin_link: null
-
-        },
-
-        successSnackbar: false,
-        failedSnackbar: false,
-        failedSnackbarReason: 'Failed to create a contact'
-      }
-    },
-
-    computed:
-      mapGetters({
-        groups: 'groupsAll',
-        sources: 'sourcesAll',
-        types: 'typesAll',
-        countries: 'countriesAll',
-        statuses: 'statusesAll'
-      }),
-
-    created () {
-      this.$store.dispatch('countriesGetAll')
-      this.$store.dispatch('groupsGetAll')
-      this.$store.dispatch('sourcesGetAll')
-      this.$store.dispatch('typesGetAll')
-      this.$store.dispatch('statusesGetAll')
-      this.refresh()
-    },
-
-    methods: {
-
-      refresh(){
-        let _self = this
-        if (this.group && this.name) {
-          api.getOne(this.group, this.name)
-            .then(data => {
-              _self.contact.group_id = data.group_id
-              _self.contact.group_name = data.group_name
-              _self.contact.name = data.name
-
-              _self.contact.first_name = data.first_name
-              _self.contact.last_name = data.last_name
-
-              _self.contact.position = data.position
-              _self.contact.type_id = data.type_id
-              _self.contact.source_id = data.source_id
-              _self.contact.status_id = data.status_id
-              _self.contact.create_dt = data.create_dt
-              _self.contact.update_dt = data.update_dt
-
-              _self.contact.country_code = data.country_code
-
-              _self.contact.company_name = data.company_name
-              _self.contact.company_www = data.company_www
-
-              _self.contact.facebook_link = data.facebook_link
-              _self.contact.twitter_link = data.twitter_link
-              _self.contact.linkedin_link = data.linkedin_link
-            })
-        }
       },
 
-      onSubmit (evt) {
-
-        const _self = this
-
-        this.$store.dispatch('contactsUpdateOne', this.contact)
-          .then(() => {
-            // _self.reset()
-            _self.successSnackbar = true
-            _self.refresh()
-          })
-          .catch((err) => {
-            if (err.response && err.response.data) {
-              this.failedSnackbarReason = err.response.data.error
-            }
-            _self.failedSnackbar = true
-          })
-      },
-
-      onClose (){
-
-        this.$router.push({ name: 'contacts'})
-      },
-      reset () {
-      }
-
+      successSnackbar: false,
+      failedSnackbar: false,
+      failedSnackbarReason: 'Failed to create a contact'
     }
+  },
+
+  computed:
+    mapGetters({
+      groups: 'groupsAll',
+      sources: 'sourcesAll',
+      types: 'typesAll',
+      countries: 'countriesAll',
+      statuses: 'statusesAll'
+    }),
+
+  created () {
+    this.$store.dispatch('countriesGetAll')
+    this.$store.dispatch('groupsGetAll')
+    this.$store.dispatch('sourcesGetAll')
+    this.$store.dispatch('typesGetAll')
+    this.$store.dispatch('statusesGetAll')
+    this.refresh()
+  },
+
+  methods: {
+
+    refresh () {
+      let _self = this
+      if (this.group && this.name) {
+        api.getOne(this.group, this.name)
+          .then(data => {
+            _self.contact.group_id = data.group_id
+            _self.contact.group_name = data.group_name
+            _self.contact.name = data.name
+
+            _self.contact.first_name = data.first_name
+            _self.contact.last_name = data.last_name
+
+            _self.contact.position = data.position
+            _self.contact.type_id = data.type_id
+            _self.contact.source_id = data.source_id
+            _self.contact.status_id = data.status_id
+            _self.contact.create_dt = data.create_dt
+            _self.contact.update_dt = data.update_dt
+
+            _self.contact.country_code = data.country_code
+
+            _self.contact.company_name = data.company_name
+            _self.contact.company_www = data.company_www
+
+            _self.contact.facebook_link = data.facebook_link
+            _self.contact.twitter_link = data.twitter_link
+            _self.contact.linkedin_link = data.linkedin_link
+          })
+      }
+    },
+
+    onSubmit (evt) {
+      const _self = this
+
+      this.$store.dispatch('contactsUpdateOne', this.contact)
+        .then(() => {
+          // _self.reset()
+          _self.successSnackbar = true
+          _self.refresh()
+        })
+        .catch((err) => {
+          if (err.response && err.response.data) {
+            this.failedSnackbarReason = err.response.data.error
+          }
+          _self.failedSnackbar = true
+        })
+    },
+
+    onClose () {
+      this.$router.push({name: 'contacts'})
+    },
+
+    reset () {
+    }
+
   }
+}
 </script>
 <style scoped>
 

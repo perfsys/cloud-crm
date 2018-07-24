@@ -44,7 +44,6 @@ export default {
   name: 'contacts-table',
   mixins: [dateMixin],
 
-
   computed:
       mapGetters({
         contacts: 'contactsAll'
@@ -71,9 +70,9 @@ export default {
 
     onEdit (contact) {
       this.$router.push({
-          name: 'contact-update',
-          params: {group: contact.group_id, name: contact.name}
-        }
+        name: 'contact-update',
+        params: {group: contact.group_id, name: contact.name}
+      }
       )
     }
 

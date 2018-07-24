@@ -21,7 +21,6 @@
             </md-tab>
           </md-tabs>
 
-
         </md-dialog-content>
 
         <md-dialog-actions>

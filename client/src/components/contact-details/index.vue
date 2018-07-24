@@ -35,8 +35,6 @@
 
             </md-list-item>
 
-
-
             <md-list-item>
               <div class="md-list-item-text">
 
@@ -61,7 +59,6 @@
               </div>
 
             </md-list-item>
-
 
             <md-divider></md-divider>
             <md-subheader>Links</md-subheader>
@@ -139,10 +136,8 @@
 
 <script>
 import api from '../../api/contacts'
-import {mapGetters, mapActions} from 'vuex'
+import {mapActions} from 'vuex'
 import dateMixin from '@/mixins/FormattersDateMixin'
-
-
 
 export default {
   name: 'contact-details-index',
@@ -209,7 +204,7 @@ export default {
       'contactsDeleteOne'
     ]),
 
-    deleteOne(event) {
+    deleteOne (event) {
       this.contactsDeleteOne(this.contact)
         .then(() => {
           this.$router.push({
@@ -217,7 +212,7 @@ export default {
           })
         })
     },
-    editOne(event) {
+    editOne (event) {
       this.$router.push({
         name: 'contact-update'
       })
