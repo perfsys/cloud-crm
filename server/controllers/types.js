@@ -1,13 +1,13 @@
 const
-    express = require('express'),
-    router = express.Router();
+  express = require('express')
+
+const router = express.Router()
 const data = require('../data/types.json')
 
-
 router.get('', function (req, res) {
-    console.log('types-list - starting')
+  console.log('types-list - starting')
 
-    res.json(data)
+  res.json(data)
 })
 
-module.exports = router;
+module.exports = router
