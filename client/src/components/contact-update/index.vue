@@ -1,17 +1,30 @@
 <template>
   <div>
-
-
     <md-card >
       <md-card-header>
-        <div class="md-title">Edit contact</div>
         <div class="md-title">{{contact.group_name}}  {{contact.name}}</div>
       </md-card-header>
 
-      <md-card-content class="md-scrollbar">
-        <div class="md-title">Created: {{contact.create_dt | fromISO}}</div>
-        <div class="md-title">Last updated: {{contact.update_dt | fromISO}}</div>
+      <div class="md-layout">
+      <div class="md-layout-item">
+      <md-card-content class="md-scrollbar " >
 
+        <md-list class="md-double-line">
+          <md-list-item>
+            <div class="md-list-item-text">
+              <span>{{contact.create_dt | fromISO}}</span>
+              <span>Created</span>
+            </div>
+          </md-list-item>
+
+          <md-list-item>
+            <div class="md-list-item-text">
+              <span>{{contact.update_dt | fromISO}}</span>
+              <span>Last updated</span>
+            </div>
+          </md-list-item>
+
+        </md-list>
 
         <form novalidate @submit.prevent="onSubmit" >
 
@@ -139,6 +152,9 @@
 
       </form>
       </md-card-content>
+      </div>
+      <div class="md-layout-item"></div>
+      </div>
     </md-card>
 
   </div>

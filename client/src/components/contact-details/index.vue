@@ -2,7 +2,7 @@
 
   <md-card>
     <md-card-header>
-      <div class="md-title">{{contact.first_name}} {{contact.last_name}} ({{contact.name}})</div>
+      <div class="md-title">{{contact.group_name}}  {{contact.name}}</div>
     </md-card-header>
 
     <md-card-content>
@@ -129,7 +129,7 @@
     </md-card-content>
 
     <md-card-actions>
-      <md-button class="md-primary" @click="deleteOne">Delete</md-button>
+      <md-button class="md-accent" @click="deleteOne">Delete</md-button>
       <md-button class="md-primary" @click="editOne">Edit</md-button>
     </md-card-actions>
 
