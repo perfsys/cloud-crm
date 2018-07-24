@@ -139,6 +139,14 @@ functions:
           method: get
           cors: true
 
+  statuses-list:
+    handler: index.handler
+    events:
+      - http:
+          path: '/statuses'
+          method: get
+          cors: true
+
   contacts-create:
     handler: index.handler
     events:
@@ -147,13 +155,6 @@ functions:
           method: post
           cors: true
 
-  contacts-update:
-    handler: index.handler
-    events:
-      - http:
-          path: '/contacts'
-          method: put
-          cors: true
 
   contacts-list:
     handler: index.handler
@@ -186,6 +187,14 @@ functions:
       - http:
           path: '/contacts/{group_id}/{proxy+}'
           method: delete
+          cors: true
+
+  contacts-update-one:
+    handler: index.handler
+    events:
+      - http:
+          path: '/contacts/{group_id}/{proxy+}'
+          method: put
           cors: true
 
 

@@ -1,0 +1,39 @@
+[
+    {
+        "id": "NEW",
+        "name": "New"
+    },
+    {
+        "id": "WAIT_FOR_RESPONSE",
+        "name": "Wait for response"
+    },
+    {
+        "id": "SEND_1_TEXT",
+        "name": "Send 1 text"
+    },
+    {
+        "id": "SEND_2_TEXT",
+        "name": "Send 2 text"
+    },
+    {
+        "id": "SEND_3_TEXT",
+        "name": "Send 3 text"
+    },
+    {
+        "id": "TRY_ASSIGN_A_CALL",
+        "name": "Try assign a call"
+    },
+    {
+        "id": "CALL_CONFIRMED",
+        "name": "Call confirmed"
+    },
+    {
+        "id": "DECLINED",
+        "name": "Declined"
+    },
+    {
+        "id": "SUCCESS_A_DEAL",
+        "name": "Success a deal"
+    }
+
+]
