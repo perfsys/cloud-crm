@@ -1,6 +1,6 @@
 <template>
 
-  <contacts-table>
+  <contacts-table v-bind:group_id="group_id">
     <contacts-form slot="form"></contacts-form>
   </contacts-table>
 
@@ -13,7 +13,7 @@ import form from './form.vue'
 
 export default {
   name: 'contacts-index',
-  props: ['organization_name'],
+  props: ['group_id'],
   components: {
     'contacts-table': table,
     'contacts-form': form

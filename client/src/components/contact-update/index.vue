@@ -268,12 +268,11 @@ export default {
         })
     },
 
-    onClose () {
-      this.$router.push({name: 'contacts'})
-    },
-
-    reset () {
-    }
+      onClose () {
+        this.$router.go(-1)
+      },
+      reset () {
+      }
 
   }
 }
