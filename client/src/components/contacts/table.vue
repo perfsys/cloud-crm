@@ -3,7 +3,7 @@
   <md-table v-model="contacts" md-card @md-selected="onSelect" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder" :md-sort-fn="customSort">
 
     <md-table-toolbar>
-      <h1 class="md-title" v-show="!allContacts">All Contacts in Group</h1>
+      <h1 class="md-title" v-show="!allContacts">All Contacts in {{groupName}}</h1>
       <h1 class="md-title" v-show="allContacts">All Contacts</h1>
       <slot name="form"></slot>
     </md-table-toolbar>
@@ -51,10 +51,15 @@ export default {
     }
   },
 
-  computed:
-      mapGetters({
-        contacts: 'contactsAll'
-      }),
+  computed: {
+    groupName () {
+      return this.$store.getters.groupNameById(this.group_id)
+    },
+
+    ...mapGetters({
+      contacts: 'contactsAll'
+    })
+  },
 
   created () {
     if (this.group_id) {
