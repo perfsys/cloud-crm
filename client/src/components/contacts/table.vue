@@ -53,7 +53,7 @@ export default {
 
   computed: {
     groupName () {
-      return this.$store.getters.groupNameById(this.group_id)
+      return this.$store.getters.groupById(this.group_id).name
     },
 
     ...mapGetters({

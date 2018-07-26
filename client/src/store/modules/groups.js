@@ -10,9 +10,9 @@ const getters = {
 
   groupsAll: state => state.all,
 
-  groupNameById (state) {
+  groupById (state) {
     return groupId => {
-      return (groupId) ? state.all.find(i => i.id === groupId).name : {}
+      return (groupId) ? state.all.find(i => i.id === groupId) : {}
     }
   }
 
