@@ -14,7 +14,7 @@
       <span class="md-list-item-text">Groups</span>
       <md-list slot="md-expand">
         <div v-for="group in groups" :key="group.id">
-        <md-list-item @click="onClick(group)">
+        <md-list-item :to="{ path: `/contacts/`+`${group.id}`}">
           <span class="md-list-item-text">{{group.name}}</span>
         </md-list-item>
         </div>
@@ -48,12 +48,6 @@ export default {
   },
 
   methods: {
-    onClick (group) {
-      this.$router.push({
-        name: 'contacts-group',
-        params: {group: group.id}
-      })
-    }
   }
 }
 </script>
