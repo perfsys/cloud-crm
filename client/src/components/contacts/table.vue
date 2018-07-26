@@ -43,11 +43,11 @@ export default {
   name: 'contacts-table',
   mixins: [dateMixin],
   props: ['group_id'],
-  data() {
-    return{
+  data () {
+    return {
       allContacts: true,
       currentSort: 'name',
-      currentSortOrder: 'asc',
+      currentSortOrder: 'asc'
     }
   },
 
@@ -73,37 +73,34 @@ export default {
       'contactsDeleteOne'
     ]),
 
-    onSelect(contact) {
+    onSelect (contact) {
       this.$router.push({
-          name: 'contact-details',
-          params: {group: contact.group_id, name: contact.name}
-        }
-      )
+        name: 'contact-details',
+        params: {group: contact.group_id, name: contact.name}
+      })
     },
 
-    onEdit(contact) {
+    onEdit (contact) {
       this.$router.push({
-          name: 'contact-update',
-          params: {group: contact.group_id, name: contact.name}
-        }
-      )
+        name: 'contact-update',
+        params: {group: contact.group_id, name: contact.name}
+      })
     },
 
     customSort (value) {
-
       const toString = v => {
         if (!v) {
-          return '';
+          return ''
         }
-        return String(v);
-      };
+        return String(v)
+      }
 
       return value.sort((a, b) => {
         const sortBy = this.currentSort
         if (this.currentSortOrder === 'desc') {
-         return toString(b[sortBy]).localeCompare(toString(a[sortBy]))
+          return toString(b[sortBy]).localeCompare(toString(a[sortBy]))
         }
-        return toString(a[sortBy]).localeCompare(toString(b[sortBy]));
+        return toString(a[sortBy]).localeCompare(toString(b[sortBy]))
       })
     }
   }
