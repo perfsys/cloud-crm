@@ -8,7 +8,13 @@ const state = {
 // getters
 const getters = {
 
-  groupsAll: state => state.all
+  groupsAll: state => state.all,
+
+  groupById (state) {
+    return groupId => {
+      return (groupId) ? state.all.find(i => i.id === groupId) : {}
+    }
+  }
 
 }
 
