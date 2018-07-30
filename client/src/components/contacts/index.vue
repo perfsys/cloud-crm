@@ -1,7 +1,7 @@
 <template>
 
   <contacts-table v-bind:group_id="group_id">
-    <contacts-form slot="form"></contacts-form>
+    <contacts-form  v-bind:gr_id="group_id" slot="form"></contacts-form>
   </contacts-table>
 
 </template>

@@ -3,14 +3,7 @@
   <div>
     <div class="md-layout md-gutter">
       <div class="md-layout-item md-small-size-100">
-        <md-field>
-          <label for="group_id">Group</label>
-          <md-select v-model="group_id" name="group_id" id="group_id">
-
-            <md-option v-for="group in groups" :value="group.id" :key="group.id">{{ group.name }}</md-option>
-
-          </md-select>
-        </md-field>
+        <group_el v-model="group_id"/>
       </div>
       <div class="md-layout-item md-small-size-100">
         <md-field>
@@ -38,45 +31,28 @@
 
     <div class="md-layout md-gutter">
       <div class="md-layout-item md-small-size-100">
-        <md-field>
-          <label for="source_id">Source</label>
-          <md-select v-model="source_id" name="source_id" id="source_id">
-
-            <md-option v-for="source in sources" :value="source.id" :key="source.id">{{ source.name }}
-            </md-option>
-
-          </md-select>
-        </md-field>
+        <source_el v-model="source_id"/>
       </div>
 
       <div class="md-layout-item md-small-size-100">
-        <md-field>
-          <label for="status_id">Status</label>
-          <md-select v-model="status_id" name="status_id" id="status_id">
-
-            <md-option v-for="status in statuses" :value="status.id" :key="status.id">{{ status.name }}
-            </md-option>
-
-          </md-select>
-        </md-field>
+        <status_el v-model="status_id"/>
       </div>
-
     </div>
 
     <div class="md-layout md-gutter">
       <div class="md-layout-item md-small-size-100">
-        <md-radio v-model="type_id" value="COLD">Cold</md-radio>
-        <md-radio v-model="type_id" value="WARM">Warm</md-radio>
-        <md-radio v-model="type_id" value="HOT">Hot</md-radio>
+       <type_el v-model="type_id"/>
       </div>
-
     </div>
 
     </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import group_el from '@/components/contact-elements/group.vue'
+import source_el from '@/components/contact-elements/source.vue'
+import status_el from '@/components/contact-elements/status.vue'
+import type_el from '@/components/contact-elements/type.vue'
 
 export default {
   name: 'form-general',
@@ -97,18 +73,16 @@ export default {
       status_id: 'NEW'
     }
   },
-  computed:
-      mapGetters({
-        groups: 'groupsAll',
-        sources: 'sourcesAll',
-        types: 'typesAll',
-        statuses: 'statusesAll'
-      }),
+
+  components: {
+    'group_el': group_el,
+    'source_el': source_el,
+    'status_el': status_el,
+    'type_el': type_el
+  },
+
   created () {
-    this.$store.dispatch('groupsGetAll')
-    this.$store.dispatch('sourcesGetAll')
-    this.$store.dispatch('typesGetAll')
-    this.$store.dispatch('statusesGetAll')
+    this.group_id = this.value.group_id
   },
   watch: {
     group_id () {
