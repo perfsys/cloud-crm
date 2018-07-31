@@ -54,6 +54,7 @@ const R = require('ramda')
 export default {
   name: 'contacts-form',
   props: ['gr_id'],
+
   data () {
     return {
 
@@ -73,6 +74,14 @@ export default {
     links,
     company,
     general
+  },
+
+  watch: {
+
+    gr_id () {
+      console.log('group_id = ' + this.gr_id)
+      this.form_general.group_id = this.gr_id
+    }
   },
 
   methods: {

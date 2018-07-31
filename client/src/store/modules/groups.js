@@ -2,7 +2,8 @@ import api from '../../api/groups'
 
 // initial state
 const state = {
-  all: []
+  all: [],
+  currentId: null
 }
 
 // getters
@@ -14,7 +15,9 @@ const getters = {
     return groupId => {
       return (groupId) ? state.all.find(i => i.id === groupId) : {}
     }
-  }
+  },
+
+  groupCurrentId: state => state.currentId
 
 }
 
@@ -33,6 +36,10 @@ const mutations = {
 
   setGroups (state, groups) {
     state.all = groups
+  },
+
+  setCurrentGroup (state, group) {
+    state.currentId = group
   }
 
 }

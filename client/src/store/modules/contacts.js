@@ -15,14 +15,14 @@ const getters = {
 // actions
 const actions = {
 
-  contactsGetAll ({commit}) {
-    api.getAll()
-      .then(contacts => commit('setContacts', contacts))
-  },
-
-  contactsGetAllInGroup ({state, commit, dispatch}, item) {
-    api.getAllInGroup(item)
-      .then(contacts => commit('setContacts', contacts))
+  contactsGetAllInCurrentGroup ({state, commit, rootState}) {
+    if (rootState.groups.currentId) {
+      api.getAllInGroup(rootState.groups.currentId)
+        .then(contacts => commit('setContacts', contacts))
+    } else {
+      api.getAll()
+        .then(contacts => commit('setContacts', contacts))
+    }
   },
 
   contactsDeleteOne ({state, commit, dispatch}, item) {
@@ -32,7 +32,7 @@ const actions = {
 
       if (group && name) {
         api.deleteOne(group, name)
-          .then(() => dispatch('contactsGetAll'))
+          .then(() => dispatch('contactsGetAllInCurrentGroup'))
       }
     })
   },
@@ -42,7 +42,7 @@ const actions = {
       api.saveOne(item)
         .then(() => {
           // refresh contacts list
-          dispatch('contactsGetAll')
+          dispatch('contactsGetAllInCurrentGroup')
           // callback
           resolve()
         }, reject)
@@ -54,7 +54,7 @@ const actions = {
       api.updateOne(item)
         .then(() => {
           // refresh contacts list
-          dispatch('contactsGetAll')
+          dispatch('contactsGetAllInCurrentGroup')
           // callback
           resolve()
         }, reject)
