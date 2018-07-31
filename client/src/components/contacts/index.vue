@@ -19,9 +19,6 @@ export default {
     'contacts-form': form
   },
   created () {
-    if (!this.group_id) {
-      this.$store.commit('setCurrentGroup', null)
-    }
   }
 }
 </script>

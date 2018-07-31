@@ -16,8 +16,8 @@ const getters = {
 const actions = {
 
   contactsGetAllInCurrentGroup ({state, commit, rootState}) {
-    if (rootState.groups.currentId) {
-      api.getAllInGroup(rootState.groups.currentId)
+    if (rootState.route.params.group) {
+      api.getAllInGroup(rootState.route.params.group)
         .then(contacts => commit('setContacts', contacts))
     } else {
       api.getAll()

@@ -52,7 +52,7 @@ export default {
 
   computed: {
     groupName () {
-      return this.refreshHeader()
+      return this.refreshByGroup()
     },
 
     ...mapGetters({
@@ -74,11 +74,12 @@ export default {
       this.$store.dispatch('contactsGetAllInCurrentGroup')
     },
 
-    refreshHeader () {
-      if (this.$store.getters.groupCurrentId) {
+    refreshByGroup () {
+      this.refresh()
+      if (this.$store.state.route.params.group) {
         this.allContacts = false
-        console.log(this.$store.getters.groupById(this.$store.getters.groupCurrentId).name)
-        return this.$store.getters.groupById(this.$store.getters.groupCurrentId).name
+        console.log(this.$store.getters.groupById(this.$store.state.route.params.group).name)
+        return this.$store.getters.groupById(this.$store.state.route.params.group).name
       } else {
         this.allContacts = true
         return null

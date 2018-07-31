@@ -17,7 +17,6 @@ export default {
 
   created () {
     this.gr_id = this.group
-    this.$store.commit('setCurrentGroup', this.group)
     this.$store.dispatch('contactsGetAllInCurrentGroup')
   },
 
@@ -26,8 +25,6 @@ export default {
   },
 
   beforeRouteUpdate (to, from, next) {
-    this.$store.commit('setCurrentGroup', to.params.group)
-    this.$store.dispatch('contactsGetAllInCurrentGroup')
     this.gr_id = to.params.group
     next()
   }
