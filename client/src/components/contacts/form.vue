@@ -53,13 +53,16 @@ const R = require('ramda')
 
 export default {
   name: 'contacts-form',
+  props: ['gr_id'],
+
   data () {
     return {
 
       showDialog: false,
 
-      form_general: {},
-      form_company: {},
+      form_general: {
+        group_id: this.gr_id
+      },
       form_links: {},
 
       successSnackbar: false,
@@ -73,14 +76,21 @@ export default {
     general
   },
 
+  watch: {
+
+    gr_id () {
+      console.log('group_id = ' + this.gr_id)
+      this.form_general.group_id = this.gr_id
+    }
+  },
+
   methods: {
 
     onSubmit (evt) {
       evt.preventDefault()
-
       const _self = this
 
-      this.$store.dispatch('contactsSaveOne', R.merge(this.form_general, this.form_company, this.form_links))
+      this.$store.dispatch('contactsSaveOne', R.merge(this.form_general, this.form_links))
         .then(() => {
           _self.reset()
           // _self.successSnackbar = true

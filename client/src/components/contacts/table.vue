@@ -42,7 +42,6 @@ import dateMixin from '@/mixins/FormattersDateMixin'
 export default {
   name: 'contacts-table',
   mixins: [dateMixin],
-  props: ['group_id'],
   data () {
     return {
       allContacts: true,
@@ -53,7 +52,7 @@ export default {
 
   computed: {
     groupName () {
-      return this.$store.getters.groupById(this.group_id).name
+      return this.refreshByGroup()
     },
 
     ...mapGetters({
@@ -62,14 +61,7 @@ export default {
   },
 
   created () {
-    if (this.group_id) {
-      this.$store.dispatch('contactsGetAllInGroup', this.group_id)
-      this.allContacts = false
-    } else {
-    // Get Contacts on Created
-      this.$store.dispatch('contactsGetAll')
-      this.allContacts = true
-    }
+    this.refresh()
   },
 
   methods: {
@@ -77,6 +69,25 @@ export default {
     ...mapActions([
       'contactsDeleteOne'
     ]),
+
+    ...mapGetters([
+      'routeGroupId', 'routeGroupName'
+    ]),
+
+    refresh () {
+      this.$store.dispatch('contactsGetAllInCurrentGroup')
+    },
+
+    refreshByGroup () {
+      this.refresh()
+      if (this.routeGroupId()) {
+        this.allContacts = false
+        return this.routeGroupName()
+      } else {
+        this.allContacts = true
+        return null
+      }
+    },
 
     onSelect (contact) {
       this.$router.push({

@@ -14,6 +14,14 @@ const getters = {
     return groupId => {
       return (groupId) ? state.all.find(i => i.id === groupId) : {}
     }
+  },
+
+  routeGroupId (state, getters, rootState) {
+    return rootState.route.params.group
+  },
+
+  routeGroupName (state, getters, rootState) {
+    return getters.groupById(rootState.route.params.group).name
   }
 
 }

@@ -28,22 +28,8 @@
 
           <div class="md-layout">
             <div class="md-layout-item">
-
-              <md-field>
-                <label for="status_id">Status</label>
-                <md-select v-model="contact.status_id" name="status_id" id="status_id">
-
-                  <md-option v-for="status in statuses" :value="status.id" :key="status.id">{{ status.name }}
-                  </md-option>
-
-                </md-select>
-              </md-field>
-
-              <div class="md-layout-item md-small-size-100">
-                <md-radio v-model="contact.type_id" value="COLD">Cold</md-radio>
-                <md-radio v-model="contact.type_id" value="WARM">Warm</md-radio>
-                <md-radio v-model="contact.type_id" value="HOT">Hot</md-radio>
-              </div>
+              <status_el v-model="contact.status_id"/>
+              <type_el v-model="contact.type_id"/>
 
               <md-steppers md-vertical>
 
@@ -71,66 +57,32 @@
                     </div>
 
                     <div class="md-layout-item md-small-size-100">
-                    <md-field>
-                      <label for="source_id">Source</label>
-                      <md-select v-model="contact.source_id" name="source_id" id="source_id">
-                        <md-option v-for="source in sources" :value="source.id" :key="source.id">{{ source.name }}
-                        </md-option>
-                      </md-select>
-                    </md-field>
+                      <source_el v-model="contact.source_id"/>
                     </div>
 
                 </md-step>
 
                 <md-step id="second" md-label="Company">
 
-                    <div class="md-layout-item md-small-size-100">
+                  <div class="md-layout-item md-small-size-100">
                     <md-field>
-                    <label for="company_name">Company Name</label>
-                    <md-input name="company_name" id="company_name" autocomplete="company_name" v-model="contact.company_name"/>
+                      <label for="company_name">Company Name</label>
+                      <md-input name="company_name" id="company_name" autocomplete="company_name" v-model="contact.company_name"/>
                     </md-field>
-                    </div>
+                  </div>
 
-                    <div class="md-layout-item md-small-size-100">
+                  <div class="md-layout-item md-small-size-100">
                       <md-field>
                         <label for="company_www">Company www</label>
                         <md-input name="company_www" id="company_www" autocomplete="company_www" v-model="contact.company_www"/>
                       </md-field>
                     </div>
 
-                    <md-field>
-                      <label for="country">Country</label>
-                      <md-select v-model="contact.country_code" name="country" id="country">
-
-                        <md-option v-for="country in countries" :value="country.abbreviation" :key="country.abbreviation">{{ country.country }}
-                        </md-option>
-
-                      </md-select>
-                    </md-field>
+                  <country_el v-model="contact.country_code"/>
 
                 </md-step>
                 <md-step id="third" md-label="Links">
-                    <div class="md-layout-item md-small-size-100">
-                      <md-field>
-                        <label for="facebook_link">Facebook Link</label>
-                        <md-input name="facebook_link" id="facebook_link" autocomplete="facebook_link" v-model="contact.facebook_link"/>
-                      </md-field>
-                    </div>
-
-                    <div class="md-layout-item md-small-size-100">
-                      <md-field>
-                        <label for="twitter_link">Twitter Link</label>
-                        <md-input name="twitter_link" id="twitter_link" autocomplete="twitter_link" v-model="contact.twitter_link"/>
-                      </md-field>
-                    </div>
-
-                    <div class="md-layout-item md-small-size-100">
-                      <md-field>
-                        <label for="linkedin_link">Linkedin Link</label>
-                        <md-input name="linkedin_link" id="linkedin_link" autocomplete="linkedin_link" v-model="contact.linkedin_link"/>
-                      </md-field>
-                    </div>
-
+                  <links_el v-model="links" />
                 </md-step>
               </md-steppers>
 
@@ -164,8 +116,14 @@
 <script>
 
 import api from '../../api/contacts'
-import {mapGetters} from 'vuex'
 import dateMixin from '@/mixins/FormattersDateMixin'
+import source_el from '@/components/contact-elements/source.vue'
+import status_el from '@/components/contact-elements/status.vue'
+import type_el from '@/components/contact-elements/type.vue'
+import country_el from '@/components/contact-elements/country.vue'
+import links_el from '@/components/contact-elements/links.vue'
+
+const R = require('ramda')
 
 export default {
   name: 'contact-update',
@@ -189,12 +147,13 @@ export default {
         source_id: null,
         country_code: null,
         type_id: null,
-        status_id: null,
+        status_id: null
+      },
 
+      links: {
         facebook_link: null,
         twitter_link: null,
         linkedin_link: null
-
       },
 
       successSnackbar: false,
@@ -203,21 +162,15 @@ export default {
     }
   },
 
-  computed:
-    mapGetters({
-      groups: 'groupsAll',
-      sources: 'sourcesAll',
-      types: 'typesAll',
-      countries: 'countriesAll',
-      statuses: 'statusesAll'
-    }),
+  components: {
+    'source_el': source_el,
+    'status_el': status_el,
+    'type_el': type_el,
+    'country_el': country_el,
+    'links_el': links_el
+  },
 
   created () {
-    this.$store.dispatch('countriesGetAll')
-    this.$store.dispatch('groupsGetAll')
-    this.$store.dispatch('sourcesGetAll')
-    this.$store.dispatch('typesGetAll')
-    this.$store.dispatch('statusesGetAll')
     this.refresh()
   },
 
@@ -247,9 +200,9 @@ export default {
             _self.contact.company_name = data.company_name
             _self.contact.company_www = data.company_www
 
-            _self.contact.facebook_link = data.facebook_link
-            _self.contact.twitter_link = data.twitter_link
-            _self.contact.linkedin_link = data.linkedin_link
+            _self.links.facebook_link = data.facebook_link
+            _self.links.twitter_link = data.twitter_link
+            _self.links.linkedin_link = data.linkedin_link
           })
       }
     },
@@ -257,7 +210,7 @@ export default {
     onSubmit (evt) {
       const _self = this
 
-      this.$store.dispatch('contactsUpdateOne', this.contact)
+      this.$store.dispatch('contactsUpdateOne', R.merge(this.contact, this.links))
         .then(() => {
           // _self.reset()
           _self.successSnackbar = true
