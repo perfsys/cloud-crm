@@ -70,16 +70,19 @@ export default {
       'contactsDeleteOne'
     ]),
 
+    ...mapGetters([
+      'routeGroupId', 'routeGroupName'
+    ]),
+
     refresh () {
       this.$store.dispatch('contactsGetAllInCurrentGroup')
     },
 
     refreshByGroup () {
       this.refresh()
-      if (this.$store.state.route.params.group) {
+      if (this.routeGroupId()) {
         this.allContacts = false
-        console.log(this.$store.getters.groupById(this.$store.state.route.params.group).name)
-        return this.$store.getters.groupById(this.$store.state.route.params.group).name
+        return this.routeGroupName()
       } else {
         this.allContacts = true
         return null
