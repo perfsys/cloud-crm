@@ -55,11 +55,14 @@ provider:
         - dynamodb:DeleteItem
       Resource:
         - { "Fn::GetAtt": ["ContactsDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["GroupsDynamoDBTable", "Arn" ] }
+
 # you can define service wide environment variables here
 #  environment:
 #    variable1: value1
   environment:
     CONTACTS_TABLE: ${self:provider.stage}-cloud-crm-contacts
+    GROUPS_TABLE: ${self:provider.stage}-cloud-crm-groups
 
 # you can add packaging information here
 #package:
@@ -123,6 +126,14 @@ functions:
           method: get
           cors: true
 
+  groups-create:
+    handler: index.handler
+    events:
+      - http:
+          path: '/groups'
+          method: post
+          cors: true
+
   types-list:
     handler: index.handler
     events:
@@ -155,7 +166,6 @@ functions:
           method: post
           cors: true
 
-
   contacts-list:
     handler: index.handler
     events:
@@ -171,7 +181,6 @@ functions:
           path: '/contacts/{group_id}'
           method: get
           cors: true
-
 
   contacts-get-one:
     handler: index.handler
@@ -196,6 +205,65 @@ functions:
           path: '/contacts/{group_id}/{proxy+}'
           method: put
           cors: true
+
+  labels-group-create:
+    handler: index.handler
+    events:
+      - http:
+          path: '/groups/{group_id}/labels'
+          method: post
+          cors: true
+
+  labels-group-list:
+    handler: index.handler
+    events:
+      - http:
+          path: '/groups/{group_id}/labels'
+          method: get
+          cors: true
+
+#  label-contact-create:
+#    handler: index.handler
+#    events:
+#      - http:
+#          path: '/groups/{group_id}/contact/{contact_name}/labels'
+#          method: post
+#          cors: true
+#
+#  label-contact-delete:
+#    handler: index.handler
+#    events:
+#      - http:
+#          path: '/groups/{group_id}/contact/{contact_name}/labels/{proxy+}'
+#          method: delete
+#          cors: true
+#
+#  label-contact-add:
+#    handler: index.handler
+#    events:
+#      - http:
+#          path: '/labels/groups/{group_id}/contact/{proxy+}'
+#          method: post
+#          cors: true
+#
+#
+
+#  label-contact-add:
+#    handler: index.handler
+#    events:
+#      - http:
+#          path: '/contacts/group/{group_id}/{contact_name}/labels'
+#          method: post
+#          cors: true
+
+#  label-contact-remove:
+#    handler: index.handler
+#    events:
+#      - http:
+#          path: '/contacts/{group_id}/{contact_name}/labels/{proxy+}'
+#          method: delete
+#          cors: true
+
 
 
 # you can add CloudFormation resource templates here
@@ -228,6 +296,24 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.CONTACTS_TABLE}
+
+    GroupsDynamoDBTable:
+        Type: 'AWS::DynamoDB::Table'
+        Properties:
+          AttributeDefinitions:
+            -
+              AttributeName: id
+              AttributeType: S
+
+          KeySchema:
+            -
+              AttributeName: id
+              KeyType: HASH
+
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
+          TableName: ${self:provider.environment.GROUPS_TABLE}
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
