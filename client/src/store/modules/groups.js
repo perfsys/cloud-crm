@@ -21,7 +21,11 @@ const getters = {
   },
 
   routeGroupName (state, getters, rootState) {
-    return getters.groupById(rootState.route.params.group).name
+    return getters.groupById(rootState.route.params.group) ? getters.groupById(rootState.route.params.group).name : []
+  },
+
+  labelsByGroupId (state, getters) {
+    return getters.groupById(getters.routeGroupId) ? getters.groupById(getters.routeGroupId).labels : []
   }
 
 }
@@ -33,7 +37,6 @@ const actions = {
     api.getAll()
       .then(groups => commit('setGroups', groups))
   }
-
 }
 
 // mutations

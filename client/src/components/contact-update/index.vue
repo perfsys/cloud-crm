@@ -86,6 +86,8 @@
                 </md-step>
               </md-steppers>
 
+              <labels_el v-model="contact.labels"/>
+
           </div>
             <div class="md-layout-item"></div>
           </div>
@@ -122,6 +124,7 @@ import status_el from '@/components/contact-elements/status.vue'
 import type_el from '@/components/contact-elements/type.vue'
 import country_el from '@/components/contact-elements/country.vue'
 import links_el from '@/components/contact-elements/links.vue'
+import labels_el from '@/components/contact-elements/labels.vue'
 
 const R = require('ramda')
 
@@ -147,7 +150,9 @@ export default {
         source_id: null,
         country_code: null,
         type_id: null,
-        status_id: null
+        status_id: null,
+
+        labels: null
       },
 
       links: {
@@ -167,7 +172,8 @@ export default {
     'status_el': status_el,
     'type_el': type_el,
     'country_el': country_el,
-    'links_el': links_el
+    'links_el': links_el,
+    'labels_el': labels_el
   },
 
   created () {
@@ -181,6 +187,7 @@ export default {
       if (this.group && this.name) {
         api.getOne(this.group, this.name)
           .then(data => {
+            debugger
             _self.contact.group_id = data.group_id
             _self.contact.group_name = data.group_name
             _self.contact.name = data.name
@@ -199,6 +206,8 @@ export default {
 
             _self.contact.company_name = data.company_name
             _self.contact.company_www = data.company_www
+
+            _self.contact.labels = data.labels
 
             _self.links.facebook_link = data.facebook_link
             _self.links.twitter_link = data.twitter_link
