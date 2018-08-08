@@ -222,50 +222,6 @@ functions:
           method: get
           cors: true
 
-#  label-contact-create:
-#    handler: index.handler
-#    events:
-#      - http:
-#          path: '/groups/{group_id}/contact/{contact_name}/labels'
-#          method: post
-#          cors: true
-#
-#  label-contact-delete:
-#    handler: index.handler
-#    events:
-#      - http:
-#          path: '/groups/{group_id}/contact/{contact_name}/labels/{proxy+}'
-#          method: delete
-#          cors: true
-#
-#  label-contact-add:
-#    handler: index.handler
-#    events:
-#      - http:
-#          path: '/labels/groups/{group_id}/contact/{proxy+}'
-#          method: post
-#          cors: true
-#
-#
-
-#  label-contact-add:
-#    handler: index.handler
-#    events:
-#      - http:
-#          path: '/contacts/group/{group_id}/{contact_name}/labels'
-#          method: post
-#          cors: true
-
-#  label-contact-remove:
-#    handler: index.handler
-#    events:
-#      - http:
-#          path: '/contacts/{group_id}/{contact_name}/labels/{proxy+}'
-#          method: delete
-#          cors: true
-
-
-
 # you can add CloudFormation resource templates here
 #resources:
 #  Resources:

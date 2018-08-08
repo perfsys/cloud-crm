@@ -12,7 +12,7 @@ router.post('', function (req, res) {
 
   let {id, name} = req.body
 
-  let group ={}
+  let group = {}
   group.id = id
   group.name = name
   group.labels = []
@@ -28,7 +28,6 @@ router.post('', function (req, res) {
     } else {
       console.log(data)
       res.json(data)
-
     }
   })
 })
@@ -84,7 +83,7 @@ router.delete('/:group_id/', function (req, res) {
   const params = {
     TableName: GROUPS_TABLE,
     Key: {
-      group_id: group_id,
+      group_id: group_id
     }
   }
 
@@ -99,6 +98,5 @@ router.delete('/:group_id/', function (req, res) {
     }
   })
 })
-
 
 module.exports = router
