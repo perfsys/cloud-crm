@@ -2,6 +2,7 @@
 <div>
 
   <md-field>
+    <label for="label">Labels</label>
     <md-select v-model="labels" name="labels" id="labels" multiple >
       <md-option v-for="item in allInGroup"  :key="item.name_normalized" :value="item.name_normalized">{{item.name}}</md-option>
 
