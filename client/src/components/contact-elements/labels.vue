@@ -7,12 +7,13 @@
 
     </md-select>
   </md-field>
-
+  <labels-all></labels-all>
 </div>
 </template>
 
 <script>
 import {mapGetters} from 'vuex'
+import labels_all from './labels-all'
 
 export default {
   name: 'labels-element',
@@ -23,6 +24,10 @@ export default {
     return {
       labels: (this.value) ? this.value : []
     }
+  },
+
+  components: {
+    'labels-all': labels_all
   },
 
   created () {

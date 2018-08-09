@@ -36,6 +36,16 @@ const actions = {
   groupsGetAll ({commit}) {
     api.getAll()
       .then(groups => commit('setGroups', groups))
+  },
+
+  labelAddOne ({getters, dispatch}, item) {
+    return new Promise((resolve, reject) => {
+      api.labelAddOne(item, getters.routeGroupId)
+        .then(() => {
+          dispatch('groupsGetAll')
+          resolve()
+        }, reject)
+    })
   }
 }
 

@@ -187,7 +187,6 @@ export default {
       if (this.group && this.name) {
         api.getOne(this.group, this.name)
           .then(data => {
-            debugger
             _self.contact.group_id = data.group_id
             _self.contact.group_name = data.group_name
             _self.contact.name = data.name

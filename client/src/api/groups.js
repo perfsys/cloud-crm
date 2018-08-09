@@ -12,6 +12,15 @@ export default {
       HTTP.get('/groups')
         .then(response => resolve(response.data), reject)
     })
+  },
+
+  labelAddOne (item, groupId) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(`/groups/${groupId}/labels`, {
+        name: item
+      })
+        .then(response => resolve(response.data), reject)
+    })
   }
 
 }
