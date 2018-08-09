@@ -45,7 +45,13 @@
       </div>
     </div>
 
+    <div class="md-layout md-gutter">
+      <div class="md-layout-item md-small-size-100">
+        <labels_el v-model="labels"/>
+      </div>
     </div>
+
+  </div>
 </template>
 
 <script>
@@ -53,6 +59,7 @@ import group_el from '@/components/contact-elements/group.vue'
 import source_el from '@/components/contact-elements/source.vue'
 import status_el from '@/components/contact-elements/status.vue'
 import type_el from '@/components/contact-elements/type.vue'
+import labels_el from '@/components/contact-elements/labels.vue'
 
 export default {
   name: 'form-general',
@@ -70,7 +77,8 @@ export default {
       company_name: null,
       position: null,
       type_id: null,
-      status_id: 'NEW'
+      status_id: 'NEW',
+      labels: null
     }
   },
 
@@ -78,7 +86,8 @@ export default {
     'group_el': group_el,
     'source_el': source_el,
     'status_el': status_el,
-    'type_el': type_el
+    'type_el': type_el,
+    'labels_el': labels_el
   },
 
   created () {
@@ -105,6 +114,9 @@ export default {
     },
     status_id () {
       this.sendBack()
+    },
+    labels () {
+      this.sendBack()
     }
   },
   methods: {
@@ -116,7 +128,8 @@ export default {
         company_name: this.company_name,
         position: this.position,
         type_id: this.type_id,
-        status_id: this.status_id
+        status_id: this.status_id,
+        labels: this.labels
       })
     }
 

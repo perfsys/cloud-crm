@@ -308,6 +308,7 @@ router.post('', function (req, res) {
   constructContactItem(req)
     .then(checkItemNotExist)
     .then(populateContactItem)
+    .then(labelHelper.populateContactItemByLabels)
     .then(preCreate)
     .then(saveContact)
     .then(getOne)

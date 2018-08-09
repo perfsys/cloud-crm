@@ -26,6 +26,12 @@ const getters = {
 
   labelsByGroupId (state, getters) {
     return getters.groupById(getters.routeGroupId) ? getters.groupById(getters.routeGroupId).labels : []
+  },
+
+  labelsNamesByIds (state, getters) {
+    return ids => {
+      return ids ? getters.labelsByGroupId.filter(item => ids.includes(item.name_normalized)).map(item => item.name) : []
+    }
   }
 
 }
