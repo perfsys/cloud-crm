@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <div class="md-layout md-gutter">
+    <div class="md-layout md-gutter" v-if="showLabels">>
       <div class="md-layout-item md-small-size-100">
         <labels_el v-model="labels"/>
       </div>
@@ -78,7 +78,9 @@ export default {
       position: null,
       type_id: null,
       status_id: 'NEW',
-      labels: null
+      labels: null,
+
+      showLabels: true
     }
   },
 
@@ -92,6 +94,10 @@ export default {
 
   created () {
     this.group_id = this.value.group_id
+     if(!this.$route.params.group){
+       this.showLabels = false
+     }
+
   },
   watch: {
     group_id () {
