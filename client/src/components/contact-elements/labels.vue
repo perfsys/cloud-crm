@@ -1,14 +1,27 @@
 <template>
 <div>
 
-  <md-field>
-    <label for="label">Labels</label>
-    <md-select v-model="labels" name="labels" id="labels" multiple >
-      <md-option v-for="item in allInGroup"  :key="item.name_normalized" :value="item.name_normalized">{{item.name}}</md-option>
+  <div class="md-layout">
+    <div class="md-layout-item md-small-size-110">
+      <md-field>
+        <label for="label">Labels</label>
+        <md-select v-model="labels" name="labels" id="labels" multiple >
+          <md-option v-for="item in allInGroup"  :key="item.name_normalized" :value="item.name_normalized">{{item.name}}</md-option>
 
-    </md-select>
-  </md-field>
-  <labels-all v-model="addedLabel" ></labels-all>
+        </md-select>
+      </md-field>
+    </div>
+
+    <div class="md-layout-item md-small-size-110">
+     <md-button class="md-primary md-icon-button " @click="showAddLabel = !showAddLabel">
+      <md-icon>add</md-icon>
+    </md-button>
+    </div>
+  </div>
+
+  <div v-if="showAddLabel">
+    <labels-all v-model="addedLabel" ></labels-all>
+  </div>
 </div>
 </template>
 
@@ -24,7 +37,9 @@ export default {
   data () {
     return {
       labels: (this.value) ? this.value : [],
-      addedLabel: null
+      addedLabel: null,
+
+      showAddLabel: false
     }
   },
 
@@ -71,7 +86,7 @@ export default {
     },
 
     addAddedLabelToLabels: function () {
-      if(this.addedLabel && this.labelByName(this.addedLabel)) {
+      if (this.addedLabel && this.labelByName(this.addedLabel)) {
         const addedLabelNnameNormalized = this.labelByName(this.addedLabel).name_normalized
         this.labels.push(addedLabelNnameNormalized)
         this.resetAddedLabel()

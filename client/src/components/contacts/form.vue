@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!--<md-button class="md-fab md-primary md-fab-top-right" @click="showDialog = true">-->
     <md-button class="md-primary md-icon-button md-raised" @click="showDialog = true">
       <md-icon>add</md-icon>
     </md-button>

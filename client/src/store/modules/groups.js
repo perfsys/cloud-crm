@@ -52,7 +52,7 @@ const actions = {
 
   labelAddOne ({getters, dispatch}, label) {
     return new Promise((resolve, reject) => {
-      if(!getters.labelsByGroupId.map(item => item.name).includes(label)) {
+      if (!getters.labelsByGroupId.map(item => item.name).includes(label)) {
         api.labelAddOne(label, getters.routeGroupId)
           .then(() => {
             dispatch('groupsGetAll')
