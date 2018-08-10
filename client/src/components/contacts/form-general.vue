@@ -94,11 +94,11 @@ export default {
 
   created () {
     this.group_id = this.value.group_id
-     if(!this.$route.params.group){
-       this.showLabels = false
-     }
-
+    if (!this.$route.params.group) {
+      this.showLabels = false
+    }
   },
+
   watch: {
     group_id () {
       this.sendBack()
