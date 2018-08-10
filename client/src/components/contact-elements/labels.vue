@@ -8,7 +8,7 @@
 
     </md-select>
   </md-field>
-  <labels-all></labels-all>
+  <labels-all v-model="addedLabel" ></labels-all>
 </div>
 </template>
 
@@ -23,7 +23,8 @@ export default {
 
   data () {
     return {
-      labels: (this.value) ? this.value : []
+      labels: (this.value) ? this.value : [],
+      addedLabel: null
     }
   },
 
@@ -37,7 +38,8 @@ export default {
 
   computed:
     mapGetters({
-      allInGroup: 'labelsByGroupId'
+      allInGroup: 'labelsByGroupId',
+      labelByName: 'labelByName'
     }),
 
   watch: {
@@ -47,14 +49,33 @@ export default {
 
     value () {
       this.labels = (this.value) ? this.value : []
-    }
+    },
 
+    addedLabel () {
+      this.addAddedLabelToLabels()
+    },
+
+    allInGroup () {
+      this.addAddedLabelToLabels()
+    }
   },
 
   methods: {
 
     sendBack: function () {
       this.$emit('input', this.labels)
+    },
+
+    resetAddedLabel: function () {
+      this.addedLabel = null
+    },
+
+    addAddedLabelToLabels: function () {
+      if(this.addedLabel && this.labelByName(this.addedLabel)) {
+        const addedLabelNnameNormalized = this.labelByName(this.addedLabel).name_normalized
+        this.labels.push(addedLabelNnameNormalized)
+        this.resetAddedLabel()
+      }
     }
   }
 }

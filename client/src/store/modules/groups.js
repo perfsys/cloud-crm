@@ -32,6 +32,12 @@ const getters = {
     return ids => {
       return ids ? getters.labelsByGroupId.filter(item => ids.includes(item.name_normalized)).map(item => item.name) : []
     }
+  },
+
+  labelByName (state, getters) {
+    return name => {
+      return name ? getters.labelsByGroupId.find(i => i.name === name) : {}
+    }
   }
 
 }
@@ -44,13 +50,17 @@ const actions = {
       .then(groups => commit('setGroups', groups))
   },
 
-  labelAddOne ({getters, dispatch}, item) {
+  labelAddOne ({getters, dispatch}, label) {
     return new Promise((resolve, reject) => {
-      api.labelAddOne(item, getters.routeGroupId)
-        .then(() => {
-          dispatch('groupsGetAll')
-          resolve()
-        }, reject)
+      if(!getters.labelsByGroupId.map(item => item.name).includes(label)) {
+        api.labelAddOne(label, getters.routeGroupId)
+          .then(() => {
+            dispatch('groupsGetAll')
+            resolve()
+          }, reject)
+      } else {
+        resolve()
+      }
     })
   }
 }

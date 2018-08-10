@@ -18,11 +18,6 @@
     </div>
 
     <md-dialog-alert
-      :md-active.sync="successSnackbar"
-      md-content="Label was added"
-      md-confirm-text="Close"/>
-
-    <md-dialog-alert
       :md-active.sync="failedSnackbar"
       :md-content="failedSnackbarReason"
       md-confirm-text="Close"/>
@@ -33,39 +28,47 @@
 <script>
 
 export default {
-  name: 'labels-element',
+  name: 'labels-all-element',
+
+  props:
+    ['value'],
 
   data () {
     return {
       label: null,
 
       showAddLabel: false,
-      successSnackbar: false,
       failedSnackbar: false,
       failedSnackbarReason: 'Failed to add a label'
 
     }
   },
 
+  watch: {
+    value () {
+      this.label = this.value
+    },
+  },
+
   methods: {
+    sendBack: function () {
+      this.$emit('input', this.label)
+    },
 
     saveLabel () {
-      const _self = this
-
-      this.$store.dispatch('labelAddOne', this.label)
-        .then(() => {
-          // _self.reset()
-          _self.showDialog = true
-          _self.successSnackbar = true
-          _self.refresh()
-        })
-        .catch((err) => {
-          if (err.response && err.response.data) {
-            this.failedSnackbarReason = err.response.data.error
-          }
-          _self.showDialog = true
-          _self.failedSnackbar = true
-        })
+    const _self = this
+    this.$store.dispatch('labelAddOne', this.label)
+      .then(() => {
+        _self.sendBack()
+        _self.refresh()
+      })
+      .catch((err) => {
+        if (err.response && err.response.data) {
+          this.failedSnackbarReason = err.response.data.error
+        }
+        _self.showDialog = true
+        _self.failedSnackbar = true
+      })
     },
 
     refresh () {
