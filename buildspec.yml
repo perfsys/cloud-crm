@@ -24,10 +24,10 @@ phases:
   build:
     commands:
       - cd ./client
-      - sls remove -v --force
+      - sls remove -v
       - cd ..
       - cd ./server
-      - sls remove -v --force
+      - sls remove -v
       - sls deploy -v
       - cd ..
       - cd ./client

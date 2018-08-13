@@ -220,8 +220,6 @@ resources:
   Resources:
     ContactsDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
-#      TODO will have to change that to Delete when we do export to S3
-      DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
           -
