@@ -1,14 +1,35 @@
 version: 0.2
 
 phases:
-  post_build:
+  install:
     commands:
       - cd ./server
       - npm i
-      - npm run lint
       - cd ..
       - cd ./client
       - npm i
+    finally:
+      - cd ..
+  pre_build:
+    commands:
+      - cd ./client
       - npm run lint
       - npm run test
+      - cd ..
+      - cd ./server
+      - npm run lint
+    finally:
+      - cd ..
+  build:
+    commands:
+      - cd ./client
+      - sls remove -v
+      - cd ..
+      - cd ./server
+      - sls remove -v
+      - sls deploy -v
+      - cd ..
+      - cd ./client
+      - sls deploy -v
+
 
