@@ -263,6 +263,7 @@ const constructContactItem = function (req) {
   })
 }
 
+// TODO use /libs
 const saveContact = function (req) {
   return new Promise(function (resolve, reject) {
     let {item} = req
@@ -288,6 +289,7 @@ const saveContact = function (req) {
 router.post('', function (req, res) {
   console.log('contacts-create - starting')
 
+  // TODO use /libs
   const preCreate = function (req) {
     console.log(req)
     return new Promise(function (resolve, reject) {

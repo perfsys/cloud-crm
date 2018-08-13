@@ -24,6 +24,16 @@ provider:
   runtime: nodejs6.10
   stage: ${opt:stage, 'dev'}
   region: eu-west-1
+  apiKeys:
+    - ${opt:stage, 'dev'}-cloudCrmApiKey
+  usagePlan:
+    quota:
+      limit: 5000
+      offset: 2
+      period: MONTH
+    throttle:
+      burstLimit: 200
+      rateLimit: 100
 
 # you can overwrite defaults here
 #  stage: dev
@@ -106,6 +116,15 @@ functions:
 #    Define function environment variables here
 #    environment:
 #      variable2: value2
+  external-contacts-create:
+    handler: index.handler
+    events:
+      - http:
+          path: '/external/contacts'
+          method: post
+          private: true
+#          https://serverless.com/framework/docs/providers/aws/events/apigateway/#http-endpoint-with-extended-options
+
 
   sources-list:
     handler: index.handler
