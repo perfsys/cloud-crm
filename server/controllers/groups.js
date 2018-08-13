@@ -111,7 +111,7 @@ router.get('', function (req, res) {
     return new Promise(function (resolve, reject) {
       console.log('ifGroupsExist - starting')
       if (data.Items && data.Count > 0) {
-        res.json(data.Items)
+        res.json(data.Items.sort((a,b)=> a.name.localeCompare(b.name)))
       } else {
         resolve()
       }

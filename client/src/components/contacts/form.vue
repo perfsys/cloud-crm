@@ -20,22 +20,25 @@
             </md-tab>
           </md-tabs>
 
-        </md-dialog-content>
 
         <md-dialog-actions>
           <md-button class="md-primary" @click="showDialog = false">Close</md-button>
           <md-button class="md-primary" type="submit">Save</md-button>
         </md-dialog-actions>
 
-        <md-dialog-alert
-          :md-active.sync="successSnackbar"
-          md-content="Contact was created"
-          md-confirm-text="Close"/>
+          <md-dialog-alert
+            :md-active.sync="successSnackbar"
+            md-content="Contact was created"
+            md-confirm-text="Close"/>
 
-        <md-dialog-alert
-          :md-active.sync="failedSnackbar"
-          :md-content="failedSnackbarReason"
-          md-confirm-text="Close"/>
+          <md-dialog-alert
+            :md-active.sync="failedSnackbar"
+            :md-content="failedSnackbarReason"
+            md-confirm-text="Close"/>
+
+          </md-dialog-content>
+
+
 
       </form>
     </md-dialog>
