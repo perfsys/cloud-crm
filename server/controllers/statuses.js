@@ -1,15 +1,14 @@
 const
-    express = require('express'),
-    router = express.Router();
+  express = require('express')
+
+const router = express.Router()
 
 const data = require('../data/statuses.json')
 
-
 router.get('', function (req, res) {
-    console.log('statuses-list - starting')
+  console.log('statuses-list - starting')
 
-    res.json(data)
+  res.json(data)
 })
 
-
-module.exports = router;
+module.exports = router

@@ -5,7 +5,7 @@ phases:
     commands:
       - cd ./server
       - npm i
-      -
+      - npm run lint
       - cd ..
       - cd ./client
       - npm i

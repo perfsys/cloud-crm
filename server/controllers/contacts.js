@@ -14,62 +14,65 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient()
 const CONTACTS_TABLE = process.env.CONTACTS_TABLE
 
 const getOne = function (req) {
-    console.log(req);
-    return new Promise(function (resolve, reject) {
-        console.log('getOne - starting');
-        findOne(req)
-            .then(result => {
-                if (result && result.Item) {
-                    console.log(result.Item);
-                    req.item = result.Item
-                    resolve(req)
-                }
-                else {
-                    reject({error: "Contact not found"})
-                }
-            },
-                error =>{
-                    reject(error)
-            })
-    })
+  console.log(req)
+  return new Promise(function (resolve, reject) {
+    console.log('getOne - starting')
+    findOne(req)
+      .then(result => {
+        if (result && result.Item) {
+          console.log(result.Item)
+          req.item = result.Item
+          resolve(req)
+        } else {
+          reject({error: 'Contact not found'})
+        }
+      },
+      error => {
+        reject(error)
+      })
+  })
 }
 
 const findOne = function (req) {
-    return new Promise(function (resolve, reject) {
-        console.log('findOne - starting');
-        const {item} = req,
-            {group_id, name} = item
+  return new Promise(function (resolve, reject) {
+    console.log('findOne - starting')
+    const {item} = req
 
-        const params = {
-            TableName: CONTACTS_TABLE,
-            Key: {
-                group_id: group_id,
-                name: name
-            },
-        };
+    const {group_id, name} = item
 
-        dynamoDb.get(params, (error, result) => {
-            console.log(result);
+    const params = {
+      TableName: CONTACTS_TABLE,
+      Key: {
+        group_id: group_id,
+        name: name
+      }
+    }
 
-            if (error) {
-                console.log('findOne - error');
-                reject(error)
-            }
-            if (result) {
-                resolve(result)
-            }
-        });
+    dynamoDb.get(params, (error, result) => {
+      console.log(result)
+
+      if (error) {
+        console.log('findOne - error')
+        reject(error)
+      }
+      if (result) {
+        resolve(result)
+      }
     })
+  })
 }
 
 const populateContactItem = function (req) {
   const {item} = req
 
-    const
-        types = require('../data/types.json'),
-        sources = require('../data/sources.json'),
-        statuses = require('../data/statuses.json'),
-        countries = require('../data/country-by-abbreviation.json')
+  const
+    types = require('../data/types.json')
+
+  const sources = require('../data/sources.json')
+
+  const statuses = require('../data/statuses.json')
+
+  const countries = require('../data/country-by-abbreviation.json')
 
   return new Promise(function (resolve, reject) {
     console.log('populateContactItem - starting')
@@ -144,20 +147,19 @@ const populateContactItem = function (req) {
     }
 
     if (status_id) {
-        let status_name = R.pipe(
-            // find
-            R.find(R.propEq('id', status_id)),
+      let status_name = R.pipe(
+        // find
+        R.find(R.propEq('id', status_id)),
 
-            // get name
-            R.prop('name')
-        )(statuses)
+        // get name
+        R.prop('name')
+      )(statuses)
 
-        if (status_name) {
-            item.status_id = status_id
-            item.status_name = status_name
-        }
+      if (status_name) {
+        item.status_id = status_id
+        item.status_name = status_name
+      }
     }
-
 
     if (company_name) {
       item.company_name = company_name
@@ -218,7 +220,7 @@ const constructContactItem = function (req) {
       last_name,
       source_id,
       status_id
-    } = req.body;
+    } = req.body
 
     const item = {}
 
@@ -252,8 +254,8 @@ const constructContactItem = function (req) {
       reject({error: '"source_id" must be a string'})
     }
 
-    if (typeof status_id!=='string'){
-        reject({error: '"status_id" must be a string'})
+    if (typeof status_id !== 'string') {
+      reject({error: '"status_id" must be a string'})
     }
 
     req.item = item
@@ -287,27 +289,26 @@ router.post('', function (req, res) {
   console.log('contacts-create - starting')
 
   const preCreate = function (req) {
-    console.log(req);
+    console.log(req)
     return new Promise(function (resolve, reject) {
-        req.item.create_dt = new Date().toISOString();
-        resolve(req)
+      req.item.create_dt = new Date().toISOString()
+      resolve(req)
     })
   }
 
   const checkItemNotExist = function (req) {
-    console.log(req);
+    console.log(req)
     return new Promise(function (resolve, reject) {
       findOne(req)
         .then(result => {
           if (result && !result.Item) {
-              resolve(req)
+            resolve(req)
+          } else {
+            reject({error: 'Contact already exists'})
           }
-          else {
-            reject({error: "Contact already exists"})
-          }
-          },err =>{
-            reject(err)
-          })
+        }, err => {
+          reject(err)
+        })
     })
   }
 
@@ -318,27 +319,27 @@ router.post('', function (req, res) {
     .then(saveContact)
     .then(getOne)
     .then(req => {
-        res.json(req.item)
+      res.json(req.item)
     })
     .catch(error => {
-        console.log(error);
-        res.status(400).json(error);
+      console.log(error)
+      res.status(400).json(error)
     })
-});
+})
 
 router.put('/:group_id/:name', function (req, res) {
-    console.log('contacts-update - starting');
+  console.log('contacts-update - starting')
 
   const preUpdate = function (req) {
     return new Promise(function (resolve, reject) {
-      req.item.update_dt = new Date().toISOString();
+      req.item.update_dt = new Date().toISOString()
       resolve(req)
     })
   }
   const {
     group_id, // partition key
-    name, // sort key
-  } = req.params;
+    name // sort key
+  } = req.params
 
   req.item = {}
   req.item.group_id = group_id
@@ -421,7 +422,6 @@ router.get('/:group_id/:name', function (req, res) {
       res.status(400).json({error: 'Could not get a contact'})
     })
 })
-
 
 router.delete('/:group_id/:name', function (req, res) {
   console.log('contact-delete - starting')
