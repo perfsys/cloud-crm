@@ -25,7 +25,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: eu-west-1
   apiKeys:
-    - ${opt:stage}-cloudCrmApiKey
+    - ${opt:stage, 'dev'}-cloudCrmApiKey
 
 # you can overwrite defaults here
 #  stage: dev
