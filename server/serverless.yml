@@ -26,6 +26,14 @@ provider:
   region: eu-west-1
   apiKeys:
     - ${opt:stage, 'dev'}-cloudCrmApiKey
+  usagePlan:
+    quota:
+      limit: 5000
+      offset: 2
+      period: MONTH
+    throttle:
+      burstLimit: 200
+      rateLimit: 100
 
 # you can overwrite defaults here
 #  stage: dev
