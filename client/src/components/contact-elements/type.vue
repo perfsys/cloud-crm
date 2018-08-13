@@ -24,7 +24,6 @@ export default {
     },
 
     value () {
-      console.log('type_id = ' + this.value)
       this.type_id = this.value
     }
   },

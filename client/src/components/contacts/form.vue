@@ -79,7 +79,6 @@ export default {
   watch: {
 
     gr_id () {
-      console.log('group_id = ' + this.gr_id)
       this.form_general.group_id = this.gr_id
     }
   },
