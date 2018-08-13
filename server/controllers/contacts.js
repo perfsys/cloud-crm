@@ -38,13 +38,13 @@ const findOne = function (req) {
     const {item} = req
     const {group_id, name} = item
 
-        const params = {
-            TableName: CONTACTS_TABLE,
-            Key: {
-                group_id: group_id,
-                name: name
-            },
-        };
+    const params = {
+      TableName: CONTACTS_TABLE,
+      Key: {
+        group_id: group_id,
+        name: name
+      }
+    }
 
     dynamoDb.get(params, (error, result) => {
       console.log(result)
