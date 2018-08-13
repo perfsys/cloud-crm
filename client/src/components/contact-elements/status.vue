@@ -40,7 +40,6 @@ export default {
     },
 
     value () {
-      console.log('status_id = ' + this.value)
       this.status_id = this.value
     }
   },

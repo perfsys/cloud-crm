@@ -39,7 +39,6 @@ export default {
       this.sendBack()
     },
     value () {
-      console.log('country_code = ' + this.value)
       this.country_code = this.value
     }
   },

@@ -38,13 +38,13 @@ const findOne = function (req) {
     const {item} = req
     const {group_id, name} = item
 
-    const params = {
-      TableName: CONTACTS_TABLE,
-      Key: {
-        group_id: group_id,
-        name: name
-      }
-    }
+        const params = {
+            TableName: CONTACTS_TABLE,
+            Key: {
+                group_id: group_id,
+                name: name
+            },
+        };
 
     dynamoDb.get(params, (error, result) => {
       console.log(result)
@@ -62,9 +62,14 @@ const findOne = function (req) {
 
 const populateContactItem = function (req) {
   const {item} = req
-  const types = require('../data/types.json')
+
+  const
+    types = require('../data/types.json')
+
   const sources = require('../data/sources.json')
+
   const statuses = require('../data/statuses.json')
+
   const countries = require('../data/country-by-abbreviation.json')
 
   return new Promise(function (resolve, reject) {
@@ -256,6 +261,7 @@ const constructContactItem = function (req) {
   })
 }
 
+// TODO use /libs
 const saveContact = function (req) {
   return new Promise(function (resolve, reject) {
     let {item} = req
@@ -281,6 +287,7 @@ const saveContact = function (req) {
 router.post('', function (req, res) {
   console.log('contacts-create - starting')
 
+  // TODO use /libs
   const preCreate = function (req) {
     console.log(req)
     return new Promise(function (resolve, reject) {
