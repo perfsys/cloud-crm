@@ -97,7 +97,6 @@ router.post('/contacts', function (req, res) {
       console.log(error)
       res.status(400).json(error)
     })
-
 })
 
 module.exports = router

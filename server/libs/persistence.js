@@ -2,6 +2,9 @@
 
 const CONTACTS_TABLE = process.env.CONTACTS_TABLE
 
+const
+  AWS = require('aws-sdk')
+
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
 
 exports.preCreate = (req) => {

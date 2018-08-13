@@ -115,6 +115,8 @@ functions:
           path: '/external/contacts'
           method: post
           private: true
+#          https://serverless.com/framework/docs/providers/aws/events/apigateway/#http-endpoint-with-extended-options
+
 
   sources-list:
     handler: index.handler
