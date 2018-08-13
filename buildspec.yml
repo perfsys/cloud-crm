@@ -3,6 +3,7 @@ version: 0.2
 phases:
   install:
     commands:
+      - npm i -g serverless
       - cd ./server
       - npm i
       - cd ..
