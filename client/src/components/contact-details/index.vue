@@ -61,9 +61,13 @@
             </md-list-item>
 
             <md-list-item>
-              <div class="md-list-item-text">
-                <span>{{labels_names}}</span>
-                <span>Labels</span>
+
+              <div>
+                <md-chips v-model="labels_names" md-static></md-chips>
+                <div class="md-list-item-text">
+                  <span></span>
+                  <span>Labels</span>
+                </div>
               </div>
 
             </md-list-item>
@@ -212,7 +216,7 @@ export default {
 
   computed: {
     labels_names () {
-      return this.$store.getters.labelsNamesByIds(this.contact.labels).toString()
+      return this.$store.getters.labelsNamesByIds(this.contact.labels)
     }
   },
 

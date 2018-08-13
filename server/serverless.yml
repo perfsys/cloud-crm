@@ -53,9 +53,23 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
+        - dynamodb:BatchWriteItem
       Resource:
         - { "Fn::GetAtt": ["ContactsDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["GroupsDynamoDBTable", "Arn" ] }
+
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource:
+        - 'Fn::Join':
+          - ':'
+          -
+            - 'arn:aws:lambda'
+            - Ref: 'AWS::Region'
+            - Ref: 'AWS::AccountId'
+            - 'function'
+            - perfsys-cloud-crm-api-${self:provider.stage}-init-groups
 
 # you can define service wide environment variables here
 #  environment:
@@ -63,6 +77,7 @@ provider:
   environment:
     CONTACTS_TABLE: ${self:provider.stage}-cloud-crm-contacts
     GROUPS_TABLE: ${self:provider.stage}-cloud-crm-groups
+    INIT_GROUPS_FUNCTION_NAME: perfsys-cloud-crm-api-${self:provider.stage}-init-groups
 
 # you can add packaging information here
 #package:
@@ -222,6 +237,9 @@ functions:
           method: get
           cors: true
 
+  init-groups:
+    handler: functions/init-groups.handler
+
 # you can add CloudFormation resource templates here
 #resources:
 #  Resources:
@@ -270,6 +288,7 @@ resources:
             ReadCapacityUnits: 1
             WriteCapacityUnits: 1
           TableName: ${self:provider.environment.GROUPS_TABLE}
+
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
