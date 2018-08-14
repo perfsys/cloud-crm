@@ -1,26 +1,29 @@
 <template>
 <div>
 
-  <div class="md-layout">
-    <div class="md-layout-item md-small-size-110">
+  <div class="md-layout md-gutter">
+    <div class="md-layout-item md-small-size-85 md-medium-size-65">
       <md-field>
         <label for="label">Labels</label>
         <md-select v-model="labels" name="labels" id="labels" multiple >
           <md-option v-for="item in allInGroup"  :key="item.name_normalized" :value="item.name_normalized">{{item.name}}</md-option>
 
         </md-select>
+        <md-tooltip md-direction="bottom" v-if="tooltipNoLabel11">No Labels yet</md-tooltip>
       </md-field>
     </div>
 
-    <div class="md-layout-item md-small-size-110">
+    <div class="md-layout-item md-small-size-15">
      <md-button class="md-primary md-icon-button " @click="showAddLabel = !showAddLabel">
       <md-icon>add</md-icon>
     </md-button>
     </div>
   </div>
 
-  <div v-if="showAddLabel">
-    <labels-all v-model="addedLabel" ></labels-all>
+  <div class="md-layout md-gutter md-alignment-center-space-between">
+    <div class="md-layout-item md-size-100" v-if="showAddLabel">
+     <labels-all v-model="addedLabel"></labels-all>
+    </div>
   </div>
 </div>
 </template>
@@ -39,7 +42,8 @@ export default {
       labels: (this.value) ? this.value : [],
       addedLabel: null,
 
-      showAddLabel: false
+      showAddLabel: false,
+      tooltipNoLabel11: false
     }
   },
 
@@ -51,11 +55,12 @@ export default {
     this.$store.dispatch('groupsGetAll')
   },
 
-  computed:
-    mapGetters({
+  computed: {
+    ...mapGetters({
       allInGroup: 'labelsByGroupId',
       labelByName: 'labelByName'
-    }),
+    })
+  },
 
   watch: {
     labels () {
@@ -71,6 +76,7 @@ export default {
     },
 
     allInGroup () {
+      this.tooltipNoLabel11 = !this.allInGroup || this.allInGroup.length === 0
       this.addAddedLabelToLabels()
     }
   },

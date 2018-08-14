@@ -1,19 +1,17 @@
 <template>
-<div>
-  <div class="md-layout">
-    <div class="md-layout-item md-small-size-100">
+  <div class="md-layout md-gutter md-alignment-center-right">
+    <div class="md-layout-item md-small-size-85 md-medium-size-65">
       <md-field>
         <label for="label">Add Label</label>
         <md-input name="label" id="label" autocomplete="label" v-model="label"/>
       </md-field>
     </div>
 
-      <div class="md-layout-item md-small-size-110">
+    <div class="md-layout-item md-small-size-15">
 
-      <md-button  class="md-primary md-icon-button" @click="saveLabel()">
-          <md-icon>save</md-icon>
-        </md-button>
-      </div>
+    <md-button  class="md-primary md-icon-button" @click="saveLabel()">
+        <md-icon>save</md-icon>
+      </md-button>
     </div>
 
     <md-dialog-alert
@@ -21,7 +19,7 @@
       :md-content="failedSnackbarReason"
       md-confirm-text="Close"/>
 
-</div>
+  </div>
 </template>
 
 <script>

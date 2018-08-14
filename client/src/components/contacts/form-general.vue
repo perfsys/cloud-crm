@@ -40,14 +40,12 @@
     </div>
 
     <div class="md-layout md-gutter">
-      <div class="md-layout-item md-small-size-100">
-       <type_el v-model="type_id"/>
-      </div>
-    </div>
-
-    <div class="md-layout md-gutter" v-if="showLabels">>
-      <div class="md-layout-item md-small-size-100">
+      <div class="md-layout-item md-small-size-100" v-if="showLabels">
         <labels_el v-model="labels"/>
+      </div>
+
+      <div class="md-layout-item md-small-size-100">
+        <type_el v-model="type_id"/>
       </div>
     </div>
 
