@@ -72,7 +72,6 @@
 
             </md-list-item>
 
-            <md-divider></md-divider>
             <md-subheader>Links</md-subheader>
 
             <md-list-item>
