@@ -63,7 +63,7 @@
             <md-list-item>
 
               <div>
-                <md-chips v-model="labels_names" md-static></md-chips>
+                <md-chip v-for="item in labels_names"  :key="item" :value="item">{{item}}</md-chip>
                 <div class="md-list-item-text">
                   <span></span>
                   <span>Labels</span>

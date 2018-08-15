@@ -1,15 +1,19 @@
 <template>
 <div>
 
-  <div class="md-layout md-gutter">
+  <div class="md-layout md-gutter md-alignment-center-space-between">
     <div class="md-layout-item md-small-size-85 md-medium-size-65">
-      <md-field>
+
+      <md-field  v-if="!showLabelsDropDown">
+        <label for="label">No Labels Yet</label>
+      </md-field>
+
+      <md-field  v-if="showLabelsDropDown">
         <label for="label">Labels</label>
         <md-select v-model="labels" name="labels" id="labels" multiple >
-          <md-option v-for="item in allInGroup"  :key="item.name_normalized" :value="item.name_normalized">{{item.name}}</md-option>
+          <md-option   v-for="item in allInGroup"  :key="item.name_normalized" :value="item.name_normalized">{{item.name}}</md-option>
 
         </md-select>
-        <md-tooltip md-direction="bottom" v-if="tooltipNoLabel11">No Labels yet</md-tooltip>
       </md-field>
     </div>
 
@@ -42,8 +46,7 @@ export default {
       labels: (this.value) ? this.value : [],
       addedLabel: null,
 
-      showAddLabel: false,
-      tooltipNoLabel11: false
+      showAddLabel: false
     }
   },
 
@@ -59,7 +62,11 @@ export default {
     ...mapGetters({
       allInGroup: 'labelsByGroupId',
       labelByName: 'labelByName'
-    })
+    }),
+
+    showLabelsDropDown: function () {
+      return this.allInGroup && this.allInGroup.length > 0
+    }
   },
 
   watch: {
@@ -76,7 +83,6 @@ export default {
     },
 
     allInGroup () {
-      this.tooltipNoLabel11 = !this.allInGroup || this.allInGroup.length === 0
       this.addAddedLabelToLabels()
     }
   },
