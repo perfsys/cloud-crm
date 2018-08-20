@@ -1,13 +1,15 @@
 const AWS = require('aws-sdk')
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
-
-const GROUPS_TABLE = process.env.GROUPS_TABLE
+const response = require('cfn-response')
 
 const groups = require('../data/groupsItems.json')
 
-module.exports.handler = (event, context, callback) => {
+exports.handler = function (event, context) {
+  console.log('init groups - starting')
+
+  const GROUPS_TABLE = event.ResourceProperties.Table
+
   const str = `{"RequestItems": { "${GROUPS_TABLE}":`
-  // const str = `{"RequestItems": { \"${GROUPS_TABLE}\":`
   const str1 = JSON.stringify(groups)
   const str2 = str + str1 + '}}'
   console.log(str2)
@@ -20,7 +22,10 @@ module.exports.handler = (event, context, callback) => {
     } else {
       console.log('init groups - success')
       console.log(data)
-      callback(null, data)
+
+      response.send(event, context, response.SUCCESS, data)
     }
   })
+
+  return response.send(event, context, response.SUCCESS, { 'error': 'something wrong' })
 }

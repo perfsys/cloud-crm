@@ -68,26 +68,12 @@ provider:
         - { "Fn::GetAtt": ["ContactsDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["GroupsDynamoDBTable", "Arn" ] }
 
-    - Effect: Allow
-      Action:
-        - lambda:InvokeFunction
-      Resource:
-        - 'Fn::Join':
-          - ':'
-          -
-            - 'arn:aws:lambda'
-            - Ref: 'AWS::Region'
-            - Ref: 'AWS::AccountId'
-            - 'function'
-            - perfsys-cloud-crm-api-${self:provider.stage}-init-groups
-
 # you can define service wide environment variables here
 #  environment:
 #    variable1: value1
   environment:
     CONTACTS_TABLE: ${self:provider.stage}-cloud-crm-contacts
     GROUPS_TABLE: ${self:provider.stage}-cloud-crm-groups
-    INIT_GROUPS_FUNCTION_NAME: perfsys-cloud-crm-api-${self:provider.stage}-init-groups
 
 # you can add packaging information here
 #package:
@@ -256,7 +242,7 @@ functions:
           method: get
           cors: true
 
-  init-groups:
+  initGroups:
     handler: functions/init-groups.handler
 
 # you can add CloudFormation resource templates here
@@ -291,22 +277,31 @@ resources:
         TableName: ${self:provider.environment.CONTACTS_TABLE}
 
     GroupsDynamoDBTable:
-        Type: 'AWS::DynamoDB::Table'
-        Properties:
-          AttributeDefinitions:
-            -
-              AttributeName: id
-              AttributeType: S
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
 
-          KeySchema:
-            -
-              AttributeName: id
-              KeyType: HASH
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
 
-          ProvisionedThroughput:
-            ReadCapacityUnits: 1
-            WriteCapacityUnits: 1
-          TableName: ${self:provider.environment.GROUPS_TABLE}
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.GROUPS_TABLE}
+
+    InitGroupsCustomResource:
+      Type: Custom::InitGroupsCustomResource
+      DependsOn: GroupsDynamoDBTable
+      Properties:
+        ServiceToken:
+          Fn::GetAtt: [InitGroupsLambdaFunction, Arn]
+        Table: ${self:provider.environment.GROUPS_TABLE}
+        Version: 1
 
 #  Outputs:
 #     NewOutput:
