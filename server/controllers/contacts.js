@@ -2,6 +2,7 @@ const AWS = require('aws-sdk')
 
 const express = require('express')
 const labelHelper = require('../helpers/labelHelper')
+const groupsHelper = require('../helpers/groupsHelper')
 
 const router = express.Router()
 
@@ -207,7 +208,7 @@ const populateContactItem = function (req) {
 
 const constructContactItem = function (req) {
   const
-    groups = require('../data/groups.json')
+    groups = req.groups
 
   return new Promise(function (resolve, reject) {
     console.log('constructContactItem - starting')
@@ -223,14 +224,7 @@ const constructContactItem = function (req) {
     const item = {}
 
     if (group_id && typeof group_id === 'string') {
-      // TODO
-      let group_name = R.pipe(
-        // find
-        R.find(R.propEq('id', group_id)),
-
-        // get name
-        R.prop('name')
-      )(groups)
+      let group_name = groups.find(i => i.id === group_id) ? groups.find(i => i.id === group_id).name : null
 
       if (group_name && typeof group_name === 'string') {
         item.group_id = group_id // partition key
@@ -312,7 +306,24 @@ router.post('', function (req, res) {
     })
   }
 
-  constructContactItem(req)
+  const findGroups = function (req) {
+    return new Promise(function (resolve, reject) {
+      groupsHelper.getGroups()
+        .then(result => {
+          if (result && result.Items) {
+            req.groups = result.Items
+            resolve(req)
+          } else {
+            reject({error: 'Groups were not found'})
+          }
+        }, err => {
+          reject(err)
+        })
+    })
+  }
+
+  findGroups(req)
+    .then(constructContactItem)
     .then(checkItemNotExist)
     .then(populateContactItem)
     .then(labelHelper.populateContactItemByLabels)
