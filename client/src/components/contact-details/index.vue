@@ -60,7 +60,18 @@
 
             </md-list-item>
 
-            <md-divider></md-divider>
+            <md-list-item>
+
+              <div>
+                <md-chip v-for="item in labels_names"  :key="item" :value="item">{{item}}</md-chip>
+                <div class="md-list-item-text">
+                  <span></span>
+                  <span>Labels</span>
+                </div>
+              </div>
+
+            </md-list-item>
+
             <md-subheader>Links</md-subheader>
 
             <md-list-item>
@@ -163,6 +174,7 @@ export default {
         type_name: null,
         status_id: null,
         status_name: null,
+        labels: null,
 
         company_name: null,
         company_www: null,
@@ -193,12 +205,20 @@ export default {
         this.contact.company_www = data.company_www
         this.contact.position = data.position
         this.contact.status_name = data.status_name
+        this.contact.labels = data.labels
 
         this.contact.facebook_link = data.facebook_link
         this.contact.twitter_link = data.twitter_link
         this.contact.linkedin_link = data.linkedin_link
       })
   },
+
+  computed: {
+    labels_names () {
+      return this.$store.getters.labelsNamesByIds(this.contact.labels)
+    }
+  },
+
   methods: {
 
     ...mapActions([

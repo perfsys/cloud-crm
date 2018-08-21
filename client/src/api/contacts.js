@@ -72,7 +72,8 @@ export default {
       position: item.position,
       facebook_link: item.facebook_link,
       twitter_link: item.twitter_link,
-      linkedin_link: item.linkedin_link
+      linkedin_link: item.linkedin_link,
+      labels: item.labels
     }
     )
   },
@@ -96,7 +97,8 @@ export default {
       position: item.position,
       facebook_link: item.facebook_link,
       twitter_link: item.twitter_link,
-      linkedin_link: item.linkedin_link
+      linkedin_link: item.linkedin_link,
+      labels: item.labels
     }
     )
   }

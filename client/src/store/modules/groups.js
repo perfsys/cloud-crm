@@ -21,7 +21,23 @@ const getters = {
   },
 
   routeGroupName (state, getters, rootState) {
-    return getters.groupById(rootState.route.params.group).name
+    return getters.groupById(rootState.route.params.group) ? getters.groupById(rootState.route.params.group).name : []
+  },
+
+  labelsByGroupId (state, getters) {
+    return getters.groupById(getters.routeGroupId) ? getters.groupById(getters.routeGroupId).labels : []
+  },
+
+  labelsNamesByIds (state, getters) {
+    return ids => {
+      return ids ? getters.labelsByGroupId.filter(item => ids.includes(item.name_normalized)).map(item => item.name) : []
+    }
+  },
+
+  labelByName (state, getters) {
+    return name => {
+      return name ? getters.labelsByGroupId.find(i => i.name === name) : {}
+    }
   }
 
 }
@@ -32,8 +48,21 @@ const actions = {
   groupsGetAll ({commit}) {
     api.getAll()
       .then(groups => commit('setGroups', groups))
-  }
+  },
 
+  labelAddOne ({getters, dispatch}, label) {
+    return new Promise((resolve, reject) => {
+      if (!getters.labelsByGroupId.map(item => item.name).includes(label)) {
+        api.labelAddOne(label, getters.routeGroupId)
+          .then(() => {
+            dispatch('groupsGetAll')
+            resolve()
+          }, reject)
+      } else {
+        resolve()
+      }
+    })
+  }
 }
 
 // mutations

@@ -1,7 +1,7 @@
-const
-  AWS = require('aws-sdk')
+const AWS = require('aws-sdk')
 
 const express = require('express')
+const labelHelper = require('../helpers/labelHelper')
 
 const router = express.Router()
 
@@ -14,7 +14,6 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient()
 const CONTACTS_TABLE = process.env.CONTACTS_TABLE
 
 const getOne = function (req) {
-  console.log(req)
   return new Promise(function (resolve, reject) {
     console.log('getOne - starting')
     findOne(req)
@@ -37,7 +36,6 @@ const findOne = function (req) {
   return new Promise(function (resolve, reject) {
     console.log('findOne - starting')
     const {item} = req
-
     const {group_id, name} = item
 
     const params = {
@@ -317,6 +315,7 @@ router.post('', function (req, res) {
   constructContactItem(req)
     .then(checkItemNotExist)
     .then(populateContactItem)
+    .then(labelHelper.populateContactItemByLabels)
     .then(preCreate)
     .then(saveContact)
     .then(getOne)
@@ -350,6 +349,7 @@ router.put('/:group_id/:name', function (req, res) {
   getOne(req)
     .then(preUpdate)
     .then(populateContactItem)
+    .then(labelHelper.populateContactItemByLabels)
     .then(saveContact)
     .then(getOne)
     .then(req => {

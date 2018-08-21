@@ -1,7 +1,7 @@
 const
   express = require('express')
 const
-  persistence_lib = require('./lib/pesistence')
+  persistence_lib = require('../libs/persistence')
 
 const router = express.Router()
 

@@ -1,0 +1,42 @@
+ [
+      {
+        "PutRequest": {
+          "Item": {
+            "id": "GROUP_01",
+            "name": "Group 01",
+            "labels": []
+          }
+        }},
+      {
+        "PutRequest": {
+          "Item": {
+            "id": "GROUP_02",
+            "name": "Group 02",
+            "labels": []
+          }
+        }},
+      {
+        "PutRequest": {
+          "Item": {
+            "id": "GROUP_03",
+            "name": "Group 03",
+            "labels": []
+          }
+        }},
+      {
+        "PutRequest": {
+          "Item": {
+            "id": "GROUP_04",
+            "name": "Group 04",
+            "labels": []
+          }
+        }},
+      {
+        "PutRequest": {
+          "Item": {
+            "id": "GROUP_05",
+            "name": "Group 05",
+            "labels": []
+          }
+        }}
+      ]

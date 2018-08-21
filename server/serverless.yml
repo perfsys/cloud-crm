@@ -63,13 +63,17 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
+        - dynamodb:BatchWriteItem
       Resource:
         - { "Fn::GetAtt": ["ContactsDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["GroupsDynamoDBTable", "Arn" ] }
+
 # you can define service wide environment variables here
 #  environment:
 #    variable1: value1
   environment:
     CONTACTS_TABLE: ${self:provider.stage}-cloud-crm-contacts
+    GROUPS_TABLE: ${self:provider.stage}-cloud-crm-groups
 
 # you can add packaging information here
 #package:
@@ -142,6 +146,14 @@ functions:
           method: get
           cors: true
 
+  groups-create:
+    handler: index.handler
+    events:
+      - http:
+          path: '/groups'
+          method: post
+          cors: true
+
   types-list:
     handler: index.handler
     events:
@@ -174,7 +186,6 @@ functions:
           method: post
           cors: true
 
-
   contacts-list:
     handler: index.handler
     events:
@@ -190,7 +201,6 @@ functions:
           path: '/contacts/{group_id}'
           method: get
           cors: true
-
 
   contacts-get-one:
     handler: index.handler
@@ -216,6 +226,24 @@ functions:
           method: put
           cors: true
 
+  labels-group-create:
+    handler: index.handler
+    events:
+      - http:
+          path: '/groups/{group_id}/labels'
+          method: post
+          cors: true
+
+  labels-group-list:
+    handler: index.handler
+    events:
+      - http:
+          path: '/groups/{group_id}/labels'
+          method: get
+          cors: true
+
+  initGroups:
+    handler: functions/init-groups.handler
 
 # you can add CloudFormation resource templates here
 #resources:
@@ -247,6 +275,34 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.CONTACTS_TABLE}
+
+    GroupsDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.GROUPS_TABLE}
+
+    InitGroupsCustomResource:
+      Type: Custom::InitGroupsCustomResource
+      DependsOn: GroupsDynamoDBTable
+      Properties:
+        ServiceToken:
+          Fn::GetAtt: [InitGroupsLambdaFunction, Arn]
+        Table: ${self:provider.environment.GROUPS_TABLE}
+        Version: 1
+
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
