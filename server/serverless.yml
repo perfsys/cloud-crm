@@ -28,12 +28,11 @@ provider:
     - ${opt:stage, 'dev'}-cloudCrmApiKey
   usagePlan:
     quota:
-      limit: 5000
-      offset: 2
-      period: MONTH
+      limit: 10
+      period: DAY
     throttle:
-      burstLimit: 200
-      rateLimit: 100
+      burstLimit: 10
+      rateLimit: 1
 
 # you can overwrite defaults here
 #  stage: dev
