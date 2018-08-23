@@ -2,6 +2,7 @@ const
   express = require('express')
 const
   persistence_lib = require('../libs/persistence')
+const groupsHelper = require('../helpers/groupsHelper')
 
 const router = express.Router()
 
@@ -9,7 +10,7 @@ const R = require('ramda')
 
 const constructContactItem = function (req) {
   const
-    groups = require('../data/groups.json')
+    groups = req.groups
 
   return new Promise(function (resolve, reject) {
     console.log('constructContactItem - starting')
@@ -24,13 +25,7 @@ const constructContactItem = function (req) {
     const item = {}
 
     if (group_id && typeof group_id === 'string') {
-      let group_name = R.pipe(
-        // find
-        R.find(R.propEq('id', group_id)),
-
-        // get name
-        R.prop('name')
-      )(groups)
+      let group_name = groups.find(i => i.id === group_id) ? groups.find(i => i.id === group_id).name : null
 
       if (group_name && typeof group_name === 'string') {
         item.group_id = group_id // partition key
@@ -82,11 +77,29 @@ const constructContactItem = function (req) {
     resolve(req)
   })
 }
+
+const findGroups = function (req) {
+  return new Promise(function (resolve, reject) {
+    groupsHelper.getGroups()
+      .then(result => {
+        if (result && result.Items) {
+          req.groups = result.Items
+          resolve(req)
+        } else {
+          reject({error: 'Groups were not found'})
+        }
+      }, err => {
+        reject(err)
+      })
+  })
+}
+
 router.post('/contacts', function (req, res) {
   console.log('external-contacts - starting')
   console.log(req.body)
 
-  constructContactItem(req)
+  findGroups(req)
+    .then(constructContactItem)
     .then(persistence_lib.preCreate)
     .then(persistence_lib.saveContact)
     .then(req => {
