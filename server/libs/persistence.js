@@ -1,4 +1,4 @@
-'use strict'
+// 'use strict'
 
 const CONTACTS_TABLE = process.env.CONTACTS_TABLE
 
@@ -32,6 +32,37 @@ exports.saveContact = (req) => {
         console.log(data)
         // resolve(data) // TODO ?
         resolve(req)
+      }
+    })
+  })
+}
+
+exports.findContact = (req) => {
+  return new Promise(function (resolve, reject) {
+    console.log('findContact - starting')
+    const {item} = req
+    const {group_id, name} = item
+    console.log(group_id, name)
+
+    const params = {
+      TableName: CONTACTS_TABLE,
+      Key: {
+        group_id: group_id,
+        name: name
+      }
+    }
+
+    dynamoDb.get(params, (error, result) => {
+      console.log(result)
+
+      if (error) {
+        console.log('findContact - error')
+        reject(error)
+      }
+      if (result) {
+        console.log('findContact - success')
+
+        resolve(result)
       }
     })
   })

@@ -64,8 +64,10 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:BatchWriteItem
+        - dynamodb:BatchGetItem
       Resource:
         - { "Fn::GetAtt": ["ContactsDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["ContactUpdatesDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["GroupsDynamoDBTable", "Arn" ] }
 
 # you can define service wide environment variables here
@@ -74,6 +76,7 @@ provider:
   environment:
     CONTACTS_TABLE: ${self:provider.stage}-cloud-crm-contacts
     GROUPS_TABLE: ${self:provider.stage}-cloud-crm-groups
+    CONTACT_UPDATES_TABLE: ${self:provider.stage}-cloud-crm-contact-updates
 
 # you can add packaging information here
 #package:
@@ -245,6 +248,40 @@ functions:
   initGroups:
     handler: functions/init-groups.handler
 
+  updates-contact-list:
+    handler: index.handler
+    events:
+      - http:
+          path: '/contacts/group/{group_id}/name/{name}/updates'
+          method: get
+          cors: true
+
+  updates-contact-create:
+    handler: index.handler
+    events:
+      - http:
+          path: '/contacts/group/{group_id}/name/{name}/updates'
+#          path: '/updates'
+          method: post
+          cors: true
+
+  updates-contact-one:
+    handler: index.handler
+    events:
+      - http:
+          path: '/contacts/group/{group_id}/name/{name}/updates/{proxy+}'
+          method: get
+          cors: true
+
+  updates-contact-update:
+    handler: index.handler
+    events:
+      - http:
+          path: '/contacts/group/{group_id}/name/{name}/updates/{proxy+}'
+#          path: '/updates/{proxy+}'
+          method: put
+          cors: true
+
 # you can add CloudFormation resource templates here
 #resources:
 #  Resources:
@@ -275,6 +312,22 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.CONTACTS_TABLE}
+
+    ContactUpdatesDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.CONTACT_UPDATES_TABLE}
 
     GroupsDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'

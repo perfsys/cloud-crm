@@ -201,6 +201,7 @@ const populateContactItem = function (req) {
       }
     }
 
+    item.updates = []
     req.item = item
     resolve(req)
   })
