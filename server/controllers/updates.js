@@ -2,6 +2,7 @@ const AWS = require('aws-sdk')
 
 const randomstring = require('randomstring')
 const persistence_lib = require('../libs/persistence')
+const updatesHelper = require('../helpers/updatesHelper')
 
 const express = require('express')
 const router = express.Router()
@@ -89,15 +90,13 @@ const getUpdatesByIds = function (req) {
     console.log('getUpdatesByIds - starting')
     const {updatesIds} = req.item
     console.log(updatesIds)
-    const str = `{"RequestItems": { "${CONTACT_UPDATES_TABLE}": {
-      "Keys": `
     const listObjects = updatesIds.map(item => { return {id: item} })
 
-    const str1 = JSON.stringify(listObjects)
-    const str2 = str + str1 + '}}}'
-    console.log(str2)
+    const params = {}
+    params.RequestItems = {}
+    params.RequestItems[`${CONTACT_UPDATES_TABLE}`] = {}
+    params.RequestItems[`${CONTACT_UPDATES_TABLE}`].Keys = listObjects
 
-    const params = JSON.parse(str2)
     dynamoDb.batchGet(params, (error, data) => {
       if (error) {
         console.log('getUpdatesByIds - error')
@@ -107,6 +106,44 @@ const getUpdatesByIds = function (req) {
         console.log('getUpdatesByIds - success')
         console.log(data)
         req.item.data = data.Responses[`${CONTACT_UPDATES_TABLE}`]
+        resolve(req)
+      }
+    })
+  })
+}
+
+const deleteItemFromContact = function (req) {
+  return new Promise(function (resolve, reject) {
+    console.log('deleteItemFromContact - starting')
+
+    const {item} = req
+    const {group_id, name, id} = item
+
+    let updates = req.contact.updates
+
+    let newUpdates = updates.filter(i => i !== id)
+
+    const params = {
+      TableName: CONTACTS_TABLE,
+      Key: {
+        group_id: group_id,
+        name: name
+
+      },
+      UpdateExpression: 'SET updates = :i',
+      ExpressionAttributeValues: {
+        ':i': newUpdates
+      },
+      ReturnValues: 'ALL_NEW'
+    }
+
+    dynamoDb.update(params, (error, data) => {
+      if (error) {
+        console.log('deleteItemFromContact - error')
+        reject(error)
+      } else {
+        console.log(data)
+        req.contact = data.Attributes
         resolve(req)
       }
     })
@@ -215,46 +252,44 @@ router.get('/:update_id', function (req, res) {
 
   const {update_id} = req.params
 
-  const params = {
-    TableName: CONTACT_UPDATES_TABLE,
-    Key: {
-      id: update_id
-    }
-  }
+  req.update_id = update_id
 
-  dynamoDb.get(params, (error, result) => {
-    console.log(result)
-
-    if (error) {
+  updatesHelper.getUpdate(req)
+    .then(req => {
+      if (req.result.Item) {
+        res.json(req.result.Item)
+      } else {
+        res.status(404).json({error: 'Update not found'})
+      }
+    })
+    .catch(error => {
       console.log(error)
-      res.status(400).json({error: 'Could not query update'})
-    }
-    if (result.Item) {
-      res.json(result.Item)
-    } else {
-      res.status(404).json({error: 'Update not found'})
-    }
-  })
+      res.status(400).json(error)
+    })
 })
 
 // Update One
 router.put('/:update_id', function (req, res) {
   console.log('updates-contact-updateOne - starting')
+  const {update_id} = req.params
+  req.update_id = update_id
+
+  const checkResult = function (req) {
+    return new Promise(function (resolve, reject) {
+      if (req.result.Item) {
+        req.item = req.result.Item
+        resolve(req)
+      }
+      reject({error: 'Update not found'})
+    })
+  }
 
   const prepareItem = function (req) {
     return new Promise(function (resolve, reject) {
-      const {text, create_dt} = req.body
+      const {text} = req.body
+      const {item} = req
 
-      const {update_id} = req.params
-
-      if (!create_dt || isNaN(Date.parse(create_dt))) {
-        res.status(400).json({error: 'create_dt must be in request'})
-      }
-
-      let item = {}
-      item.id = update_id
       item.text = text
-      item.create_dt = create_dt
       item.update_dt = new Date().toISOString()
 
       req.item = item
@@ -262,10 +297,53 @@ router.put('/:update_id', function (req, res) {
     })
   }
 
-  prepareItem(req)
+  updatesHelper.getUpdate(req)
+    .then(checkResult)
+    .then(prepareItem)
     .then(saveItemToUpdates)
     .then(req => {
       res.json(req.item)
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(400).json(error)
+    })
+})
+
+// Delete One
+router.delete('/:deleted_id', function (req, res) {
+  console.log('updates-contact-deleteOne - starting')
+  const {deleted_id} = req.params
+  const {
+    groupId,
+    contactName
+  } = req
+  console.log(groupId, contactName, deleted_id)
+
+  let item = {}
+  item.group_id = groupId
+  item.name = contactName
+  item.id = deleted_id
+
+  req.item = item
+
+  const checkResultExists = function (result) {
+    return new Promise(function (resolve, reject) {
+      const id = req.item.id
+      if (result.Item && result.Item.updates.includes(id)) {
+        req.contact = result.Item
+        resolve(req)
+      }
+      reject({error: 'Update not found'})
+    })
+  }
+
+  persistence_lib.findContact(req)
+    .then(checkResultExists)
+    .then(deleteItemFromContact)
+    .then(deleteItemFromUpdates)
+    .then(req => {
+      res.send(req.contact)
     })
     .catch(error => {
       console.log(error)

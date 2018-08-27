@@ -28,12 +28,11 @@ provider:
     - ${opt:stage, 'dev'}-cloudCrmApiKey
   usagePlan:
     quota:
-      limit: 5000
-      offset: 2
-      period: MONTH
+      limit: 10
+      period: DAY
     throttle:
-      burstLimit: 200
-      rateLimit: 100
+      burstLimit: 10
+      rateLimit: 1
 
 # you can overwrite defaults here
 #  stage: dev
@@ -261,11 +260,10 @@ functions:
     events:
       - http:
           path: '/contacts/group/{group_id}/name/{name}/updates'
-#          path: '/updates'
           method: post
           cors: true
 
-  updates-contact-one:
+  updates-contact-get-one:
     handler: index.handler
     events:
       - http:
@@ -273,14 +271,22 @@ functions:
           method: get
           cors: true
 
-  updates-contact-update:
+  updates-contact-update-one:
     handler: index.handler
     events:
       - http:
           path: '/contacts/group/{group_id}/name/{name}/updates/{proxy+}'
-#          path: '/updates/{proxy+}'
           method: put
           cors: true
+
+  updates-contact-delete-one:
+    handler: index.handler
+    events:
+      - http:
+          path: '/contacts/group/{group_id}/name/{name}/updates/{proxy+}'
+          method: delete
+          cors: true
+
 
 # you can add CloudFormation resource templates here
 #resources:
