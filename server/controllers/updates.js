@@ -90,6 +90,11 @@ const getUpdatesByIds = function (req) {
     console.log('getUpdatesByIds - starting')
     const {updatesIds} = req.item
     console.log(updatesIds)
+    if (updatesIds.length === 0) {
+      req.item.data = []
+      resolve(req)
+    }
+
     const listObjects = updatesIds.map(item => { return {id: item} })
 
     const params = {}
