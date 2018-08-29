@@ -23,14 +23,14 @@ phases:
       - cd ..
   build:
     commands:
-      - cd ./client
-      - sls remove -v
-      - cd ..
+#      - cd ./client
+#      - sls remove -v
+#      - cd ..
       - cd ./server
-      - sls remove -v
-      - sls deploy -v
+#      - sls remove -v
+      - sls deploy -s poc-02 -v
       - cd ..
       - cd ./client
-      - sls deploy -v
+      - sls deploy -s poc-02 -v
 
 
