@@ -1,5 +1,5 @@
 <template>
-  <div class="md-layout md-gutter">
+  <!--<div class="md-layout md-gutter">-->
 
   <md-table v-model="allUpdates">
 
@@ -58,7 +58,7 @@
     </md-table-row>
 
   </md-table>
-  </div>
+  <!--</div>-->
 </template>
 
 <script>
