@@ -46,8 +46,26 @@ const actions = {
           }, reject)
       }
     })
-  }
+  },
 
+  updatesEditOne ({state, commit, dispatch, rootState}, item) {
+    return new Promise((resolve, reject) => {
+      if (rootState.route.params.group && rootState.route.params.name) {
+        item.group = rootState.route.params.group
+        item.name = rootState.route.params.name
+        api.editOneByContact(item)
+          .then(() => {
+            dispatch('updatesGetOneByContact', item)
+            resolve()
+          }, reject)
+      }
+    })
+  },
+
+  updatesGetOneByContact ({state, commit, rootState}, item) {
+    api.getOneByContact(item)
+      .then(update => commit('setOneUpdate', update))
+  }
 }
 
 // mutations
@@ -55,8 +73,13 @@ const mutations = {
 
   setUpdates (state, updates) {
     state.all = updates
-  }
+  },
 
+  setOneUpdate (state, update) {
+    const index = state.all.findIndex(item => item.id === update.id)
+    state.all[index].text = update.text
+    state.all[index].update_dt = update.update_dt
+  }
 }
 
 export default {

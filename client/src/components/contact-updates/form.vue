@@ -1,17 +1,15 @@
 <template>
   <div>
     <form novalidate class="md-layout" @submit="onSubmit">
-      <div class="md-layout md-gutter">
+        <div class="md-layout md-gutter md-alignment-center-left">
 
-      <md-field>
-        <label>Add updates</label>
-        <md-textarea v-model="update" required></md-textarea>
-        <!--<span class="md-helper-text">Enter text</span>-->
-        <!--<span class="md-error">There is an error</span>-->
-      </md-field>
+        <md-field>
+          <label>Add updates</label>
+          <md-textarea v-model="update" required></md-textarea>
+        </md-field>
 
-      <md-button class="md-primary" @click="reset()">Reset</md-button>
-      <md-button class="md-primary" type="submit">Save</md-button>
+        <md-button class="md-accent" @click="reset()">Clear</md-button>
+        <md-button class="md-primary" type="submit">Save</md-button>
       </div>
 
       <md-dialog-alert

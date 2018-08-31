@@ -2,9 +2,10 @@
 <div>
   <div class="md-title">Updates</div>
 
-  <contact-updates-table>
-    <contact-updates-add-form slot="form"></contact-updates-add-form>
-  </contact-updates-table>
+  <contact-updates-add-form></contact-updates-add-form>
+
+  <contact-updates-table></contact-updates-table>
+
 </div>
 </template>
 

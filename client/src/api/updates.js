@@ -9,9 +9,9 @@ export default {
     })
   },
 
-  getOneByContact (group, name, id) {
+  getOneByContact (item) {
     return new Promise((resolve, reject) => {
-      HTTP.get(`/contacts/${group}/${name}/updates/${id}`)
+      HTTP.get(`/contacts/group/${item.group}/name/${item.name}/updates/${item.id}`)
         .then(response => resolve(response.data), reject)
     })
   },
@@ -24,9 +24,9 @@ export default {
     })
   },
 
-  editOneByContact (group, name, update) {
+  editOneByContact (update) {
     return new Promise((resolve, reject) => {
-      HTTP.put(`/contacts/group/${group}/name/${name}/updates/${update.id}`, {
+      HTTP.put(`/contacts/group/${update.group}/name/${update.name}/updates/${update.id}`, {
         text: update.text
       }).then(response => resolve(response.data), reject)
     })
