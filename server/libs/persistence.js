@@ -67,3 +67,32 @@ exports.findContact = (req) => {
     })
   })
 }
+
+exports.deleteContact = (req) => {
+  return new Promise(function (resolve, reject) {
+    console.log('deleteContact - starting')
+    const {item} = req
+    const {group_id, name} = item
+    console.log(group_id, name)
+
+    const params = {
+      TableName: CONTACTS_TABLE,
+      Key: {
+        group_id: group_id,
+        name: name
+      }
+    }
+
+    dynamoDb.delete(params, (error, result) => {
+      if (error) {
+        console.log(error)
+        reject(error)
+      }
+      if (result) {
+        console.log('Contact was Deleted')
+        req.result = result
+        resolve(req)
+      }
+    })
+  })
+}

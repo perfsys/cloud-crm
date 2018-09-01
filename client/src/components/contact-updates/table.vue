@@ -1,11 +1,10 @@
 <template>
-  <!--<div class="md-layout md-gutter">-->
 
-  <md-table v-model="allUpdates">
+    <md-table v-model="allUpdates">
 
     <md-table-row slot="md-table-row" slot-scope="{ item }" md-selectable="single">
 
-      <md-card>
+      <md-card  >
 
         <div class="md-layout md-gutter md-alignment-center-right">
           <div class="md-layout-item">
@@ -58,7 +57,6 @@
     </md-table-row>
 
   </md-table>
-  <!--</div>-->
 </template>
 
 <script>
@@ -128,3 +126,8 @@ export default {
   }
 }
 </script>
+<style>
+  pre {
+    text-indent: -17px;
+  }
+</style>
