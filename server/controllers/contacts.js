@@ -16,7 +16,6 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient()
 const CONTACTS_TABLE = process.env.CONTACTS_TABLE
 const CONTACT_UPDATES_TABLE = process.env.CONTACT_UPDATES_TABLE
 
-
 const getOne = function (req) {
   return new Promise(function (resolve, reject) {
     console.log('getOne - starting')
@@ -452,16 +451,17 @@ router.delete('/:group_id/:name', function (req, res) {
     return new Promise(function (resolve, reject) {
       console.log('checkAndDeleteUpdates - starting')
 
-       const {item} = req
-      if(item.updates && item.updates.length > 0){
-
-        const listObjects = item.updates.map(item => { return {
-          DeleteRequest: {
-            Key: {
-              id: item
+      const {item} = req
+      if (item.updates && item.updates.length > 0) {
+        const listObjects = item.updates.map(item => {
+          return {
+            DeleteRequest: {
+              Key: {
+                id: item
+              }
             }
           }
-        }})
+        })
 
         const params = {}
         params.RequestItems = {}
