@@ -21,7 +21,7 @@ app.param('groupId', require('./middlewares/group-id'))
 app.param('contactName', require('./middlewares/contact-name'))
 
 app.use('/contacts', contacts)
-app.use('/contacts/group/:groupId/name/:contactName/updates', updates)
+app.use('/contacts/:groupId/:contactName/updates', updates)
 app.use('/external', external)
 app.use('/sources', sources)
 app.use('/groups', groups)

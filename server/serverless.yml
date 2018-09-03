@@ -208,7 +208,7 @@ functions:
     handler: index.handler
     events:
       - http:
-          path: '/contacts/{group_id}/{proxy+}'
+          path: '/contacts/{group_id}/{name}'
           method: get
           cors: true
 
@@ -216,7 +216,7 @@ functions:
     handler: index.handler
     events:
       - http:
-          path: '/contacts/{group_id}/{proxy+}'
+          path: '/contacts/{group_id}/{name}'
           method: delete
           cors: true
 
@@ -224,7 +224,7 @@ functions:
     handler: index.handler
     events:
       - http:
-          path: '/contacts/{group_id}/{proxy+}'
+          path: '/contacts/{group_id}/{name}'
           method: put
           cors: true
 
@@ -251,7 +251,7 @@ functions:
     handler: index.handler
     events:
       - http:
-          path: '/contacts/group/{group_id}/name/{name}/updates'
+          path: '/contacts/{group_id}/{name}/updates'
           method: get
           cors: true
 
@@ -259,7 +259,7 @@ functions:
     handler: index.handler
     events:
       - http:
-          path: '/contacts/group/{group_id}/name/{name}/updates'
+          path: '/contacts/{group_id}/{name}/updates'
           method: post
           cors: true
 
@@ -267,7 +267,7 @@ functions:
     handler: index.handler
     events:
       - http:
-          path: '/contacts/group/{group_id}/name/{name}/updates/{proxy+}'
+          path: '/contacts/{group_id}/{name}/updates/{id}'
           method: get
           cors: true
 
@@ -275,7 +275,7 @@ functions:
     handler: index.handler
     events:
       - http:
-          path: '/contacts/group/{group_id}/name/{name}/updates/{proxy+}'
+          path: '/contacts/{group_id}/{name}/updates/{id}'
           method: put
           cors: true
 
@@ -283,7 +283,7 @@ functions:
     handler: index.handler
     events:
       - http:
-          path: '/contacts/group/{group_id}/name/{name}/updates/{proxy+}'
+          path: '/contacts/{group_id}/{name}/updates/{id}'
           method: delete
           cors: true
 
