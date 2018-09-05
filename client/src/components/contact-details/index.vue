@@ -144,16 +144,7 @@
 
   </md-card>
   <br/>
-  <md-card>
-    <md-card-header>
-      <md-card-content>
-        <contact-updates/>
-      </md-card-content>
-
-    </md-card-header>
-
-  </md-card>
-
+  <contact-updates/>
 </div>
 </template>
 
@@ -196,10 +187,6 @@ export default {
         twitter_link: null,
         linkedin_link: null
       }
-      // updatesInfo: {
-      //   group_id: null,
-      //   company_name: null
-      // }
     }
   },
   created () {
@@ -227,9 +214,6 @@ export default {
         this.contact.facebook_link = data.facebook_link
         this.contact.twitter_link = data.twitter_link
         this.contact.linkedin_link = data.linkedin_link
-
-        // this.updatesInfo.group_id = data.group_id
-        // this.updatesInfo.company_name = data.company_normalized
       })
   },
 

@@ -8,8 +8,11 @@ const state = {
 // getters
 const getters = {
 
-  contactsAll: state => state.all
+  contactsAll: state => state.all,
 
+  routeContactName (state, getters, rootState) {
+    return rootState.route.params.name ? rootState.route.params.name : null
+  }
 }
 
 // actions

@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk')
+const R = require('ramda')
 
 const randomstring = require('randomstring')
 const persistence_lib = require('../libs/persistence')
@@ -238,12 +239,14 @@ router.get('', function (req, res) {
     })
   }
 
+  var sortByCreatedDate = R.sortBy(R.prop('create_dt'))
+
   prepareItem(req)
     .then(persistence_lib.findContact)
     .then(findUpdatesIdsInContact)
     .then(getUpdatesByIds)
     .then(req => {
-      res.json(req.item.data.sort((a, b) => a.create_dt.localeCompare(b.create_dt)))
+      res.json(sortByCreatedDate(req.item.data))
     })
     .catch(error => {
       console.log(error)

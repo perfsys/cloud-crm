@@ -1,10 +1,10 @@
 <template>
+  <div class="md-layout md-gutter ">
 
-    <md-table v-model="allUpdates">
+    <div class="md-layout-item md-size-100" v-for="item in allUpdates"  :key="item.id">
 
-    <md-table-row slot="md-table-row" slot-scope="{ item }" md-selectable="single">
-
-      <md-card  >
+      <md-divider></md-divider>
+      <md-divider></md-divider>
 
         <div class="md-layout md-gutter md-alignment-center-right">
           <div class="md-layout-item">
@@ -12,11 +12,9 @@
              <div class="md-subhead">Created at {{ item.create_dt  | fromISO}}</div>
              <div class="md-subhead" v-if="item.update_dt">Last updated at  {{ item.update_dt  | fromISO}}</div>
             </md-card-header>
-
           </div>
 
           <div class="md-layout-item md-size-15">
-
             <md-button  class="md-icon-button md-primary" @click.stop="onEdit(item)">
               <md-icon>edit</md-icon>
             </md-button>
@@ -24,7 +22,6 @@
             <md-button  class="md-icon-button md-accent" @click.stop="updatesDeleteOne(item)">
               <md-icon>delete</md-icon>
             </md-button>
-
           </div>
         </div>
 
@@ -35,6 +32,8 @@
         <md-card-content v-if="item.id === editedItemId">
           <form novalidate class="md-layout" @submit="onEditSubmit">
 
+            <div class="md-layout md-gutter md-alignment-center-right">
+
               <md-field>
                 <md-textarea v-model="newUpdate" required></md-textarea>
               </md-field>
@@ -42,6 +41,7 @@
               <md-button class="md-accent" @click="cancel">Cancel</md-button>
               <md-button class="md-primary" type="submit">Save</md-button>
 
+            </div>
             <md-dialog-alert
               :md-active.sync="failedSnackbar"
               :md-content="failedSnackbarReason"
@@ -51,12 +51,10 @@
 
         </md-card-content>
 
-      </md-card>
       <br/>
 
-    </md-table-row>
-
-  </md-table>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -126,7 +124,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
   pre {
     text-indent: -17px;
   }
