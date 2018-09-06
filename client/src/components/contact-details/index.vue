@@ -1,5 +1,5 @@
 <template>
-
+<div>
   <md-card>
     <md-card-header>
       <div class="md-title">{{contact.group_name}}  {{contact.name}}</div>
@@ -143,13 +143,17 @@
     </md-card-actions>
 
   </md-card>
-
+  <br/>
+  <contact-updates/>
+</div>
 </template>
 
 <script>
 import api from '../../api/contacts'
 import {mapActions} from 'vuex'
 import dateMixin from '@/mixins/FormattersDateMixin'
+
+import contact_updates from '@/components/contact-updates/index.vue'
 
 export default {
   name: 'contact-details-index',
@@ -211,6 +215,10 @@ export default {
         this.contact.twitter_link = data.twitter_link
         this.contact.linkedin_link = data.linkedin_link
       })
+  },
+
+  components: {
+    'contact-updates': contact_updates
   },
 
   computed: {

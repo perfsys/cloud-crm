@@ -3,6 +3,7 @@ const AWS = require('aws-sdk')
 const express = require('express')
 const labelHelper = require('../helpers/labelHelper')
 const groupsHelper = require('../helpers/groupsHelper')
+const persistence = require('../libs/persistence')
 
 const router = express.Router()
 
@@ -13,6 +14,7 @@ const R = require('ramda')
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
 
 const CONTACTS_TABLE = process.env.CONTACTS_TABLE
+const CONTACT_UPDATES_TABLE = process.env.CONTACT_UPDATES_TABLE
 
 const getOne = function (req) {
   return new Promise(function (resolve, reject) {
@@ -201,6 +203,7 @@ const populateContactItem = function (req) {
       }
     }
 
+    item.updates = []
     req.item = item
     resolve(req)
   })
@@ -440,24 +443,57 @@ router.delete('/:group_id/:name', function (req, res) {
   console.log('contact-delete - starting')
   const {group_id, name} = req.params
 
-  const params = {
-    TableName: CONTACTS_TABLE,
-    Key: {
-      group_id: group_id,
-      name: name
-    }
+  req.item = {}
+  req.item.group_id = group_id
+  req.item.name = name
+
+  const checkAndDeleteUpdates = function (req) {
+    return new Promise(function (resolve, reject) {
+      console.log('checkAndDeleteUpdates - starting')
+
+      const {item} = req
+      if (item.updates && item.updates.length > 0) {
+        const listObjects = item.updates.map(item => {
+          return {
+            DeleteRequest: {
+              Key: {
+                id: item
+              }
+            }
+          }
+        })
+
+        const params = {}
+        params.RequestItems = {}
+        params.RequestItems[`${CONTACT_UPDATES_TABLE}`] = listObjects
+
+        dynamoDb.batchWrite(params, (error, data) => {
+          if (error) {
+            console.log('checkAndDeleteUpdates - error')
+            console.log(error)
+            reject(error)
+          } else {
+            console.log('checkAndDeleteUpdates - success')
+            console.log(data)
+            resolve(req)
+          }
+        })
+      } else {
+        resolve(req)
+      }
+    })
   }
 
-  dynamoDb.delete(params, (error, result) => {
-    if (error) {
+  getOne(req)
+    .then(checkAndDeleteUpdates)
+    .then(persistence.deleteContact)
+    .then(req => {
+      res.send(req.result)
+    })
+    .catch(error => {
       console.log(error)
       res.status(400).json({error: 'Could not delete contact'})
-    }
-    if (result) {
-      console.log('Contact was Deleted')
-      res.send(result)
-    }
-  })
+    })
 })
 
 module.exports = router

@@ -11,14 +11,17 @@ const types = require('./controllers/types')
 const countries = require('./controllers/countries')
 const statuses = require('./controllers/statuses')
 const labels = require('./controllers/labels')
+const updates = require('./controllers/updates')
 
 const app = express()
 
 app.use(cors())
 app.use(bodyParser.json({strict: false}))
 app.param('groupId', require('./middlewares/group-id'))
+app.param('contactName', require('./middlewares/contact-name'))
 
 app.use('/contacts', contacts)
+app.use('/contacts/:groupId/:contactName/updates', updates)
 app.use('/external', external)
 app.use('/sources', sources)
 app.use('/groups', groups)

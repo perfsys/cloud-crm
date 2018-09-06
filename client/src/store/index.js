@@ -7,6 +7,7 @@ import countries from './modules/countries'
 import sources from './modules/sources'
 import types from './modules/types'
 import statuses from './modules/statuses'
+import updates from './modules/updates'
 
 // import createLogger from '../../../src/plugins/logger'
 
@@ -21,7 +22,8 @@ export default new Vuex.Store({
     countries,
     sources,
     types,
-    statuses
+    statuses,
+    updates
   },
   strict: debug
   // plugins: debug ? [createLogger()] : []
