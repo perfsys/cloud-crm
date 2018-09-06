@@ -26,7 +26,7 @@
         </div>
 
        <md-card-content v-if="item.id !== editedItemId">
-         <pre>  {{ item.text }} </pre>
+        <span v-html="getHtml(item.text )"></span>
        </md-card-content>
 
         <md-card-content v-if="item.id === editedItemId">
@@ -60,6 +60,9 @@
 <script>
 import {mapGetters, mapActions} from 'vuex'
 import dateMixin from '@/mixins/FormattersDateMixin'
+
+const showdown = require('showdown')
+const converter = new showdown.Converter({simpleLineBreaks: true})
 
 export default {
   name: 'contact-updates-table',
@@ -119,6 +122,10 @@ export default {
           }
           _self.failedSnackbar = true
         })
+    },
+
+    getHtml (text) {
+      return converter.makeHtml(text)
     }
 
   }

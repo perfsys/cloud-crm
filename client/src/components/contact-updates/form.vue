@@ -65,7 +65,7 @@ export default {
 </script>
 <style scoped>
   .md-field {
-    margin-right: 4px;
-    margin-left: 4px;
+    margin-right: 16px;
+    margin-left: 16px;
   }
 </style>
