@@ -25,10 +25,12 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: eu-west-1
   apiKeys:
-    - ${opt:stage, 'dev'}-cloudCrmApiKey
+    - ${opt:stage, 'dev'}-cloudCrmApiKey-v02
+    - ${opt:stage, 'dev'}-cloudCrmApiKey-v03
   usagePlan:
     quota:
       limit: 10
+      offset: 0
       period: DAY
     throttle:
       burstLimit: 10
