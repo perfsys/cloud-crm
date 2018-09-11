@@ -1,8 +1,10 @@
 const
   express = require('express')
-const
-  persistence_lib = require('../libs/persistence')
+const randomstring = require('randomstring')
+
+const  persistence_lib = require('../libs/persistence')
 const groupsHelper = require('../helpers/groupsHelper')
+const updatesHelper = require('../helpers/updatesHelper')
 
 const router = express.Router()
 
@@ -18,9 +20,9 @@ const constructContactItem = function (req) {
       group_id, // partition key
       name,
       email,
-      phone_number,
-      text
+      phone
     } = req.body
+    console.log(group_id, name, email, phone)
 
     const item = {}
 
@@ -53,10 +55,6 @@ const constructContactItem = function (req) {
       reject({error: '"email" must be a string'})
     }
 
-    if (typeof text !== 'string') {
-      reject({error: '"text" must be a string'})
-    }
-
     if (email) {
       item.email = R.pipe(
         R.trim()
@@ -65,15 +63,39 @@ const constructContactItem = function (req) {
       )(email)
     }
 
-    if (phone_number) {
+    if (phone) {
       item.phone_number = R.pipe(
         R.trim()
         // R.replace(' ', '_'),
         // R.toLower()
-      )(phone_number)
+      )(phone)
     }
 
+    item.updates = [req.updateItem.id]
+
     req.item = item
+    resolve(req)
+  })
+}
+
+const constructUpdateItem = function (req) {
+  return new Promise(function (resolve, reject) {
+    console.log('constructUpdateItem - starting')
+
+    const {
+      text
+    } = req.body
+
+    if (typeof text !== 'string') {
+      reject({error: '"text" must be a string'})
+    }
+
+    let item = {}
+    item.id = randomstring.generate(7)
+    item.create_dt = new Date().toISOString()
+
+    item.text = text
+    req.updateItem = item
     resolve(req)
   })
 }
@@ -99,12 +121,14 @@ router.post('/contacts', function (req, res) {
   console.log(req.body)
 
   findGroups(req)
+    .then(constructUpdateItem)
     .then(constructContactItem)
     .then(persistence_lib.preCreate)
+    .then(updatesHelper.saveItemToUpdates)
     .then(persistence_lib.saveContact)
+    // create update
     .then(req => {
-      res.json({})
-      // res.json(req.item)
+      res.status(200).json({})
     })
     .catch(error => {
       console.log(error)
