@@ -2,7 +2,7 @@ const
   express = require('express')
 const randomstring = require('randomstring')
 
-const  persistence_lib = require('../libs/persistence')
+const persistence_lib = require('../libs/persistence')
 const groupsHelper = require('../helpers/groupsHelper')
 const updatesHelper = require('../helpers/updatesHelper')
 
