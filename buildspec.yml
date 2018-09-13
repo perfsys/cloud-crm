@@ -27,7 +27,7 @@ phases:
       - sls remove -v
       - cd ..
       - cd ./server
-      - sls remove -v
+#      - sls remove -v
       - sls deploy -v
       - cd ..
       - cd ./client
