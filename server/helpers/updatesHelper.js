@@ -30,3 +30,24 @@ exports.getUpdate = (req) => {
     })
   })
 }
+
+exports.saveItemToUpdates = function (req) {
+  return new Promise(function (resolve, reject) {
+    let {updateItem} = req
+    console.log('saveItemToUpdates - starting')
+    const params = {
+      TableName: CONTACT_UPDATES_TABLE,
+      Item: updateItem
+    }
+
+    dynamoDb.put(params, (error, data) => {
+      if (error) {
+        console.log('saveItemToUpdates - error')
+        reject(error)
+      } else {
+        console.log(data)
+        resolve(req)
+      }
+    })
+  })
+}
