@@ -83,6 +83,9 @@ const constructUpdateItem = function (req) {
     console.log('constructUpdateItem - starting')
 
     const {
+      name,
+      email,
+      phone,
       text
     } = req.body
 
@@ -94,7 +97,7 @@ const constructUpdateItem = function (req) {
     item.id = randomstring.generate(7)
     item.create_dt = new Date().toISOString()
 
-    item.text = text
+    item.text = text + `\n --- \n name: ${name} \n phone: ${phone} \n email: ${email}`
     req.updateItem = item
     resolve(req)
   })
