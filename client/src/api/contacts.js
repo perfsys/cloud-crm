@@ -98,7 +98,9 @@ export default {
       facebook_link: item.facebook_link,
       twitter_link: item.twitter_link,
       linkedin_link: item.linkedin_link,
-      labels: item.labels
+      labels: item.labels,
+      email: item.email,
+      phone_number: item.phone_number
     }
     )
   }
