@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk')
 
 const express = require('express')
-const emailValidator = require('email-validator')
+const isemail = require('isemail')
 const labelHelper = require('../helpers/labelHelper')
 const groupsHelper = require('../helpers/groupsHelper')
 const persistence = require('../libs/persistence')
@@ -179,7 +179,7 @@ const populateContactItem = function (req) {
       item.position = position
     }
 
-    if (email && emailValidator.validate(email)) {
+    if (email && isemail.validate(email)) {
       item.email = email
     }
 
