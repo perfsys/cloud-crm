@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk')
 
 const express = require('express')
+const isemail = require('isemail')
 const labelHelper = require('../helpers/labelHelper')
 const groupsHelper = require('../helpers/groupsHelper')
 const persistence = require('../libs/persistence')
@@ -92,7 +93,10 @@ const populateContactItem = function (req) {
       position,
       facebook_link,
       twitter_link,
-      linkedin_link
+      linkedin_link,
+      email,
+      phone_number
+
     } = req.body
 
     if (first_name && typeof source_id === 'string') {
@@ -175,6 +179,14 @@ const populateContactItem = function (req) {
       item.position = position
     }
 
+    if (email && isemail.validate(email)) {
+      item.email = email
+    }
+
+    if (phone_number) {
+      item.phone_number = phone_number
+    }
+
     if (company_www) {
       let www_obj = parse_link(company_www)
       if (www_obj.protocol && www_obj.host) {
@@ -203,7 +215,7 @@ const populateContactItem = function (req) {
       }
     }
 
-    item.updates = []
+    item.updates = item.updates ? item.updates : []
     req.item = item
     resolve(req)
   })

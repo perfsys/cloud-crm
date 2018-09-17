@@ -131,6 +131,20 @@
 
             </md-list-item>
 
+            <md-list-item>
+              <div class="md-list-item-text">
+                <span>{{contact.email}}</span>
+                <span>Email</span>
+              </div>
+            </md-list-item>
+
+            <md-list-item>
+              <div class="md-list-item-text">
+                <span>{{contact.phone_number}}</span>
+                <span>Phone</span>
+              </div>
+            </md-list-item>
+
           </md-list>
         </div>
       </div>
@@ -185,7 +199,10 @@ export default {
         position: null,
         facebook_link: null,
         twitter_link: null,
-        linkedin_link: null
+        linkedin_link: null,
+
+        email: null,
+        phone_number: null
       }
     }
   },
@@ -214,6 +231,9 @@ export default {
         this.contact.facebook_link = data.facebook_link
         this.contact.twitter_link = data.twitter_link
         this.contact.linkedin_link = data.linkedin_link
+
+        this.contact.email = data.email
+        this.contact.phone_number = data.phone_number
       })
   },
 

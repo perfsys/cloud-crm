@@ -81,9 +81,29 @@
                   <country_el v-model="contact.country_code"/>
 
                 </md-step>
+
                 <md-step id="third" md-label="Links">
                   <links_el v-model="links" />
                 </md-step>
+
+                <md-step id="fourth" md-label="Connect">
+
+                  <div class="md-layout-item md-small-size-100">
+                    <md-field>
+                      <label for="email">Email</label>
+                        <md-input name="email" id="email" type="email" autocomplete="email" v-model="contact.email"/>
+                    </md-field>
+                  </div>
+
+                  <div class="md-layout-item md-small-size-100">
+                    <md-field>
+                      <label for="phone_number">Phone</label>
+                      <md-input name="phone_number" id="phone_number" type="tel" autocomplete="phone" v-model="contact.phone_number"/>
+                    </md-field>
+                  </div>
+
+                </md-step>
+
               </md-steppers>
 
               <labels_el v-model="contact.labels"/>
@@ -152,7 +172,11 @@ export default {
         type_id: null,
         status_id: null,
 
-        labels: null
+        labels: null,
+
+        email: null,
+        phone_number: null
+
       },
 
       links: {
@@ -207,6 +231,9 @@ export default {
             _self.contact.company_www = data.company_www
 
             _self.contact.labels = data.labels
+
+            _self.contact.email = data.email
+            _self.contact.phone_number = data.phone_number
 
             _self.links.facebook_link = data.facebook_link
             _self.links.twitter_link = data.twitter_link
