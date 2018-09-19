@@ -72,9 +72,9 @@ const populateContactItem = function (req) {
 
   const sources = require('../data/sources.json')
 
-  const statuses = require('../data/statuses.json')
-
   const countries = require('../data/country-by-abbreviation.json')
+
+  const groups = req.groups
 
   return new Promise(function (resolve, reject) {
     console.log('populateContactItem - starting')
@@ -152,17 +152,16 @@ const populateContactItem = function (req) {
     }
 
     if (status_id) {
-      let status_name = R.pipe(
-        // find
-        R.find(R.propEq('id', status_id)),
+      const group_id = req.item.group_id
+      const group = groups.find(gr => gr.id === group_id)
 
-        // get name
-        R.prop('name')
-      )(statuses)
+      if (group && group.statuses) {
+        const status = group.statuses.find(st => st.id === status_id)
 
-      if (status_name) {
-        item.status_id = status_id
-        item.status_name = status_name
+        if (status) {
+          item.status_id = status_id
+          item.status_name = status.name
+        }
       }
     }
 
@@ -217,6 +216,7 @@ const populateContactItem = function (req) {
 
     item.updates = item.updates ? item.updates : []
     req.item = item
+
     resolve(req)
   })
 }
@@ -293,6 +293,22 @@ const saveContact = function (req) {
   })
 }
 
+const findGroups = function (req) {
+  return new Promise(function (resolve, reject) {
+    groupsHelper.getGroups()
+      .then(result => {
+        if (result && result.Items) {
+          req.groups = result.Items
+          resolve(req)
+        } else {
+          reject({error: 'Groups were not found'})
+        }
+      }, err => {
+        reject(err)
+      })
+  })
+}
+
 router.post('', function (req, res) {
   console.log('contacts-create - starting')
 
@@ -314,22 +330,6 @@ router.post('', function (req, res) {
             resolve(req)
           } else {
             reject({error: 'Contact already exists'})
-          }
-        }, err => {
-          reject(err)
-        })
-    })
-  }
-
-  const findGroups = function (req) {
-    return new Promise(function (resolve, reject) {
-      groupsHelper.getGroups()
-        .then(result => {
-          if (result && result.Items) {
-            req.groups = result.Items
-            resolve(req)
-          } else {
-            reject({error: 'Groups were not found'})
           }
         }, err => {
           reject(err)
@@ -372,7 +372,8 @@ router.put('/:group_id/:name', function (req, res) {
   req.item.group_id = group_id
   req.item.name = name
 
-  getOne(req)
+  findGroups(req)
+    .then(getOne)
     .then(preUpdate)
     .then(populateContactItem)
     .then(labelHelper.populateContactItemByLabels)

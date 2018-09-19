@@ -55,7 +55,7 @@
 <script>
 import group_el from '@/components/contact-elements/group.vue'
 import source_el from '@/components/contact-elements/source.vue'
-import status_el from '@/components/contact-elements/status.vue'
+import status_el from '@/components/contact-elements/status1.vue'
 import type_el from '@/components/contact-elements/type.vue'
 import labels_el from '@/components/contact-elements/labels.vue'
 

@@ -38,8 +38,17 @@ const getters = {
     return name => {
       return name ? getters.labelsByGroupId.find(i => i.name === name) : {}
     }
-  }
+  },
 
+  statusesByGroupId (state, getters) {
+    return getters.groupById(getters.routeGroupId) ? getters.groupById(getters.routeGroupId).statuses : []
+  },
+
+  statusByName (state, getters) {
+    return name => {
+      return name ? getters.statusesByGroupId.find(i => i.name === name) : {}
+    }
+  }
 }
 
 // actions
@@ -62,7 +71,22 @@ const actions = {
         resolve()
       }
     })
+  },
+
+  statusAddOne ({getters, dispatch}, status) {
+    return new Promise((resolve, reject) => {
+      if (!getters.statusesByGroupId || !getters.statusesByGroupId.map(item => item.name).includes(status)) {
+        api.statusAddOne(status, getters.routeGroupId)
+          .then(() => {
+            dispatch('groupsGetAll')
+            resolve()
+          }, reject)
+      } else {
+        resolve()
+      }
+    })
   }
+
 }
 
 // mutations

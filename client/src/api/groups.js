@@ -21,6 +21,15 @@ export default {
       })
         .then(response => resolve(response.data), reject)
     })
+  },
+
+  statusAddOne (item, groupId) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(`/groups/${groupId}/statuses`, {
+        name: item
+      })
+        .then(response => resolve(response.data), reject)
+    })
   }
 
 }

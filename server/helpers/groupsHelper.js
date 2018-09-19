@@ -21,4 +21,32 @@ const getGroups = function () {
   })
 }
 
+exports.getGroup = function (req) {
+  return new Promise(function (resolve, reject) {
+    console.log('getGroup - starting')
+
+    const {group_id} = req.item
+
+    const params = {
+      TableName: GROUPS_TABLE,
+      Key: {
+        id: group_id
+      }
+    }
+
+    dynamoDb.get(params, (error, result) => {
+      console.log(result)
+
+      if (error) {
+        console.log('get - error')
+      }
+      if (result && result.Item) {
+        console.log(result.Item)
+        req.item.groupResult = result
+        resolve(req)
+      }
+    })
+  })
+}
+
 exports.getGroups = getGroups
