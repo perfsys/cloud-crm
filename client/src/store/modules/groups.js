@@ -46,7 +46,7 @@ const getters = {
 
   statusByName (state, getters) {
     return name => {
-      return name ? getters.statusesByGroupId.find(i => i.name === name) : {}
+      return (name && getters.statusesByGroupId) ? getters.statusesByGroupId.find(i => i.name === name) : {}
     }
   }
 }

@@ -34,8 +34,8 @@
         <source_el v-model="source_id"/>
       </div>
 
-      <div class="md-layout-item md-small-size-100">
-        <status_el v-model="status_id"/>
+      <div class="md-layout-item md-small-size-100" >
+        <status_el v-model="status_id" v-if="showStatuses"/>
       </div>
     </div>
 
@@ -78,7 +78,8 @@ export default {
       status_id: 'NEW',
       labels: null,
 
-      showLabels: true
+      showLabels: true,
+      showStatuses: true
     }
   },
 
@@ -94,6 +95,7 @@ export default {
     this.group_id = this.value.group_id
     if (!this.$route.params.group) {
       this.showLabels = false
+      this.showStatuses = false
     }
   },
 
