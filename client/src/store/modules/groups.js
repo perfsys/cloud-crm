@@ -41,12 +41,12 @@ const getters = {
   },
 
   statusesByGroupId (state, getters) {
-    return getters.groupById(getters.routeGroupId) ? getters.groupById(getters.routeGroupId).statuses : []
+    return getters.groupById(getters.routeGroupId) && getters.groupById(getters.routeGroupId).statuses ? getters.groupById(getters.routeGroupId).statuses : []
   },
 
   statusByName (state, getters) {
     return name => {
-      return (name && getters.statusesByGroupId) ? getters.statusesByGroupId.find(i => i.name === name) : {}
+      return (name) ? getters.statusesByGroupId.find(i => i.name === name) : {}
     }
   }
 }
