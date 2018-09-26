@@ -28,7 +28,7 @@ app.use('/groups', groups)
 app.use('/groups/:groupId/labels', labels)
 app.use('/types', types)
 app.use('/countries', countries)
-app.use('/statuses', statuses)
+app.use('/groups/:groupId/statuses', statuses)
 
 app.get('/', function (req, res) {
   res.send('HEALTHY')

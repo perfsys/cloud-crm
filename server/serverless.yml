@@ -175,13 +175,13 @@ functions:
           method: get
           cors: true
 
-  statuses-list:
-    handler: index.handler
-    events:
-      - http:
-          path: '/statuses'
-          method: get
-          cors: true
+#  statuses-list:
+#    handler: index.handler
+#    events:
+#      - http:
+#          path: '/statuses'
+#          method: get
+#          cors: true
 
   contacts-create:
     handler: index.handler
@@ -246,6 +246,22 @@ functions:
           path: '/groups/{group_id}/labels'
           method: get
           cors: true
+
+  status-group-create:
+   handler: index.handler
+   events:
+     - http:
+         path: '/groups/{group_id}/statuses'
+         method: post
+         cors: true
+
+  status-group-list:
+   handler: index.handler
+   events:
+     - http:
+         path: '/groups/{group_id}/statuses'
+         method: get
+         cors: true
 
   initGroups:
     handler: functions/init-groups.handler

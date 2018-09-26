@@ -1,11 +1,12 @@
 <template>
     <md-field>
       <label for="group_id">Group</label>
-      <md-select v-model="group_id" name="group_id" id="group_id">
 
+      <md-select v-model="group_id" name="group_id" id="group_id"  :disabled="groupDisabled">
         <md-option v-for="group in groups" :value="group.id" :key="group.id">{{ group.name }}</md-option>
 
       </md-select>
+
     </md-field>
 </template>
 
@@ -19,7 +20,8 @@ export default {
 
   data () {
     return {
-      group_id: this.value
+      group_id: this.value,
+      groupDisabled: true
     }
   },
   computed:
@@ -28,6 +30,10 @@ export default {
     }),
   created () {
     this.$store.dispatch('groupsGetAll')
+
+    if (!this.$route.params.group) {
+      this.groupDisabled = false
+    }
   },
   watch: {
     group_id () {

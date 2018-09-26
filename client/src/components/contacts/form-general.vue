@@ -8,7 +8,7 @@
       <div class="md-layout-item md-small-size-100">
         <md-field>
           <label for="name">Name</label>
-          <md-input name="name" id="name" autocomplete="name" v-model="name"/>
+          <md-input name="name" id="name" autocomplete="name" v-model="name" />
         </md-field>
       </div>
     </div>
@@ -35,7 +35,7 @@
       </div>
 
       <div class="md-layout-item md-small-size-100">
-        <status_el v-model="status_id"/>
+        <type_el v-model="type_id"/>
       </div>
     </div>
 
@@ -44,8 +44,8 @@
         <labels_el v-model="labels"/>
       </div>
 
-      <div class="md-layout-item md-small-size-100">
-        <type_el v-model="type_id"/>
+      <div class="md-layout-item md-small-size-100" >
+        <status_el v-model="status_id" v-if="showStatuses"/>
       </div>
     </div>
 
@@ -55,7 +55,7 @@
 <script>
 import group_el from '@/components/contact-elements/group.vue'
 import source_el from '@/components/contact-elements/source.vue'
-import status_el from '@/components/contact-elements/status.vue'
+import status_el from '@/components/contact-elements/status1.vue'
 import type_el from '@/components/contact-elements/type.vue'
 import labels_el from '@/components/contact-elements/labels.vue'
 
@@ -78,7 +78,8 @@ export default {
       status_id: 'NEW',
       labels: null,
 
-      showLabels: true
+      showLabels: true,
+      showStatuses: true
     }
   },
 
@@ -94,6 +95,7 @@ export default {
     this.group_id = this.value.group_id
     if (!this.$route.params.group) {
       this.showLabels = false
+      this.showStatuses = false
     }
   },
 
