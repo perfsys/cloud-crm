@@ -19,6 +19,7 @@ provider:
   name: aws
   stage: ${opt:stage, 'dev'}
   region: eu-west-1
+  profile: perfsys
 
   environment:
     UI_DIST_BUCKET_NAME: ${self:custom.bucketName}

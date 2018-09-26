@@ -23,8 +23,9 @@
       </div>
 
       <div class="md-layout-item md-small-size-15">
-        <md-button class="md-primary md-icon-button " @click="showStatuses = !showStatuses">
-          <md-icon>add</md-icon>
+        <md-button class="md-primary md-icon-button " @click="showAddStatuses">
+          <md-icon v-if="expandMore">expand_more</md-icon>
+          <md-icon v-if="!expandMore">expand_less</md-icon>
         </md-button>
       </div>
     </div>
@@ -52,7 +53,9 @@ export default {
 
       addedStatus: null,
 
-      showStatuses: false
+      showStatuses: false,
+
+      expandMore: true
     }
   },
 
@@ -101,6 +104,7 @@ export default {
 
     resetAddedStatus: function () {
       this.addedStatus = null
+      this.showAddStatuses()
     },
 
     doAddedStatusCurrent: function () {
@@ -108,6 +112,11 @@ export default {
         this.status_id = this.statusByName(this.addedStatus).id
         this.resetAddedStatus()
       }
+    },
+
+    showAddStatuses: function () {
+      this.showStatuses = !this.showStatuses
+      this.expandMore = !this.expandMore
     }
 
   }

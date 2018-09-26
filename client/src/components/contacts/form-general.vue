@@ -8,7 +8,7 @@
       <div class="md-layout-item md-small-size-100">
         <md-field>
           <label for="name">Name</label>
-          <md-input name="name" id="name" autocomplete="name" v-model="name"/>
+          <md-input name="name" id="name" autocomplete="name" v-model="name" />
         </md-field>
       </div>
     </div>
@@ -34,8 +34,8 @@
         <source_el v-model="source_id"/>
       </div>
 
-      <div class="md-layout-item md-small-size-100" >
-        <status_el v-model="status_id" v-if="showStatuses"/>
+      <div class="md-layout-item md-small-size-100">
+        <type_el v-model="type_id"/>
       </div>
     </div>
 
@@ -44,8 +44,8 @@
         <labels_el v-model="labels"/>
       </div>
 
-      <div class="md-layout-item md-small-size-100">
-        <type_el v-model="type_id"/>
+      <div class="md-layout-item md-small-size-100" >
+        <status_el v-model="status_id" v-if="showStatuses"/>
       </div>
     </div>
 

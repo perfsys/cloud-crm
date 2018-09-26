@@ -18,8 +18,9 @@
     </div>
 
     <div class="md-layout-item md-small-size-15">
-     <md-button class="md-primary md-icon-button " @click="showAddLabel = !showAddLabel">
-      <md-icon>add</md-icon>
+     <md-button class="md-primary md-icon-button " @click="showAddLabels">
+      <md-icon v-if="expandMore">expand_more</md-icon>
+      <md-icon v-if="!expandMore">expand_less</md-icon>
     </md-button>
     </div>
   </div>
@@ -46,7 +47,9 @@ export default {
       labels: (this.value) ? this.value : [],
       addedLabel: null,
 
-      showAddLabel: false
+      showAddLabel: false,
+      expandMore: true
+
     }
   },
 
@@ -95,6 +98,7 @@ export default {
 
     resetAddedLabel: function () {
       this.addedLabel = null
+      this.showAddLabels()
     },
 
     addAddedLabelToLabels: function () {
@@ -103,6 +107,11 @@ export default {
         this.labels.push(addedLabelNnameNormalized)
         this.resetAddedLabel()
       }
+    },
+
+    showAddLabels: function () {
+      this.showAddLabel = !this.showAddLabel
+      this.expandMore = !this.expandMore
     }
   }
 }
