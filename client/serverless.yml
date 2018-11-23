@@ -22,6 +22,9 @@ provider:
 
   environment:
     UI_DIST_BUCKET_NAME: ${self:custom.bucketName}
+    #custom varialbe
+    #API_BASE_URL: https://ky2y3a88pc.execute-api.eu-west-1.amazonaws.com/dev/
+    #/custom variable
 
 resources:
   Resources:
@@ -103,8 +106,3 @@ resources:
             -
               - Ref: 'AWS::StackName'
               - 'S3UIDistBucketWebsiteURL'
-
-
-
-
-

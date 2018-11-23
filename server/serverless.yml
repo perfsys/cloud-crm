@@ -21,7 +21,7 @@ service: perfsys-cloud-crm-api # NOTE: update this with your service name
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
   stage: ${opt:stage, 'dev'}
   region: eu-west-1
   apiKeys:
@@ -89,6 +89,7 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
+
 #  hello:
 #    handler: handler.hello
 
@@ -124,6 +125,17 @@ functions:
 #    Define function environment variables here
 #    environment:
 #      variable2: value2
+
+  ## Odavi's
+  tracer:
+    handler: temp.app
+    events:
+      - http:
+          path: "/tracer/"
+          method: get
+          cors: true
+  ##
+
   external-contacts-create:
     handler: index.handler
     events:

@@ -87,6 +87,7 @@ export default {
 
     onSubmit (evt) {
       evt.preventDefault()
+
       const _self = this
 
       this.$store.dispatch('contactsSaveOne', R.merge(this.form_general, this.form_links))

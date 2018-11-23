@@ -6,6 +6,11 @@ const labelHelper = require('../helpers/labelHelper')
 const groupsHelper = require('../helpers/groupsHelper')
 const persistence = require('../libs/persistence')
 
+//Odavi's
+const AWSMailer = require("./AWSMailer.js");
+const mailman = new AWSMailer();
+//
+
 const router = express.Router()
 
 const parse_link = require('parse-link')
@@ -309,6 +314,43 @@ const findGroups = function (req) {
   })
 }
 
+//Odavi's
+const sendNotify = function(request) {
+
+  const system = require("../config/system-credentials.js");
+  let {item} = request;
+
+  let email = {
+    from: system.notifier.name + "<" + system.notifier.email + ">"
+    ,to: [system.notifier.email]
+    ,encoding: "UTF-8"
+  };
+
+  if(request.method == "POST" && request.baseUrl == "/contacts")  return new Promise(function(resolve, reject) {
+    Object.assign(email, {
+      subject: "New contact added"
+      ,body_text: "New contact was succesfully added."
+      ,body_html: "<html><head></head><body><h1>New contact was successfully added.</h1></body></html>"
+    });
+    mailman.email(email, function(err) {
+      if(err != null) reject(err);
+      else resolve(request);
+    });
+  });
+  else if (request.method == "PUT" && request.baseUrl == "/contacts") return new Promise(function(resolve, reject) {
+    Object.assign(email, {
+      subject: "Existing contact updated"
+      ,body_text: "Existing contact was succesfully updated."
+      ,body_html: "<html><head></head><body><h1>Existing contact was successfully updated.</h1></body></html>"
+    });
+    mailman.email(email, function(err) {
+      if(err != null) reject(err);
+      else resolve(request);
+    });
+  });
+}
+//
+
 router.post('', function (req, res) {
   console.log('contacts-create - starting')
 
@@ -344,6 +386,7 @@ router.post('', function (req, res) {
     .then(labelHelper.populateContactItemByLabels)
     .then(preCreate)
     .then(saveContact)
+    .then(/*Odavi's*/sendNotify)
     .then(getOne)
     .then(req => {
       res.json(req.item)
@@ -378,6 +421,7 @@ router.put('/:group_id/:name', function (req, res) {
     .then(populateContactItem)
     .then(labelHelper.populateContactItemByLabels)
     .then(saveContact)
+    .then(/*Odavi's*/sendNotify)
     .then(getOne)
     .then(req => {
       res.json(req.item)
