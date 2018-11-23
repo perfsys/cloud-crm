@@ -1,6 +1,6 @@
 module.exports = {
-  notifier:{
-    name:"Cloud-CRM"
-    ,email:"robakidzegeorge@gmail.com"
+  notifier: {
+    name: 'Cloud-CRM',
+    email: 'robakidzegeorge@gmail.com'
   }
-};
+}
