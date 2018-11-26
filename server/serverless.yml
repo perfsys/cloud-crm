@@ -126,16 +126,6 @@ functions:
 #    environment:
 #      variable2: value2
 
-  ## Odavi's
-  tracer:
-    handler: temp.app
-    events:
-      - http:
-          path: "/tracer/"
-          method: get
-          cors: true
-  ##
-
   external-contacts-create:
     handler: index.handler
     events:

@@ -1,23 +1,27 @@
 'use strict'
+// AWSMailer module contains realisation of AWSMailer class.
+// The main purpose of the class is a connection with AWS SES via AWS JavaScript SDK.
 
 const AWS = require('aws-sdk')
 
 const AWSMailer = function () {
   let SIMPLE_EMAIL_SERVICE;
 
-  (function /* constructor */(obj) {
+  (function (obj) {
+    // Request of the AWS IAM credentials stored in the aws-config.json file
     AWS.config.loadFromPath('./config/aws-config.json')
     SIMPLE_EMAIL_SERVICE = new AWS.SES()
   })(this)
 
-  /* email obj. {
-    from: "Name <email>"
-    to: ["email 1", "email 2", ..., "email n"]
-    subject: "email subject"
-    body_text: email text view
-    body_html: email html view
-    encoding: email charset
-  } */
+  // A template of first parameter required with .email() f. is given below
+  // email obj. {
+  //   from: "Name <email>"
+  //   to: ["email 1", "email 2", ..., "email n"]
+  //   subject: "email subject"
+  //   body_text: email text view
+  //   body_html: email html view
+  //   encoding: email charset
+  // }
   this.email = function (email, callback) {
     if (email == null) return false
     var params = {

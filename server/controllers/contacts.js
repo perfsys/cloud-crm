@@ -6,7 +6,8 @@ const labelHelper = require('../helpers/labelHelper')
 const groupsHelper = require('../helpers/groupsHelper')
 const persistence = require('../libs/persistence')
 
-// Odavi's
+// #Odavi's
+// Importing AWSMailer module and creating an instance of AWSMailer class
 const AWSMailer = require('./AWSMailer.js')
 const mailman = new AWSMailer()
 //
@@ -314,8 +315,11 @@ const findGroups = function (req) {
   })
 }
 
-// Odavi's
+// #Odavi's
+// sendNotify f. is responsible for a formulation of notifications and emails, and for sending them via AWS SES system.
+// Communication with AWS SES system is done via an instance of AWSMailer class.
 const sendNotify = function (request) {
+  // Request of the 'system as a notifier' credentials stored in the system-credentials.js module
   const system = require('../config/system-credentials.js')
 
   let email = {
@@ -325,30 +329,24 @@ const sendNotify = function (request) {
   }
 
   if (request.method === 'POST' && request.baseUrl === '/contacts') {
-    return new Promise(function (resolve, reject) {
-      Object.assign(email, {
-        subject: 'New contact added',
-        body_text: 'New contact was succesfully added.',
-        body_html: '<html><head></head><body><h1>New contact was successfully added.</h1></body></html>'
-      })
-      mailman.email(email, function (err) {
-        if (err != null) reject(err)
-        else resolve(request)
-      })
+    Object.assign(email, {
+      subject: 'New contact added',
+      body_text: 'New contact was succesfully added.',
+      body_html: '<html><head></head><body><h1>New contact was successfully added.</h1></body></html>'
     })
   } else if (request.method === 'PUT' && request.baseUrl === '/contacts') {
-    return new Promise(function (resolve, reject) {
-      Object.assign(email, {
-        subject: 'Existing contact updated',
-        body_text: 'Existing contact was succesfully updated.',
-        body_html: '<html><head></head><body><h1>Existing contact was successfully updated.</h1></body></html>'
-      })
-      mailman.email(email, function (err) {
-        if (err != null) reject(err)
-        else resolve(request)
-      })
+    Object.assign(email, {
+      subject: 'Existing contact updated',
+      body_text: 'Existing contact was succesfully updated.',
+      body_html: '<html><head></head><body><h1>Existing contact was successfully updated.</h1></body></html>'
     })
-  }
+  } else return false
+  return new Promise(function (resolve, reject) {
+    mailman.email(email, function (err) {
+      if (err != null) reject(err)
+      else resolve(request)
+    })
+  })
 }
 //
 
@@ -387,7 +385,9 @@ router.post('', function (req, res) {
     .then(labelHelper.populateContactItemByLabels)
     .then(preCreate)
     .then(saveContact)
-    .then(/* Odavi's */sendNotify)
+    // #Odavi's
+    // Insertion of the notifier function to the endpoint functions queue
+    .then(sendNotify)
     .then(getOne)
     .then(req => {
       res.json(req.item)
@@ -422,7 +422,9 @@ router.put('/:group_id/:name', function (req, res) {
     .then(populateContactItem)
     .then(labelHelper.populateContactItemByLabels)
     .then(saveContact)
-    .then(/* Odavi's */sendNotify)
+    // #Odavi's
+    // Insertion of the notifier function to the endpoint functions queue
+    .then(sendNotify)
     .then(getOne)
     .then(req => {
       res.json(req.item)
