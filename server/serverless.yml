@@ -66,10 +66,24 @@ provider:
         - dynamodb:DeleteItem
         - dynamodb:BatchWriteItem
         - dynamodb:BatchGetItem
+        #Odavi's
+        - dynamodb:DescribeStream
+        - dynamodb:GetRecords
+        - dynamodb:GetShardIterator
+        - dynamodb:ListStreams
+        ##
       Resource:
         - { "Fn::GetAtt": ["ContactsDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["ContactUpdatesDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["GroupsDynamoDBTable", "Arn" ] }
+        ## #Odavi's
+        - Fn::GetAtt:
+          - QuickStorage
+          - Arn
+        - Fn::GetAtt:
+          - QuickStorage
+          - StorageArn
+        ##
 
 # you can define service wide environment variables here
 #  environment:
@@ -125,6 +139,26 @@ functions:
 #    Define function environment variables here
 #    environment:
 #      variable2: value2
+
+  ## #Odavi's
+  stream-trigger:
+    handler: temp.trigger
+    events:
+      - http:
+          path: '/sandbox/'
+          method: get
+          cors: true
+
+  stream-handler:
+    handler: temp.handler
+    events:
+      - stream:
+        type: dynabodb
+        arn:
+          Fn::GetAtt:
+            - Storage
+            - StreamArn
+  ##
 
   external-contacts-create:
     handler: index.handler
@@ -382,6 +416,26 @@ resources:
           Fn::GetAtt: [InitGroupsLambdaFunction, Arn]
         Table: ${self:provider.environment.GROUPS_TABLE}
         Version: 1
+
+    ## #Odavi's
+    QuickStorage:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: itemKey
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: itemKey
+            KeyType: HASH
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: cloud-storage
+    ##
 
 #  Outputs:
 #     NewOutput:

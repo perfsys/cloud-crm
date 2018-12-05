@@ -8,8 +8,14 @@ const persistence = require('../libs/persistence')
 
 // #Odavi's
 // Importing AWSMailer module and creating an instance of AWSMailer class
-const AWSMailer = require('./AWSMailer.js')
-const mailman = new AWSMailer()
+// const AWSNotifier = require('../modules/aws-notifier.js')
+// const notifier = new AWSNotifier()
+
+/* let contactManagmentTopic = null
+notifier.createNotificationTopic('contacts-management-actions', function (err, data) {
+  if (err != null) console.log('Failed to create new topic - "' + 'contacts-management-actions' + '" topic.')
+  else contactManagmentTopic = data
+}) */
 //
 
 const router = express.Router()
@@ -318,36 +324,9 @@ const findGroups = function (req) {
 // #Odavi's
 // sendNotify f. is responsible for a formulation of notifications and emails, and for sending them via AWS SES system.
 // Communication with AWS SES system is done via an instance of AWSMailer class.
-const sendNotify = function (request) {
-  // Request of the 'system as a notifier' credentials stored in the system-credentials.js module
-  const system = require('../config/system-credentials.js')
-
-  let email = {
-    from: system.notifier.name + '<' + system.notifier.email + '>',
-    to: [system.notifier.email],
-    encoding: 'UTF-8'
-  }
-
-  if (request.method === 'POST' && request.baseUrl === '/contacts') {
-    Object.assign(email, {
-      subject: 'New contact added',
-      body_text: 'New contact was succesfully added.',
-      body_html: '<html><head></head><body><h1>New contact was successfully added.</h1></body></html>'
-    })
-  } else if (request.method === 'PUT' && request.baseUrl === '/contacts') {
-    Object.assign(email, {
-      subject: 'Existing contact updated',
-      body_text: 'Existing contact was succesfully updated.',
-      body_html: '<html><head></head><body><h1>Existing contact was successfully updated.</h1></body></html>'
-    })
-  } else return false
-  return new Promise(function (resolve, reject) {
-    mailman.email(email, function (err) {
-      if (err != null) reject(err)
-      else resolve(request)
-    })
-  })
-}
+// const sendNotify = function (request) {
+// TODO
+// }
 //
 
 router.post('', function (req, res) {
@@ -387,7 +366,7 @@ router.post('', function (req, res) {
     .then(saveContact)
     // #Odavi's
     // Insertion of the notifier function to the endpoint functions queue
-    .then(sendNotify)
+    // .then(sendNotify)
     .then(getOne)
     .then(req => {
       res.json(req.item)
@@ -424,7 +403,7 @@ router.put('/:group_id/:name', function (req, res) {
     .then(saveContact)
     // #Odavi's
     // Insertion of the notifier function to the endpoint functions queue
-    .then(sendNotify)
+    // .then(sendNotify)
     .then(getOne)
     .then(req => {
       res.json(req.item)
