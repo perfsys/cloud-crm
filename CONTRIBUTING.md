@@ -38,4 +38,4 @@ Thanks again for being a contributor :tada:!
 
 Cheers,
 
-The :zap: [Perfsys](http://www.perfsys.com) Team
+The :zap: [Perfsys](http://perfsys.com) Team
