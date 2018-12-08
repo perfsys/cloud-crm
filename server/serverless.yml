@@ -56,7 +56,8 @@ provider:
 #            - "Ref" : "ServerlessDeploymentBucket"
 #            - "/*"
   iamRoleStatements:
-    - Effect: Allow
+    -
+      Effect: Allow
       Action:
         - dynamodb:Query
         - dynamodb:Scan
@@ -66,24 +67,32 @@ provider:
         - dynamodb:DeleteItem
         - dynamodb:BatchWriteItem
         - dynamodb:BatchGetItem
-        #Odavi's
-        - dynamodb:DescribeStream
-        - dynamodb:GetRecords
-        - dynamodb:GetShardIterator
-        - dynamodb:ListStreams
-        ##
       Resource:
-        - { "Fn::GetAtt": ["ContactsDynamoDBTable", "Arn" ] }
+        ## #Odavi's
+#        - { "Fn::GetAtt": ["ContactsDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["ContactUpdatesDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["GroupsDynamoDBTable", "Arn" ] }
-        ## #Odavi's
+    -
+      Resource:
         - Fn::GetAtt:
-          - QuickStorage
-          - Arn
-        - Fn::GetAtt:
-          - QuickStorage
-          - StorageArn
-        ##
+            - ContactsDynamoDBTable
+            - Arn
+      Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:BatchWriteItem
+        - dynamodb:BatchGetItem
+        - dynamodb:GetRecords
+        - dynamodb:GetShardIterator
+        - dynamodb:DescribeStream
+        - dynamodb:ListStreams
+
+
 
 # you can define service wide environment variables here
 #  environment:
@@ -92,6 +101,9 @@ provider:
     CONTACTS_TABLE: ${self:provider.stage}-cloud-crm-contacts
     GROUPS_TABLE: ${self:provider.stage}-cloud-crm-groups
     CONTACT_UPDATES_TABLE: ${self:provider.stage}-cloud-crm-contact-updates
+    ## #Odavi's
+    AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE: ${self:provider.stage}-cloud-crm-automatic-notifications
+    ##
 
 # you can add packaging information here
 #package:
@@ -141,23 +153,15 @@ functions:
 #      variable2: value2
 
   ## #Odavi's
-  stream-trigger:
-    handler: temp.trigger
-    events:
-      - http:
-          path: '/sandbox/'
-          method: get
-          cors: true
-
-  stream-handler:
-    handler: temp.handler
+  contacts-table-stream-listener:
+    handler: streamlisteners.listener
     events:
       - stream:
-        type: dynabodb
-        arn:
-          Fn::GetAtt:
-            - Storage
-            - StreamArn
+          type: dynamodb
+          arn:
+            Fn::GetAtt:
+              - ContactsDynamoDBTable
+              - StreamArn
   ##
 
   external-contacts-create:
@@ -169,7 +173,6 @@ functions:
           cors: true
           private: true
 #          https://serverless.com/framework/docs/providers/aws/events/apigateway/#http-endpoint-with-extended-options
-
 
   sources-list:
     handler: index.handler
@@ -373,6 +376,10 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.CONTACTS_TABLE}
+        ## #Odavi's
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+        ##
 
     ContactUpdatesDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
@@ -418,25 +425,18 @@ resources:
         Version: 1
 
     ## #Odavi's
-    QuickStorage:
-      Type: AWS::DynamoDB::Table
+    ContactManagementTopic:
+      Type: AWS::SNS::Topic
       Properties:
-        AttributeDefinitions:
+        DisplayName: Cloud CRM automatic notifications
+        TopicName: ${self:provider.environment.AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE}
+        #!?
+        Subscription:
           -
-            AttributeName: itemKey
-            AttributeType: N
-        KeySchema:
-          -
-            AttributeName: itemKey
-            KeyType: HASH
-        StreamSpecification:
-          StreamViewType: NEW_AND_OLD_IMAGES
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: cloud-storage
-    ##
+            Endpoint: robakidzegeorge@gmail.com
+            Protocol: email
 
+    ##
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
