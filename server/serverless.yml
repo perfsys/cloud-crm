@@ -436,7 +436,6 @@ resources:
             Endpoint: robakidzegeorge@gmail.com
             Protocol: email
 
-    ##
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
