@@ -6,18 +6,6 @@ const labelHelper = require('../helpers/labelHelper')
 const groupsHelper = require('../helpers/groupsHelper')
 const persistence = require('../libs/persistence')
 
-// #Odavi's
-// Importing AWSMailer module and creating an instance of AWSMailer class
-// const AWSNotifier = require('../modules/aws-notifier.js')
-// const notifier = new AWSNotifier()
-
-/* let contactManagmentTopic = null
-notifier.createNotificationTopic('contacts-management-actions', function (err, data) {
-  if (err != null) console.log('Failed to create new topic - "' + 'contacts-management-actions' + '" topic.')
-  else contactManagmentTopic = data
-}) */
-//
-
 const router = express.Router()
 
 const parse_link = require('parse-link')
@@ -321,14 +309,6 @@ const findGroups = function (req) {
   })
 }
 
-// #Odavi's
-// sendNotify f. is responsible for a formulation of notifications and emails, and for sending them via AWS SES system.
-// Communication with AWS SES system is done via an instance of AWSMailer class.
-// const sendNotify = function (request) {
-// TODO
-// }
-//
-
 router.post('', function (req, res) {
   console.log('contacts-create - starting')
 
@@ -364,9 +344,6 @@ router.post('', function (req, res) {
     .then(labelHelper.populateContactItemByLabels)
     .then(preCreate)
     .then(saveContact)
-    // #Odavi's
-    // Insertion of the notifier function to the endpoint functions queue
-    // .then(sendNotify)
     .then(getOne)
     .then(req => {
       res.json(req.item)
@@ -401,9 +378,6 @@ router.put('/:group_id/:name', function (req, res) {
     .then(populateContactItem)
     .then(labelHelper.populateContactItemByLabels)
     .then(saveContact)
-    // #Odavi's
-    // Insertion of the notifier function to the endpoint functions queue
-    // .then(sendNotify)
     .then(getOne)
     .then(req => {
       res.json(req.item)

@@ -68,8 +68,6 @@ provider:
         - dynamodb:BatchWriteItem
         - dynamodb:BatchGetItem
       Resource:
-        ## #Odavi's
-#        - { "Fn::GetAtt": ["ContactsDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["ContactUpdatesDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["GroupsDynamoDBTable", "Arn" ] }
     -
@@ -101,9 +99,8 @@ provider:
     CONTACTS_TABLE: ${self:provider.stage}-cloud-crm-contacts
     GROUPS_TABLE: ${self:provider.stage}-cloud-crm-groups
     CONTACT_UPDATES_TABLE: ${self:provider.stage}-cloud-crm-contact-updates
-    ## #Odavi's
     AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE: ${self:provider.stage}-cloud-crm-automatic-notifications
-    ##
+
 
 # you can add packaging information here
 #package:
@@ -152,7 +149,6 @@ functions:
 #    environment:
 #      variable2: value2
 
-  ## #Odavi's
   contacts-table-stream-listener:
     handler: streamlisteners.listener
     events:
@@ -162,7 +158,6 @@ functions:
             Fn::GetAtt:
               - ContactsDynamoDBTable
               - StreamArn
-  ##
 
   external-contacts-create:
     handler: index.handler
@@ -376,10 +371,8 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.CONTACTS_TABLE}
-        ## #Odavi's
         StreamSpecification:
           StreamViewType: NEW_AND_OLD_IMAGES
-        ##
 
     ContactUpdatesDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
@@ -424,17 +417,11 @@ resources:
         Table: ${self:provider.environment.GROUPS_TABLE}
         Version: 1
 
-    ## #Odavi's
     ContactManagementTopic:
       Type: AWS::SNS::Topic
       Properties:
         DisplayName: Cloud CRM automatic notifications
         TopicName: ${self:provider.environment.AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE}
-        #!?
-        Subscription:
-          -
-            Endpoint: robakidzegeorge@gmail.com
-            Protocol: email
 
 #  Outputs:
 #     NewOutput:

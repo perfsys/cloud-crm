@@ -30,7 +30,6 @@ const notify = function (note) {
 }
 
 module.exports.listener = function (event, context) {
-  console.log('Tracer...')
   checkTopic()
     .then(function (TOPIC) {
       let noteTemplate = {
@@ -41,9 +40,17 @@ module.exports.listener = function (event, context) {
       event.Records.forEach(function (record) {
         let note = noteTemplate
         if (record.eventName === 'INSERT') {
-          note.message = 'New contact was successfully added to the Cloud CRM contact list.'
+          note.message = 'New contact was successfully added to the Cloud CRM contact list.\n'
+          + '\n'
+          + 'Contact name: ' + record.dynamodb.NewImage.name.S + '\n'
+          + 'Contact group: ' + record.dynamodb.NewImage.group_name.S
+          console.log(JSON.stringify(record))
         } else if (record.eventName === 'MODIFY') {
-          note.message = 'One of your Cloud CRM contacts was successfully modified'
+          note.message = 'One of your Cloud CRM contacts was successfully modified.\n'
+          + '\n'
+          + 'Contact name: ' + record.dynamodb.NewImage.name.S + '\n'
+          + 'Contact group: ' + record.dynamodb.NewImage.group_name.S
+          console.log(JSON.stringify(record))
         } else return
         notify(note)
           .then(function (data) {
