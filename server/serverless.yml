@@ -156,7 +156,7 @@ functions:
 #      variable2: value2
 
   contacts-table-stream-listener:
-    handler: streamlisteners.listener
+    handler: contacts_listener.listener
     events:
       - stream:
           type: dynamodb

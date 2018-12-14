@@ -17,14 +17,6 @@ const AWSNotifier = function () {
     }
     SIMPLE_NOTIFICATION_SERVICE.publish(params, callback)
   }
-  this.createTopic = function (topicName, callback) {
-    SIMPLE_NOTIFICATION_SERVICE.createTopic({Name: topicName}, function (err, data) {
-      if (err != null) {
-        console.log(JSON.stringify(err))
-        callback(err, null)
-      } else callback(null, {TopicName: topicName, TopicArn: data.TopicArn})
-    })
-  }
 }
 
 module.exports = AWSNotifier
