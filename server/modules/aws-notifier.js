@@ -6,7 +6,6 @@ const AWSNotifier = function () {
   let SIMPLE_NOTIFICATION_SERVICE;
 
   (function (obj) {
-    AWS.config.loadFromPath('./configs/aws-config.json')
     SIMPLE_NOTIFICATION_SERVICE = new AWS.SNS()
   })(this)
 

@@ -89,8 +89,12 @@ provider:
         - dynamodb:GetShardIterator
         - dynamodb:DescribeStream
         - dynamodb:ListStreams
-
-
+    -
+      Resource:
+        - Ref: ContactManagementTopic
+      Effect: Allow
+      Action:
+        - SNS:Publish
 
 # you can define service wide environment variables here
 #  environment:
@@ -100,6 +104,8 @@ provider:
     GROUPS_TABLE: ${self:provider.stage}-cloud-crm-groups
     CONTACT_UPDATES_TABLE: ${self:provider.stage}-cloud-crm-contact-updates
     AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE: ${self:provider.stage}-cloud-crm-automatic-notifications
+    AUTOMATIC_NOTIFICATIONS_TOPIC_ARN:
+      Ref: ContactManagementTopic
 
 
 # you can add packaging information here
