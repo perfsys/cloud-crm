@@ -21,7 +21,7 @@ service: perfsys-cloud-crm-api # NOTE: update this with your service name
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
   stage: ${opt:stage, 'dev'}
   region: eu-west-1
   apiKeys:
@@ -56,7 +56,8 @@ provider:
 #            - "Ref" : "ServerlessDeploymentBucket"
 #            - "/*"
   iamRoleStatements:
-    - Effect: Allow
+    -
+      Effect: Allow
       Action:
         - dynamodb:Query
         - dynamodb:Scan
@@ -67,9 +68,33 @@ provider:
         - dynamodb:BatchWriteItem
         - dynamodb:BatchGetItem
       Resource:
-        - { "Fn::GetAtt": ["ContactsDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["ContactUpdatesDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["GroupsDynamoDBTable", "Arn" ] }
+    -
+      Resource:
+        - Fn::GetAtt:
+            - ContactsDynamoDBTable
+            - Arn
+      Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:BatchWriteItem
+        - dynamodb:BatchGetItem
+        - dynamodb:GetRecords
+        - dynamodb:GetShardIterator
+        - dynamodb:DescribeStream
+        - dynamodb:ListStreams
+    -
+      Resource:
+        - Ref: ContactManagementTopic
+      Effect: Allow
+      Action:
+        - SNS:Publish
 
 # you can define service wide environment variables here
 #  environment:
@@ -78,6 +103,10 @@ provider:
     CONTACTS_TABLE: ${self:provider.stage}-cloud-crm-contacts
     GROUPS_TABLE: ${self:provider.stage}-cloud-crm-groups
     CONTACT_UPDATES_TABLE: ${self:provider.stage}-cloud-crm-contact-updates
+    AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE: ${self:provider.stage}-cloud-crm-automatic-notifications
+    AUTOMATIC_NOTIFICATIONS_TOPIC_ARN:
+      Ref: ContactManagementTopic
+
 
 # you can add packaging information here
 #package:
@@ -89,6 +118,7 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
+
 #  hello:
 #    handler: handler.hello
 
@@ -124,6 +154,17 @@ functions:
 #    Define function environment variables here
 #    environment:
 #      variable2: value2
+
+  contacts-table-stream-listener:
+    handler: contacts_listener.listener
+    events:
+      - stream:
+          type: dynamodb
+          arn:
+            Fn::GetAtt:
+              - ContactsDynamoDBTable
+              - StreamArn
+
   external-contacts-create:
     handler: index.handler
     events:
@@ -133,7 +174,6 @@ functions:
           cors: true
           private: true
 #          https://serverless.com/framework/docs/providers/aws/events/apigateway/#http-endpoint-with-extended-options
-
 
   sources-list:
     handler: index.handler
@@ -337,6 +377,8 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.CONTACTS_TABLE}
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
 
     ContactUpdatesDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
@@ -380,6 +422,12 @@ resources:
           Fn::GetAtt: [InitGroupsLambdaFunction, Arn]
         Table: ${self:provider.environment.GROUPS_TABLE}
         Version: 1
+
+    ContactManagementTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Cloud CRM automatic notifications
+        TopicName: ${self:provider.environment.AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE}
 
 #  Outputs:
 #     NewOutput:
