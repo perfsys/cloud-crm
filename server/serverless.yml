@@ -70,6 +70,7 @@ provider:
       Resource:
         - { "Fn::GetAtt": ["ContactUpdatesDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["GroupsDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["CompaniesDynamoDBTable", "Arn" ] }
     -
       Resource:
         - Fn::GetAtt:
@@ -103,6 +104,7 @@ provider:
     CONTACTS_TABLE: ${self:provider.stage}-cloud-crm-contacts
     GROUPS_TABLE: ${self:provider.stage}-cloud-crm-groups
     CONTACT_UPDATES_TABLE: ${self:provider.stage}-cloud-crm-contact-updates
+    COMPANIES_TABLE: ${self:provider.stage}-cloud-crm-companies
     AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE: ${self:provider.stage}-cloud-crm-automatic-notifications
     AUTOMATIC_NOTIFICATIONS_TOPIC_ARN:
       Ref: ContactManagementTopic
@@ -155,8 +157,42 @@ functions:
 #    environment:
 #      variable2: value2
 
-  contacts-table-stream-listener:
-    handler: contacts_listener.listener
+  companies-list:
+    handler: index.handler
+    events:
+      - http:
+          method: get
+          path: '/companies'
+          cors: true
+
+  company-info:
+    handler: index.handler
+    events:
+      - http:
+          method: get
+          path: '/companies/{companyId}'
+          cors: true
+
+  update-company-info:
+    handler: index.handler
+    events:
+      - http:
+          method: put
+          path: '/companies'
+          cors: true
+
+  contacts-management-act-not:
+    handler: dynamoDBStreamListeners.contactManagementActionNotification
+    events:
+      - stream:
+          type: dynamodb
+          arn:
+            Fn::GetAtt:
+              - ContactsDynamoDBTable
+              - StreamArn
+
+  companies-table-controller:
+    handler: dynamoDBStreamListeners.companiesTableController
     events:
       - stream:
           type: dynamodb
@@ -422,6 +458,22 @@ resources:
           Fn::GetAtt: [InitGroupsLambdaFunction, Arn]
         Table: ${self:provider.environment.GROUPS_TABLE}
         Version: 1
+
+    CompaniesDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: company_normalized
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: company_normalized
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.COMPANIES_TABLE}
 
     ContactManagementTopic:
       Type: AWS::SNS::Topic
