@@ -12,6 +12,7 @@ const countries = require('./controllers/countries')
 const statuses = require('./controllers/statuses')
 const labels = require('./controllers/labels')
 const updates = require('./controllers/updates')
+const companies = require('./controllers/companies')
 
 const app = express()
 
@@ -29,6 +30,7 @@ app.use('/groups/:groupId/labels', labels)
 app.use('/types', types)
 app.use('/countries', countries)
 app.use('/groups/:groupId/statuses', statuses)
+app.use('/companies', companies)
 
 app.get('/', function (req, res) {
   res.send('HEALTHY')

@@ -1,5 +1,12 @@
 <template>
+
   <md-list>
+
+    <md-subheader>Companies</md-subheader>
+    <md-list-item to="/companies">
+      <md-icon>chevron_right</md-icon>
+      <span class="md-list-item-text">Companies</span>
+    </md-list-item>
 
     <md-subheader>Contacts</md-subheader>
 
