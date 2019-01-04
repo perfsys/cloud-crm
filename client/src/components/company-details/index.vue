@@ -7,65 +7,64 @@
     <md-content>
     <div class="md-layout">
       <div class="md-layout-item">
-      <md-list class="md-double-line">
-        <md-subheader>General info</md-subheader>
-        <md-list-item v-if="company.company_name">
-          <div class="md-list-item-text">
-            <p>{{company.company_name}}</p>
-            <p>Company title</p>
-          </div>
-        </md-list-item>
-        <md-list-item v-if="company.extendedTitle">
-          <div class="md-list-item-text">
-            <p>{{company.extendedTitle}}</p>
-            <p>Full title</p>
-          </div>
-        </md-list-item>
-        <md-list-item v-if="company.address1 || company.address2">
-          <div class="md-list-item-text">
-            <p v-if="company.address1||company.address2">{{company.address1}} {{company.address2}}</p>
-            <p>Address</p>
-          </div>
-        </md-list-item>
+        <md-list class="md-double-line">
+          <md-subheader>General info</md-subheader>
+          <md-list-item v-if="company.company_name">
+            <div class="md-list-item-text">
+              <p>{{company.company_name}}</p>
+              <p>Company title</p>
+            </div>
+          </md-list-item>
+          <md-list-item v-if="company.extendedTitle">
+            <div class="md-list-item-text">
+              <p>{{company.extendedTitle}}</p>
+              <p>Full title</p>
+            </div>
+          </md-list-item>
+          <md-list-item v-if="company.address1 || company.address2">
+            <div class="md-list-item-text">
+              <p v-if="company.address1||company.address2">{{company.address1}} {{company.address2}}</p>
+              <p>Address</p>
+            </div>
+          </md-list-item>
         </md-list>
         </div>
 
         <div class="md-layout-item">
-        <md-list class="md-double-line">
-        <md-subheader v-if="company.contacts.CEO || company.contacts.CTO">Representativess</md-subheader>
-        <md-list-item v-if="company.contacts.CEO">
-          <div class="md-list-item-text" >
-            <p>{{company.contacts.CEO}}</p>
-            <p>CEO</p>
-          </div>
-        </md-list-item>
-        <md-list-item v-if="company.contacts.CTO">
-          <div class="md-list-item-text">
-            <p>{{company.contacts.CTO}}</p>
-            <p>CTO</p>
-          </div>
-        </md-list-item>
-        </md-list>
+          <md-list class="md-double-line">
+          <md-subheader v-if="company.contacts.CEO || company.contacts.CTO">Representativess</md-subheader>
+          <md-list-item v-if="company.contacts.CEO">
+            <div class="md-list-item-text" >
+              <p>{{company.contacts.CEO}}</p>
+              <p>CEO</p>
+            </div>
+          </md-list-item>
+          <md-list-item v-if="company.contacts.CTO">
+            <div class="md-list-item-text">
+              <p>{{company.contacts.CTO}}</p>
+              <p>CTO</p>
+            </div>
+          </md-list-item>
+          </md-list>
         </div>
 
         <div class="md-layout-item">
-        <md-list class="md-double-line">
-        <md-subheader v-if="company.socials.facebook || company.socials.linkedIn">Social media</md-subheader>
-        <md-list-item v-if="company.socials.facebook">
-          <div class="md-list-item-text" >
-            <p>{{company.socials.facebook}}</p>
-            <p>Facebook</p>
-          </div>
-        </md-list-item>
-        <md-list-item v-if="company.socials.linkedIn">
-          <div class="md-list-item-text" >
-            <p>{{company.socials.linkedIn}}</p>
-            <p>LinkedIn</p>
-          </div>
-        </md-list-item>
-      </md-list>
+          <md-list class="md-double-line">
+          <md-subheader v-if="company.socials.facebook || company.socials.linkedIn">Social media</md-subheader>
+          <md-list-item v-if="company.socials.facebook">
+            <div class="md-list-item-text" >
+              <p>{{company.socials.facebook}}</p>
+              <p>Facebook</p>
+            </div>
+          </md-list-item>
+          <md-list-item v-if="company.socials.linkedIn">
+            <div class="md-list-item-text" >
+              <p>{{company.socials.linkedIn}}</p>
+              <p>LinkedIn</p>
+            </div>
+          </md-list-item>
+        </md-list>
       </div>
-    </div>
     </div>
     </md-content>
   </md-card>
