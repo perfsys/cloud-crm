@@ -7,6 +7,8 @@
       </md-card-header>
 
       <md-card-content>
+      <div class="md-layout">
+      <div class="md-layout-item">
         <md-field>
           <label for="extendedTitle">Extended title</label>
           <md-input name="extendedTitle" v-model="company.extendedTitle"/>
@@ -56,6 +58,9 @@
             </md-card-content>
           </md-step>
         </md-steppers>
+        </div>
+        <div class="md-layout"></div>
+        </div>
       </md-card-content>
     </md-card>
 

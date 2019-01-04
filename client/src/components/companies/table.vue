@@ -7,7 +7,7 @@
 
     <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single">
       <md-table-cell md-label="Company name">{{item.company_name}}</md-table-cell>
-      <md-table-cell md-label="Edit info">
+      <md-table-cell>
         <md-button class="md-icon-button md-accent" @click.stop="onEdit(item)">
           <md-icon>edit</md-icon>
         </md-button>
