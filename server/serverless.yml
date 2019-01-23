@@ -481,7 +481,31 @@ resources:
         DisplayName: Cloud CRM automatic notifications
         TopicName: ${self:provider.environment.AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE}
 
-#  Outputs:
+  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+    ContactsTable:
+      Description: Table of Cloud CRM contacts list
+      Value:
+        Fn::GetAtt:
+            - ContactsDynamoDBTable
+            - Arn
+    UpdatesTable:
+      Description: Table of Cloud CRM contacts updates
+      Value:
+        Fn::GetAtt:
+            - ContactUpdatesDynamoDBTable
+            - Arn
+    GroupsTable:
+      Description: Table of Cloud CRM groups list
+      Value:
+        Fn::GetAtt:
+            - GroupsDynamoDBTable
+            - Arn
+    CompaniesTable:
+      Description: Table of Cloud CRM companies list
+      Value:
+        Fn::GetAtt:
+            - CompaniesDynamoDBTable
+            - Arn
