@@ -7,6 +7,7 @@ module.exports.contactManagementActionNotification = function (event, context) {
     TopicName: process.env.AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE,
     TopicArn: process.env.AUTOMATIC_NOTIFICATIONS_TOPIC_ARN
   }
+  const BASE_URL = process.env.BASE_URL
   const notify = function (note) {
     return new Promise(function (resolve, reject) {
       notifier.publish(note, function (err, data) {
@@ -27,12 +28,14 @@ module.exports.contactManagementActionNotification = function (event, context) {
       note.message = 'New contact was successfully added to the Cloud CRM contact list.\n' +
           '\n' +
           'Contact name: ' + record.dynamodb.NewImage.name.S + '\n' +
-          'Contact group: ' + record.dynamodb.NewImage.group_name.S
+          'Contact group: ' + record.dynamodb.NewImage.group_name.S + '\n' +
+          'Contact link:' + `http://${BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${record.dynamodb.NewImage.name.S}/view`
     } else if (record.eventName === 'MODIFY') {
       note.message = 'One of your Cloud CRM contacts was successfully modified.\n' +
           '\n' +
           'Contact name: ' + record.dynamodb.NewImage.name.S + '\n' +
-          'Contact group: ' + record.dynamodb.NewImage.group_name.S
+          'Contact group: ' + record.dynamodb.NewImage.group_name.S + '\n' +
+          'Contact link:' + `http://${BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${record.dynamodb.NewImage.name.S}/view`
     } else return
     notify(note)
       .then(function (data) {

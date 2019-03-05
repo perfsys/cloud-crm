@@ -239,7 +239,7 @@ router.get('', function (req, res) {
     })
   }
 
-  var sortByCreatedDate = R.sortBy(R.prop('create_dt'))
+  var sortByCreatedDate = R.sort(R.descend(R.prop('create_dt')))
 
   prepareItem(req)
     .then(persistence_lib.findContact)
