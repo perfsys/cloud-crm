@@ -25,12 +25,14 @@ module.exports.contactManagementActionNotification = function (event, context) {
   event.Records.forEach(function (record) {
     let note = noteTemplate
     if (record.eventName === 'INSERT') {
+      note.subject = 'Contact was created'
       note.message = 'New contact was successfully added to the Cloud CRM contact list.\n' +
           '\n' +
           'Contact name: ' + record.dynamodb.NewImage.name.S + '\n' +
           'Contact group: ' + record.dynamodb.NewImage.group_name.S + '\n' +
           'Contact link:' + `http://${BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${record.dynamodb.NewImage.name.S}/view`
     } else if (record.eventName === 'MODIFY') {
+      note.subject = 'Contact was updated'
       note.message = 'One of your Cloud CRM contacts was successfully modified.\n' +
           '\n' +
           'Contact name: ' + record.dynamodb.NewImage.name.S + '\n' +
