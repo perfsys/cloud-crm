@@ -45,4 +45,24 @@ router.put('/', function (request, response) {
   })
 })
 
+router.get('/:companyId/contacts', function (request, response) {
+  let params = {
+    TableName: process.env.CONTACTS_TABLE,
+    IndexName: 'CompanyIndex',
+    KeyConditionExpression: 'company_normalized = :company_normalized',
+    ExpressionAttributeValues: {
+      ':company_normalized': request.params.companyId
+    }
+  }
+  DynamoDB.query(params, function (err, data) {
+    if (err != null) {
+      console.log(JSON.stringify(err))
+      response.end(JSON.stringify(err))
+    } else {
+      console.log(data)
+      response.end(JSON.stringify(data.Items))
+    }
+  })
+})
+
 module.exports = router
