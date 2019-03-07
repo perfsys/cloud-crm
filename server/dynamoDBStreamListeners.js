@@ -1,13 +1,15 @@
 'use strict'
 
 module.exports.contactManagementActionNotification = function (event, context) {
+  console.log('contactManagementActionNotification - starting')
+
   const AWSNotifier = require('./modules/aws-notifier.js')
   const notifier = new AWSNotifier()
   const TOPIC = {
     TopicName: process.env.AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE,
     TopicArn: process.env.AUTOMATIC_NOTIFICATIONS_TOPIC_ARN
   }
-  const BASE_URL = process.env.BASE_URL
+  const WEB_UI_BASE_URL = process.env.WEB_UI_BASE_URL
   const notify = function (note) {
     return new Promise(function (resolve, reject) {
       notifier.publish(note, function (err, data) {
@@ -30,14 +32,14 @@ module.exports.contactManagementActionNotification = function (event, context) {
           '\n' +
           'Contact name: ' + record.dynamodb.NewImage.name.S + '\n' +
           'Contact group: ' + record.dynamodb.NewImage.group_name.S + '\n' +
-          'Contact link:' + `http://${BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${record.dynamodb.NewImage.name.S}/view`
+          'Contact link: ' + `http://${WEB_UI_BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${record.dynamodb.NewImage.name.S}/view`
     } else if (record.eventName === 'MODIFY') {
       note.subject = 'Contact was updated'
       note.message = 'One of your Cloud CRM contacts was successfully modified.\n' +
           '\n' +
           'Contact name: ' + record.dynamodb.NewImage.name.S + '\n' +
           'Contact group: ' + record.dynamodb.NewImage.group_name.S + '\n' +
-          'Contact link:' + `http://${BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${record.dynamodb.NewImage.name.S}/view`
+          'Contact link: ' + `http://${WEB_UI_BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${record.dynamodb.NewImage.name.S}/view`
     } else return
     notify(note)
       .then(function (data) {
