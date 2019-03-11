@@ -70,6 +70,15 @@ const actions = {
 const mutations = {
 
   setContacts (state, contacts) {
+    for (let i = 0; i < contacts.length; i++) {
+      for (let j = 0; j < contacts.length; j++) {
+        if (contacts[i].create_dt > contacts[j].create_dt) {
+          let per = contacts[i]
+          contacts[i] = contacts[j]
+          contacts[j] = per
+        }
+      }
+    }
     state.all = contacts
   }
 
