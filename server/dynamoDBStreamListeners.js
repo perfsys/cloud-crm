@@ -3,6 +3,8 @@
 module.exports.contactManagementActionNotification = function (event, context) {
   console.log('contactManagementActionNotification - starting')
 
+  const encodeUrl = require('encodeurl')
+
   const AWSNotifier = require('./modules/aws-notifier.js')
   const notifier = new AWSNotifier()
   const TOPIC = {
@@ -32,14 +34,20 @@ module.exports.contactManagementActionNotification = function (event, context) {
           '\n' +
           'Contact name: ' + record.dynamodb.NewImage.name.S + '\n' +
           'Contact group: ' + record.dynamodb.NewImage.group_name.S + '\n' +
-          'Contact link: ' + `http://${WEB_UI_BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${record.dynamodb.NewImage.name.S}/view`
+          'Contact link: ' + `http://${WEB_UI_BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${encodeUrl(record.dynamodb.NewImage.name.S)}/view`
     } else if (record.eventName === 'MODIFY') {
       note.subject = 'Contact was updated'
       note.message = 'One of your Cloud CRM contacts was successfully modified.\n' +
           '\n' +
           'Contact name: ' + record.dynamodb.NewImage.name.S + '\n' +
           'Contact group: ' + record.dynamodb.NewImage.group_name.S + '\n' +
-          'Contact link: ' + `http://${WEB_UI_BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${record.dynamodb.NewImage.name.S}/view`
+          'Contact link: ' + `http://${WEB_UI_BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${encodeUrl(record.dynamodb.NewImage.name.S)}/view`
+    } else if (record.eventName === 'REMOVE') {
+      note.subject = 'Contact was removed'
+      note.message = 'One of your Cloud CRM contacts was successfully removed.\n' +
+        '\n' +
+        'Contact name: ' + record.dynamodb.OldImage.name.S + '\n' +
+        'Contact group: ' + record.dynamodb.OldImage.group_name.S + '\n'
     } else return
     notify(note)
       .then(function (data) {
