@@ -118,7 +118,7 @@ provider:
     AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE: ${self:provider.stage}-cloud-crm-automatic-notifications
     AUTOMATIC_NOTIFICATIONS_TOPIC_ARN:
       Ref: ContactManagementTopic
-    BASE_URL: perfsys-cloud-crm-ui-${self:provider.stage}.s3-website-eu-west-1.amazonaws.com
+    WEB_UI_BASE_URL: perfsys-cloud-crm-ui-${self:provider.stage}.s3-website-${self:provider.region}.amazonaws.com
 
 
 # you can add packaging information here
