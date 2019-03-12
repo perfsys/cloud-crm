@@ -68,7 +68,6 @@ const actions = {
 
 // mutations
 const mutations = {
-
   setContacts (state, contacts) {
     for (let i = 0; i < contacts.length; i++) {
       for (let j = 0; j < contacts.length; j++) {
