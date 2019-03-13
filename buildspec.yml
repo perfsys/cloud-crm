@@ -24,7 +24,7 @@ phases:
   build:
     commands:
       - cd ./client
-      - sls remove --force -v
+      - sls remove -v
       - cd ..
       - cd ./server
 #      - sls remove -v
