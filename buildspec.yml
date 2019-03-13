@@ -25,12 +25,12 @@ phases:
     commands:
       - cd ./client
       - sls remove -v
-#      - cd ..
-#      - cd ./server
+      - cd ..
+      - cd ./server
 #      - sls remove -v
 #      - sls deploy -v
-#      - cd ..
-#      - cd ./client
-#      - sls deploy -v
+      - cd ..
+      - cd ./client
+      - sls deploy -v
 
 
