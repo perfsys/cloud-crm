@@ -16,8 +16,11 @@ exports.getUpdate = (req) => {
       }
     }
 
+    console.log(params)
+
     dynamoDb.get(params, (error, result) => {
       console.log(result)
+      console.log('getUpdate - result')
 
       if (error) {
         console.log(error)

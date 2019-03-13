@@ -6,6 +6,7 @@ module.exports.contactManagementActionNotification = function (event, context) {
   const encodeUrl = require('encodeurl')
 
   const AWSNotifier = require('./modules/aws-notifier.js')
+  const updateUtils = require('./helpers/updatesHelper.js')
   const notifier = new AWSNotifier()
   const TOPIC = {
     TopicName: process.env.AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE,
@@ -18,6 +19,26 @@ module.exports.contactManagementActionNotification = function (event, context) {
         if (err != null) reject(err)
         else resolve(data)
       })
+    })
+  }
+
+  const  getLastUpdate = (record) => {
+    return new Promise(function (resolve, reject) {
+
+      if((record.eventName === 'INSERT' || record.eventName === 'MODIFY' ) && record.dynamodb.NewImage.updates.L.length > 0){
+      let updateId = record.dynamodb.NewImage.updates.L[record.dynamodb.NewImage.updates.L.length -1].S
+      console.log(updateId)
+      let req = {}
+      req.update_id = updateId
+      updateUtils.getUpdate(req)
+        .then(req => {
+          console.log(req)
+          if(req.result) resolve(req.result.Item)
+         })
+        .catch(err => {
+          console.log(err)
+        })
+    } else resolve(null)
     })
   }
 
@@ -35,6 +56,17 @@ module.exports.contactManagementActionNotification = function (event, context) {
           'Contact name: ' + record.dynamodb.NewImage.name.S + '\n' +
           'Contact group: ' + record.dynamodb.NewImage.group_name.S + '\n' +
           'Contact link: ' + `http://${WEB_UI_BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${encodeUrl(record.dynamodb.NewImage.name.S)}/view`
+      if(record.dynamodb.NewImage.email.S){
+        note.message = note.message + '\n' + `Contact email: ${record.dynamodb.NewImage.email.S}`
+      }
+
+      let lastUpdate = getLastUpdate(record)
+      if(lastUpdate){
+        note.message = note.message + '\n' +
+          `Last Update:  created: ${lastUpdate.create_dt}` + '\n' +
+          `Last Update:  text: ${lastUpdate.text}`
+      }
+
     } else if (record.eventName === 'MODIFY') {
       note.subject = 'Contact was updated'
       note.message = 'One of your Cloud CRM contacts was successfully modified.\n' +
@@ -42,6 +74,9 @@ module.exports.contactManagementActionNotification = function (event, context) {
           'Contact name: ' + record.dynamodb.NewImage.name.S + '\n' +
           'Contact group: ' + record.dynamodb.NewImage.group_name.S + '\n' +
           'Contact link: ' + `http://${WEB_UI_BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${encodeUrl(record.dynamodb.NewImage.name.S)}/view`
+      if(record.dynamodb.NewImage.email.S){
+        note.message = note.message + '\n' + `Contact email: ${record.dynamodb.NewImage.email.S}`
+      }
     } else if (record.eventName === 'REMOVE') {
       note.subject = 'Contact was removed'
       note.message = 'One of your Cloud CRM contacts was successfully removed.\n' +
@@ -49,7 +84,22 @@ module.exports.contactManagementActionNotification = function (event, context) {
         'Contact name: ' + record.dynamodb.OldImage.name.S + '\n' +
         'Contact group: ' + record.dynamodb.OldImage.group_name.S + '\n'
     } else return
-    notify(note)
+
+    getLastUpdate(record)
+      .then(lastUpdate => {
+        return new Promise(function(resolve, reject) {
+          console.log(lastUpdate)
+
+          if (lastUpdate) {
+            note.message = note.message + '\n' +
+              `Last Update:  created: ${lastUpdate.create_dt}` + '\n' +
+              `Last Update:  text: ${lastUpdate.text}`
+          }
+          console.log(note)
+          resolve(note)
+        })
+      })
+      .then(notify)
       .then(function (data) {
         console.log('Notification is successfully published.\n' + JSON.stringify(data))
       })

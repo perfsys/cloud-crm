@@ -19,12 +19,23 @@ const getters = {
 const actions = {
 
   contactsGetAllInCurrentGroup ({state, commit, rootState}) {
+    const sortFunc = (contacts) => {
+      return contacts.sort((a, b) => {
+        let a1 = new Date(a.create_dt)
+        let b1 = new Date(b.create_dt)
+        return b1.getTime() - a1.getTime()
+      })
+    }
     if (rootState.route.params.group) {
       api.getAllInGroup(rootState.route.params.group)
-        .then(contacts => commit('setContacts', contacts))
+        .then(contacts => {
+          commit('setContacts', sortFunc(contacts))
+        })
     } else {
       api.getAll()
-        .then(contacts => commit('setContacts', contacts))
+        .then(contacts => {
+          commit('setContacts', sortFunc(contacts))
+        })
     }
   },
 

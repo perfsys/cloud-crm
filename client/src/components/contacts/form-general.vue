@@ -129,9 +129,9 @@ export default {
     sendBack: function () {
       this.$emit('input', {
         group_id: this.group_id,
-        name: this.name,
+        name: this.name.trim(),
         source_id: this.source_id,
-        company_name: this.company_name,
+        company_name: this.company_name.trim(),
         position: this.position,
         type_id: this.type_id,
         status_id: this.status_id,
