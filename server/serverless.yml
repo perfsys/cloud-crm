@@ -19,11 +19,14 @@ service: perfsys-cloud-crm-api # NOTE: update this with your service name
 
 
 
+
+
 provider:
   name: aws
   runtime: nodejs8.10
   stage: ${opt:stage, 'dev'}
   region: eu-west-1
+  profile: perfsys
   apiKeys:
     - ${opt:stage, 'dev'}-cloudCrmApiKey-v02
     - ${opt:stage, 'dev'}-cloudCrmApiKey-v03
