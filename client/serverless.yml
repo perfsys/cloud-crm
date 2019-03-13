@@ -25,33 +25,32 @@ provider:
 
 resources:
   Resources:
-    S3UIDistBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        AccessControl: PublicRead
-        BucketName: ${self:custom.bucketName}
-        WebsiteConfiguration:
-          IndexDocument: index.html
-
-    S3UIDistBucketBucketPolicy:
-      Type: AWS::S3::BucketPolicy
-      Properties:
-        Bucket:
-          Ref: S3UIDistBucket
-        PolicyDocument:
-          Statement:
-            - Sid: PublicReadGetObject
-              Effect: Allow
-              Principal: "*"
-              Action:
-              - s3:GetObject
-              Resource:
-                Fn::Join:
-                 - ""
-                 - - "arn:aws:s3:::"
-                   - Ref: S3UIDistBucket
-                   - "/*"
-
+#    S3UIDistBucket:
+#      Type: AWS::S3::Bucket
+#      Properties:
+#        AccessControl: PublicRead
+#        BucketName: ${self:custom.bucketName}
+#        WebsiteConfiguration:
+#          IndexDocument: index.html
+#
+#    S3UIDistBucketBucketPolicy:
+#      Type: AWS::S3::BucketPolicy
+#      Properties:
+#        Bucket:
+#          Ref: S3UIDistBucket
+#        PolicyDocument:
+#          Statement:
+#            - Sid: PublicReadGetObject
+#              Effect: Allow
+#              Principal: "*"
+#              Action:
+#              - s3:GetObject
+#              Resource:
+#                Fn::Join:
+#                 - ""
+#                 - - "arn:aws:s3:::"
+#                   - Ref: S3UIDistBucket
+#                   - "/*"
 
   Outputs:
     S3UIDistBucketName:
@@ -65,41 +64,41 @@ resources:
               - Ref: 'AWS::StackName'
               - 'S3UIDistBucketName'
 
-    S3UIDistBucketArn:
-      Value:
-        "Fn::GetAtt": ["S3UIDistBucket", "Arn" ]
-      Export:
-        Name:
-          "Fn::Join":
-            - ':'
-            -
-              - Ref: 'AWS::StackName'
-              - 'S3UIDistBucketArn'
+#    S3UIDistBucketArn:
+#      Value:
+#        "Fn::GetAtt": ["S3UIDistBucket", "Arn" ]
+#      Export:
+#        Name:
+#          "Fn::Join":
+#            - ':'
+#            -
+#              - Ref: 'AWS::StackName'
+#              - 'S3UIDistBucketArn'
 
-    S3UIDistBucketArnMask:
-      Value:
-        Fn::Join:
-         - ""
-         - - "Fn::GetAtt": ["S3UIDistBucket", "Arn" ]
-           - "/*"
-      Export:
-        Name:
-          "Fn::Join":
-            - ':'
-            -
-              - Ref: 'AWS::StackName'
-              - 'S3UIDistBucketArnMask'
+#    S3UIDistBucketArnMask:
+#      Value:
+#        Fn::Join:
+#         - ""
+#         - - "Fn::GetAtt": ["S3UIDistBucket", "Arn" ]
+#           - "/*"
+#      Export:
+#        Name:
+#          "Fn::Join":
+#            - ':'
+#            -
+#              - Ref: 'AWS::StackName'
+#              - 'S3UIDistBucketArnMask'
 
-    S3UIDistBucketWebsiteURL:
-      Value:
-        Fn::Join:
-         - ""
-         - - "Fn::GetAtt": ["S3UIDistBucket", "WebsiteURL" ]
-           - "/*"
-      Export:
-        Name:
-          "Fn::Join":
-            - ':'
-            -
-              - Ref: 'AWS::StackName'
-              - 'S3UIDistBucketWebsiteURL'
+#    S3UIDistBucketWebsiteURL:
+#      Value:
+#        Fn::Join:
+#         - ""
+#         - - "Fn::GetAtt": ["S3UIDistBucket", "WebsiteURL" ]
+#           - "/*"
+#      Export:
+#        Name:
+#          "Fn::Join":
+#            - ':'
+#            -
+#              - Ref: 'AWS::StackName'
+#              - 'S3UIDistBucketWebsiteURL'

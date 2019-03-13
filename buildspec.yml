@@ -17,20 +17,20 @@ phases:
       - npm run lint
       - npm run test
       - cd ..
-      - cd ./server
-      - npm run lint
+#      - cd ./server
+#      - npm run lint
     finally:
       - cd ..
   build:
     commands:
       - cd ./client
       - sls remove -v
-      - cd ..
-      - cd ./server
+#      - cd ..
+#      - cd ./server
 #      - sls remove -v
-      - sls deploy -v
-      - cd ..
-      - cd ./client
-      - sls deploy -v
+#      - sls deploy -v
+#      - cd ..
+#      - cd ./client
+#      - sls deploy -v
 
 
