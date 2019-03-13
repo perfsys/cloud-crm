@@ -17,7 +17,7 @@ phases:
       - npm run lint
       - npm run test
       - cd ..
-#      - cd ./server
+      - cd ./server
 #      - npm run lint
     finally:
       - cd ..
