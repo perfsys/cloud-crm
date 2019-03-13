@@ -69,9 +69,10 @@
     </div>
     </md-content>
   </md-card>
+  <br/>
   <md-card>
 
-    <md-table v-model="contacts_of_company"  :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder" >
+    <md-table v-model="contacts_of_company"  :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder"  @md-selected="onSelect">
 
       <md-table-toolbar>
         <h1 class="md-title" >All Contacts of {{company.company_name}}</h1>
@@ -139,6 +140,13 @@ export default {
         .then(function (data) {
           Object.assign(_self.company, data)
         })
+    },
+
+    onSelect (contact) {
+      this.$router.push({
+        name: 'contact-details',
+        params: {group: contact.group_id, name: contact.name}
+      })
     }
   }
 }
