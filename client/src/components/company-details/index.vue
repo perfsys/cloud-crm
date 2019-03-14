@@ -72,11 +72,11 @@
   <br/>
   <md-card>
 
-    <md-table v-model="contacts_of_company"  :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder"  @md-selected="onSelect">
+    <md-card-header>
+      <p class="md-title"> All Contacts of {{company.company_name}}</p>
+    </md-card-header>
 
-      <md-table-toolbar>
-        <h1 class="md-title" >All Contacts of {{company.company_name}}</h1>
-      </md-table-toolbar>
+    <md-table v-model="contacts_of_company"  :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder"  @md-selected="onSelect">
 
       <md-table-row slot="md-table-row" slot-scope="{ item }" md-selectable="single">
         <md-table-cell md-label="Group" md-sort-by="group_name" >{{ item.group_name }}</md-table-cell>
