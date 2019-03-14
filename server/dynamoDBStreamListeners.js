@@ -86,8 +86,8 @@ module.exports.contactManagementActionNotification = function (event, context) {
         return new Promise(function (resolve, reject) {
           if (lastUpdate) {
             note.message = note.message + '\n' +
-              `Last Update:  created: ${lastUpdate.create_dt}` + '\n' +
-              `Last Update:  text: ${lastUpdate.text}`
+              `Last Update created: ${lastUpdate.create_dt}` + '\n' +
+              `Last Update text: ${lastUpdate.text}`
           }
           resolve(note)
         })
