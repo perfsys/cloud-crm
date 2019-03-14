@@ -28,6 +28,19 @@ export default {
   },
 
   /**
+   * Get all contacts by a company's id
+   *
+   * @param companyId company's id
+   * @returns {Promise<any>}
+   */
+  getAllByCompany (companyId) {
+    return new Promise((resolve, reject) => {
+      HTTP.get(`/companies/${companyId}/contacts`)
+        .then(response => resolve(response.data), reject)
+    })
+  },
+
+  /**
    * Get one
    *
    * @param group group name
