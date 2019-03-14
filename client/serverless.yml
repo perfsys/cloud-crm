@@ -52,7 +52,6 @@ resources:
                    - Ref: S3UIDistBucket
                    - "/*"
 
-
   Outputs:
     S3UIDistBucketName:
       Value:
