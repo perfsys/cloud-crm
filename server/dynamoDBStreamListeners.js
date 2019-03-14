@@ -53,7 +53,7 @@ module.exports.contactManagementActionNotification = function (event, context) {
           'Contact name: ' + record.dynamodb.NewImage.name.S + '\n' +
           'Contact group: ' + record.dynamodb.NewImage.group_name.S + '\n' +
           'Contact link: ' + `http://${WEB_UI_BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${encodeUrl(record.dynamodb.NewImage.name.S)}/view`
-      if (record.dynamodb.NewImage.email.S) {
+      if (record.dynamodb.NewImage.email && record.dynamodb.NewImage.email.S) {
         note.message = note.message + '\n' + `Contact email: ${record.dynamodb.NewImage.email.S}`
       }
 
@@ -70,7 +70,7 @@ module.exports.contactManagementActionNotification = function (event, context) {
           'Contact name: ' + record.dynamodb.NewImage.name.S + '\n' +
           'Contact group: ' + record.dynamodb.NewImage.group_name.S + '\n' +
           'Contact link: ' + `http://${WEB_UI_BASE_URL}/#/contacts/${record.dynamodb.NewImage.group_id.S}/${encodeUrl(record.dynamodb.NewImage.name.S)}/view`
-      if (record.dynamodb.NewImage.email.S) {
+      if (record.dynamodb.NewImage.email && record.dynamodb.NewImage.email.S) {
         note.message = note.message + '\n' + `Contact email: ${record.dynamodb.NewImage.email.S}`
       }
     } else if (record.eventName === 'REMOVE') {
