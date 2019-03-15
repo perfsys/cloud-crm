@@ -56,13 +56,6 @@ module.exports.contactManagementActionNotification = function (event, context) {
       if (record.dynamodb.NewImage.email && record.dynamodb.NewImage.email.S) {
         note.message = note.message + '\n' + `Contact email: ${record.dynamodb.NewImage.email.S}`
       }
-
-      let lastUpdate = getLastUpdate(record)
-      if (lastUpdate) {
-        note.message = note.message + '\n' +
-          `Last Update:  created: ${lastUpdate.create_dt}` + '\n' +
-          `Last Update:  text: ${lastUpdate.text}`
-      }
     } else if (record.eventName === 'MODIFY') {
       note.subject = 'Contact was updated'
       note.message = 'One of your Cloud CRM contacts was successfully modified.\n' +
