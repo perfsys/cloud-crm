@@ -16,10 +16,22 @@ export default {
     })
   },
 
-  saveOneByContact (group, name, text) {
+  saveOneByContact (group, name, item) {
     return new Promise((resolve, reject) => {
       HTTP.post(`/contacts/${group}/${name}/updates`, {
-        text: text
+        text: item.text,
+        type: item.type
+      }).then(response => resolve(response.data), reject)
+    })
+  },
+
+  saveFileByContact (group, name, item) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(`/contacts/${group}/${name}/updates`, {
+        key: item.key,
+        file_name: item.fileName,
+        location: item.location,
+        type: item.type
       }).then(response => resolve(response.data), reject)
     })
   },

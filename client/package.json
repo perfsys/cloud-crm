@@ -14,11 +14,14 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "aws-sdk": "^2.425.0",
     "axios": "^0.18.0",
     "convert-rich-text": "^4.0.1",
     "cross-env": "^5.2.0",
+    "mime-types": "^2.1.22",
     "moment": "^2.22.2",
     "ramda": "^0.25.0",
+    "randomstring": "^1.1.5",
     "serverless": "^1.38.0",
     "showdown": "^1.8.6",
     "vue": "^2.5.2",

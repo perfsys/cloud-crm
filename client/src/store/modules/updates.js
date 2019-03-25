@@ -34,6 +34,18 @@ const actions = {
     })
   },
 
+  fileSaveOne ({state, commit, dispatch, rootState}, item) {
+    return new Promise((resolve, reject) => {
+      if (rootState.route.params.group && rootState.route.params.name) {
+        api.saveFileByContact(rootState.route.params.group, rootState.route.params.name, item)
+          .then(() => {
+            dispatch('updatesGetAllByContact')
+            resolve()
+          }, reject)
+      }
+    })
+  },
+
   updatesDeleteOne ({state, commit, dispatch, rootState}, item) {
     return new Promise((resolve, reject) => {
       if (rootState.route.params.group && rootState.route.params.name && item.id) {

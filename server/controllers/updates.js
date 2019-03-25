@@ -36,24 +36,29 @@ const saveItemToUpdates = function (req) {
 
 const deleteItemFromUpdates = function (req) {
   return new Promise(function (resolve, reject) {
-    let {item} = req
     console.log('deleteItemFromUpdates - starting')
-    const params = {
-      TableName: CONTACT_UPDATES_TABLE,
-      Key: {
-        id: item.id
-      }
-    }
 
-    dynamoDb.delete(params, (error, data) => {
-      if (error) {
-        console.log('deleteItemFromUpdates - error')
-        reject(error)
-      } else {
-        console.log(data)
-        resolve(req)
+    let {item} = req
+    if (item && item.id) {
+      const params = {
+        TableName: CONTACT_UPDATES_TABLE,
+        Key: {
+          id: item.id
+        }
       }
-    })
+
+      dynamoDb.delete(params, (error, data) => {
+        if (error) {
+          console.log('deleteItemFromUpdates - error')
+          reject(error)
+        } else {
+          console.log(data)
+          resolve(req)
+        }
+      })
+    } else {
+      resolve(req)
+    }
   })
 }
 
@@ -161,9 +166,7 @@ router.use(require('../middlewares/contact-name'))
 
 router.post('', function (req, res) {
   console.log('comments-contact-create - starting')
-  const {
-    text
-  } = req.body
+  console.log(req)
 
   const {
     groupId,
@@ -172,17 +175,21 @@ router.post('', function (req, res) {
 
   console.log(groupId, contactName)
 
-  if (!text || typeof text !== 'string') {
-    res.status(400).json({error: 'text must be String'})
-  }
-
   const prepareItem = function (req) {
     return new Promise(function (resolve, reject) {
       console.log('prepareItem - starting')
+      const { type } = req.body
       let item = {}
       item.id = randomstring.generate(7)
       item.create_dt = new Date().toISOString()
-      item.text = text
+      item.type = type
+      if (type === 'TEXT') {
+        item.text = req.body.text
+      } else if (type === 'FILE') {
+        item.key = req.body.key
+        item.file_name = req.body.file_name
+        item.location = req.body.location
+      }
       req.item = item
       resolve(req)
     })
@@ -195,6 +202,7 @@ router.post('', function (req, res) {
       res.json(req.item)
     }, error => {
       deleteItemFromUpdates(req)
+        // Todo delete from s3
         .then(req => {
           res.status(400).json(error)
         })
