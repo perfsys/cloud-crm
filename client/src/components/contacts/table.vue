@@ -45,8 +45,8 @@ export default {
   data () {
     return {
       allContacts: true,
-      currentSort: 'name',
-      currentSortOrder: 'asc'
+      currentSort: 'create_dt',
+      currentSortOrder: 'desc'
     }
   },
 

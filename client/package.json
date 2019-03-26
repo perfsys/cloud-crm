@@ -19,7 +19,7 @@
     "cross-env": "^5.2.0",
     "moment": "^2.22.2",
     "ramda": "^0.25.0",
-    "serverless": "^1.30.3",
+    "serverless": "^1.38.0",
     "showdown": "^1.8.6",
     "vue": "^2.5.2",
     "vue-material": "^1.0.0-beta-10.2",

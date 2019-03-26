@@ -1,4 +1,5 @@
 <template>
+  <div>
   <md-card>
     <md-card-header>
       <p class="md-title">{{company.company_name}}</p>
@@ -68,10 +69,34 @@
     </div>
     </md-content>
   </md-card>
+  <br/>
+  <md-card>
+
+    <md-card-header>
+      <p class="md-title"> All Contacts of {{company.company_name}}</p>
+    </md-card-header>
+
+    <md-table v-model="contacts_of_company"  :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder"  @md-selected="onSelect">
+
+      <md-table-row slot="md-table-row" slot-scope="{ item }" md-selectable="single">
+        <md-table-cell md-label="Group" md-sort-by="group_name" >{{ item.group_name }}</md-table-cell>
+        <md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
+        <md-table-cell md-label="Position" >{{ item.position }}</md-table-cell>
+        <md-table-cell md-label="Status" >{{ item.status_name}}</md-table-cell>
+
+      </md-table-row>
+
+    </md-table>
+
+  </md-card>
+  </div>
 </template>
 
 <script>
+
+import api from '../../api/contacts'
 export default {
+  name: 'company-details',
   props: ['companyId'],
   data: function () {
     return {
@@ -89,20 +114,39 @@ export default {
           CEO: null,
           CTO: null
         }
-      }
+      },
+      contacts_of_company: [],
+
+      currentSort: 'name',
+      currentSortOrder: 'asc',
+      companyId1: null
     }
   },
   created: function () {
     this.refresh()
   },
+
   methods: {
     refresh: function () {
       let _self = this
       let companyId = this.companyId
+
+      api.getAllByCompany(this.companyId)
+        .then(function (data) {
+          _self.contacts_of_company = data
+        })
+
       this.$store.dispatch('getCompanyInfo', companyId)
         .then(function (data) {
           Object.assign(_self.company, data)
         })
+    },
+
+    onSelect (contact) {
+      this.$router.push({
+        name: 'contact-details',
+        params: {group: contact.group_id, name: contact.name}
+      })
     }
   }
 }
