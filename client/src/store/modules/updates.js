@@ -18,7 +18,9 @@ const actions = {
   updatesGetAllByContact ({state, commit, rootState}) {
     if (rootState.route.params.group && rootState.route.params.name) {
       api.getAllByContact(rootState.route.params.group, rootState.route.params.name)
-        .then(updates => commit('setUpdates', updates))
+        .then(updates => {
+          commit('setUpdates', updates.filter(i => i.type))
+        })
     }
   },
 
