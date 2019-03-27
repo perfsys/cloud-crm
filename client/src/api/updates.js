@@ -45,7 +45,9 @@ export default {
   },
 
   deleteOneByContact (item) {
-    return HTTP.delete(`/contacts/${item.group}/${item.name}/updates/${item.id}`)
+    return new Promise((resolve, reject) => {
+      return HTTP.delete(`/contacts/${item.group}/${item.name}/updates/${item.id}`)
+        .then(response => resolve(response.data), reject)
+    })
   }
-
 }
