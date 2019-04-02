@@ -188,6 +188,7 @@ router.post('', function (req, res) {
       } else if (type === 'FILE') {
         item.key = req.body.key
         item.file_name = req.body.file_name
+        item.mime_type = req.body.mime_type
         item.location = req.body.location
       }
       req.item = item

@@ -16,6 +16,9 @@ const env = process.env.NODE_ENV === 'testing'
   : require('../config/prod.env')
 
 console.log(`process.env.API_BASE_URL=${process.env.API_BASE_URL}`)
+console.log(`process.env.S3_UPDATES_DATA_BUCKET=${process.env.S3_UPDATES_DATA_BUCKET}`)
+console.log(`process.env.IDENTITY_POOL_ID=${process.env.IDENTITY_POOL_ID}`)
+console.log(`process.env.REGION=${process.env.REGION}`)
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {

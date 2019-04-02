@@ -41,9 +41,9 @@ import AWS from 'aws-sdk'
 import randomstring from 'randomstring'
 import mime from 'mime-types'
 
-AWS.config.region = 'eu-west-1' // Region
+AWS.config.region = process.env.REGION // Region
 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-  IdentityPoolId: 'eu-west-1:7a8caef5-5a51-4d67-92d7-4283210e237e'
+  IdentityPoolId: process.env.IDENTITY_POOL_ID
 })
 
 const s3 = new AWS.S3({
@@ -148,6 +148,7 @@ export default {
           item.type = 'FILE'
           item.location = data.Location
           item.fileName = fileName
+          item.mimeType = mimeType
           item.key = key
           this.$store.dispatch('fileSaveOne', item)
 

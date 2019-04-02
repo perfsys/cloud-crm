@@ -31,7 +31,8 @@ export default {
         key: item.key,
         file_name: item.fileName,
         location: item.location,
-        type: item.type
+        type: item.type,
+        mime_type: item.mimeType
       }).then(response => resolve(response.data), reject)
     })
   },

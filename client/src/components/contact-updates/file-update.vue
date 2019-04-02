@@ -5,8 +5,8 @@
       <div class="md-layout-item">
         <md-card-header>
           <div class="md-subhead">Created at {{ item.create_dt  | fromISO}}</div>
-          <div class="md-subhead">{{ item.file_name}} </div>
-          <a class="md-primary"  v-bind:href="item.location" >{{item.location}}
+          <div class="md-subhead">Content Type: {{ item.mime_type}} </div>
+          <a class="md-primary"  v-bind:href="item.location" >{{item.file_name}}
           </a>
         </md-card-header>
       </div>
@@ -39,9 +39,9 @@
 import AWS from 'aws-sdk'
 import dateMixin from '@/mixins/FormattersDateMixin'
 
-AWS.config.region = 'eu-west-1' // Region
+AWS.config.region = process.env.REGION // Region
 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-  IdentityPoolId: 'eu-west-1:7a8caef5-5a51-4d67-92d7-4283210e237e'
+  IdentityPoolId: process.env.IDENTITY_POOL_ID
 })
 
 const s3 = new AWS.S3({

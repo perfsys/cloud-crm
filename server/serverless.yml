@@ -17,6 +17,10 @@ service: perfsys-cloud-crm-api # NOTE: update this with your service name
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
+custom:
+  dataUploadBucketName: perfsys-cloud-crm-updates-data-${opt:stage, 'dev'}
+  identityProviderName: ${opt:stage, 'dev'}CloudCrm
+
 provider:
   name: aws
   runtime: nodejs8.10
@@ -516,6 +520,105 @@ resources:
         DisplayName: Cloud CRM automatic notifications
         TopicName: ${self:provider.environment.AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE}
 
+    S3DataUploadBucket:
+      Type: AWS::S3::Bucket
+      DeletionPolicy: Retain
+      Properties:
+        AccessControl: PublicRead
+        BucketName: ${self:custom.dataUploadBucketName}
+        CorsConfiguration:
+          CorsRules:
+            - AllowedHeaders:
+              - "*"
+              AllowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - HEAD
+              AllowedOrigins:
+              - "*"
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: false
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: false
+
+    S3DataUploadBucketBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: S3DataUploadBucket
+        PolicyDocument:
+          Statement:
+          - Sid: PublicGetObject
+            Effect: Allow
+            Principal: "*"
+            Action:
+            - s3:GetObject
+            Resource:
+              Fn::Join:
+              - ""
+              - - "arn:aws:s3:::"
+                - Ref: S3DataUploadBucket
+                - "/*"
+
+    UnAuthCognitoIdentityPool:
+      Type: AWS::Cognito::IdentityPool
+      Properties:
+        IdentityPoolName: ${self:custom.identityProviderName}
+        AllowUnauthenticatedIdentities: true
+
+    UnAuthCognitoIdentityPoolUnauthenticatedRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: UnAuthCognitoIdentityPoolRole-${self:provider.stage}
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Federated: "cognito-identity.amazonaws.com"
+            Action:
+              - "sts:AssumeRoleWithWebIdentity"
+            Condition:
+              StringEquals:
+                "cognito-identity.amazonaws.com:aud":
+                  Ref: UnAuthCognitoIdentityPool
+              "ForAnyValue:StringLike":
+                "cognito-identity.amazonaws.com:amr": unauthenticated
+        Policies:
+          - PolicyName: "UnAuthCognitoPolicy"
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+              - Effect: "Allow"
+                Action:
+                - "mobileanalytics:PutEvents"
+                - "cognito-sync:*"
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource:
+                 - "Fn::Join":
+                    - '/'
+                    - - "Fn::GetAtt": ["S3DataUploadBucket", "Arn" ]
+                      - '*'
+
+    UnAuthCognitoIdentityPoolRoleAttachment:
+      Type: AWS::Cognito::IdentityPoolRoleAttachment
+      Properties:
+        IdentityPoolId: !Ref UnAuthCognitoIdentityPool
+        Roles:
+          "unauthenticated":
+            Fn::GetAtt:
+            - UnAuthCognitoIdentityPoolUnauthenticatedRole
+            - Arn
+
   Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
@@ -552,3 +655,39 @@ resources:
         Fn::GetAtt:
             - CompaniesDynamoDBTable
             - Arn
+
+    UnAuthCognitoIdentityPool:
+      Description: Identity Poll for Unauthenticated users
+      Value:
+        "Ref": "UnAuthCognitoIdentityPool"
+      Export:
+        Name:
+          "Fn::Join":
+            - ':'
+            - - Ref: 'AWS::StackName'
+              - 'UnAuthCognitoIdentityPool'
+
+    S3DataUploadBucket:
+      Description: Data upload bucket arn
+      Value:
+        "Fn::GetAtt": ["S3DataUploadBucket", "Arn" ]
+      Export:
+        Name:
+          "Fn::Join":
+          - ':'
+          -
+            - Ref: 'AWS::StackName'
+            - 'S3DataUploadBucket'
+
+    S3DataUploadBucketName:
+      Description: Data upload bucket name
+      Value: ${self:custom.dataUploadBucketName}
+      Export:
+        Name:
+          "Fn::Join":
+          - ':'
+          -
+            - Ref: 'AWS::StackName'
+            - 'S3DataUploadBucketName'
+
+

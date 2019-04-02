@@ -12,9 +12,7 @@ custom:
       localDir: dist
 
   scriptHooks:
-    before:deploy:createDeploymentArtifacts: node_modules/.bin/cross-env API_BASE_URL=${cf:perfsys-cloud-crm-api-${opt:stage, 'dev'}.ServiceEndpoint} npm run build
-
-
+    before:deploy:createDeploymentArtifacts: node_modules/.bin/cross-env S3_UPDATES_DATA_BUCKET=${cf:perfsys-cloud-crm-api-${self:provider.stage}.S3DataUploadBucketName} API_BASE_URL=${cf:perfsys-cloud-crm-api-${opt:stage, 'dev'}.ServiceEndpoint}  IDENTITY_POOL_ID=${cf:perfsys-cloud-crm-api-${self:provider.stage}.UnAuthCognitoIdentityPool} REGION=${self:provider.region} npm run build
 
 provider:
   name: aws
