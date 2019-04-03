@@ -6,7 +6,7 @@
         <md-card-header>
           <div class="md-subhead">Created at {{ item.create_dt  | fromISO}}</div>
           <div class="md-subhead">Content Type: {{ item.mime_type}} </div>
-          <a class="md-primary"  v-bind:href="item.location"  v-bind:target="_blank">{{item.file_name}}
+          <a class="md-primary"  v-bind:href="item.location"  v-bind:target="blank">{{item.file_name}}
           </a>
         </md-card-header>
       </div>
@@ -60,7 +60,8 @@ export default {
   data () {
     return {
       failedSnackbar: false,
-      failedSnackbarReason: 'Failed to delete a update'
+      failedSnackbarReason: 'Failed to delete a update',
+      blank: '_blank'
     }
   },
 
