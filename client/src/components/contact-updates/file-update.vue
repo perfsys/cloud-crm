@@ -6,7 +6,7 @@
         <md-card-header>
           <div class="md-subhead">Created at {{ item.create_dt  | fromISO}}</div>
           <div class="md-subhead">Content Type: {{ item.mime_type}} </div>
-          <a class="md-primary"  v-bind:href="item.location" >{{item.file_name}}
+          <a class="md-primary"  v-bind:href="item.location"  v-bind:target="_blank">{{item.file_name}}
           </a>
         </md-card-header>
       </div>
