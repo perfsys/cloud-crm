@@ -17,9 +17,16 @@ service: perfsys-cloud-crm-api # NOTE: update this with your service name
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
+plugins:
+- serverless-prune-plugin
+
+
 custom:
   dataUploadBucketName: perfsys-cloud-crm-updates-data-${opt:stage, 'dev'}
   identityProviderName:  ${file(./deployUtils.js):getCleanString}_CloudCrm
+  prune:
+    automatic: true
+    number: 3
 
 provider:
   name: aws
