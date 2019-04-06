@@ -18,7 +18,9 @@ const actions = {
   updatesGetAllByContact ({state, commit, rootState}) {
     if (rootState.route.params.group && rootState.route.params.name) {
       api.getAllByContact(rootState.route.params.group, rootState.route.params.name)
-        .then(updates => commit('setUpdates', updates))
+        .then(updates => {
+          commit('setUpdates', updates.filter(i => i.type))
+        })
     }
   },
 
@@ -26,6 +28,18 @@ const actions = {
     return new Promise((resolve, reject) => {
       if (rootState.route.params.group && rootState.route.params.name) {
         api.saveOneByContact(rootState.route.params.group, rootState.route.params.name, item)
+          .then(() => {
+            dispatch('updatesGetAllByContact')
+            resolve()
+          }, reject)
+      }
+    })
+  },
+
+  fileSaveOne ({state, commit, dispatch, rootState}, item) {
+    return new Promise((resolve, reject) => {
+      if (rootState.route.params.group && rootState.route.params.name) {
+        api.saveFileByContact(rootState.route.params.group, rootState.route.params.name, item)
           .then(() => {
             dispatch('updatesGetAllByContact')
             resolve()

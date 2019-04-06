@@ -16,10 +16,23 @@ export default {
     })
   },
 
-  saveOneByContact (group, name, text) {
+  saveOneByContact (group, name, item) {
     return new Promise((resolve, reject) => {
       HTTP.post(`/contacts/${group}/${name}/updates`, {
-        text: text
+        text: item.text,
+        type: item.type
+      }).then(response => resolve(response.data), reject)
+    })
+  },
+
+  saveFileByContact (group, name, item) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(`/contacts/${group}/${name}/updates`, {
+        key: item.key,
+        file_name: item.fileName,
+        location: item.location,
+        type: item.type,
+        mime_type: item.mimeType
       }).then(response => resolve(response.data), reject)
     })
   },
@@ -33,7 +46,9 @@ export default {
   },
 
   deleteOneByContact (item) {
-    return HTTP.delete(`/contacts/${item.group}/${item.name}/updates/${item.id}`)
+    return new Promise((resolve, reject) => {
+      return HTTP.delete(`/contacts/${item.group}/${item.name}/updates/${item.id}`)
+        .then(response => resolve(response.data), reject)
+    })
   }
-
 }
