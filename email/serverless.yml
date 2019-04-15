@@ -142,10 +142,19 @@ functions:
   email-token-get:
     handler: functions/email-token-get.handler
     events:
+      - stream:
+          type: dynamodb
+          arn:
+            "Fn::GetAtt":
+               - AccessTokenDynamoDBTable
+               - StreamArn
 
   email-get:
     handler: functions/email-get.handler
     events:
+      - schedule:
+          rate: rate(10 minutes)
+          enabled: false
 
 
 # you can add CloudFormation resource templates here
