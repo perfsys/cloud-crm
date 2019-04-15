@@ -1,0 +1,241 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: perfsys-cloud-crm-email # NOTE: update this with your service name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+custom:
+
+  s3BucketEmailKeysName: perfsys-cloud-crm-email-keys-${opt:stage, 'dev'}
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+#  versionFunctions: false
+  stage: ${opt:stage, 'dev'}
+  region: eu-west-1
+  apiKeys:
+    - ${opt:stage, 'dev'}-cloudCrmApiKey-v02
+    - ${opt:stage, 'dev'}-cloudCrmApiKey-v03
+  usagePlan:
+    quota:
+      limit: 10
+      offset: 0
+      period: DAY
+    throttle:
+      burstLimit: 10
+      rateLimit: 1
+
+# you can overwrite defaults here
+#  stage: dev
+#  region: us-east-1
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+  iamRoleStatements:
+
+  - Effect: "Allow"
+    Action:
+    - "s3:GetBucketNotification"
+    - "s3:PutBucketNotification"
+    Resource:
+      Fn::Join:
+      - ""
+      - - "arn:aws:s3:::*"
+
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+  environment:
+    ACCESS_TOKEN_TABLE: ${self:provider.stage}-cloud-crm-access-token
+
+
+# you can add packaging information here
+#package:
+#  include:
+#    - include-me.js
+#    - include-me-dir/**
+#  exclude:
+#    - exclude-me.js
+#    - exclude-me-dir/**
+
+functions:
+
+#  hello:
+#    handler: handler.hello
+
+#    The following are a few example events you can configure
+#    NOTE: Please make sure to change your handler code to work with those events
+#    Check the event documentation for details
+#    events:
+#      - http:
+#          path: users/create
+#          method: get
+#      - s3: ${env:BUCKET}
+#      - schedule: rate(10 minutes)
+#      - sns: greeter-topic
+#      - stream: arn:aws:dynamodb:region:XXXXXX:table/foo/stream/1970-01-01T00:00:00.000
+#      - alexaSkill
+#      - alexaSmartHome: amzn1.ask.skill.xx-xx-xx-xx
+#      - iot:
+#          sql: "SELECT * FROM 'some_topic'"
+#      - cloudwatchEvent:
+#          event:
+#            source:
+#              - "aws.ec2"
+#            detail-type:
+#              - "EC2 Instance State-change Notification"
+#            detail:
+#              state:
+#                - pending
+#      - cloudwatchLog: '/aws/lambda/hello'
+#      - cognitoUserPool:
+#          pool: MyUserPool
+#          trigger: PreSignUp
+
+#    Define function environment variables here
+#    environment:
+#      variable2: value2
+
+
+#
+#  get-google-email:
+#    handler: index.handler
+#    events:
+#    - http:
+#        path: '/email'
+#        method: get
+#        cors: true
+
+  email-token-config:
+    handler: functions/email-token-config.handler
+#    events:
+#      - s3: perfsys-cloud-crm-email-keys-${opt:stage, 'dev'}
+
+  email-token-get:
+    handler: functions/email-token-get.handler
+    events:
+
+  email-get:
+    handler: functions/email-get.handler
+    events:
+
+
+# you can add CloudFormation resource templates here
+#resources:
+#  Resources:
+#    NewResource:
+#      Type: AWS::S3::Bucket
+#      Properties:
+#        BucketName: my-new-bucket
+resources:
+  Resources:
+
+    S3BucketEmailKeys:
+      Type: AWS::S3::Bucket
+      DeletionPolicy: Retain
+      DependsOn: EmailDashTokenDashConfigLambdaPermissionEmailKeysS3
+      Properties:
+        AccessControl: BucketOwnerRead
+        BucketName: ${self:custom.s3BucketEmailKeysName}
+        NotificationConfiguration:
+          LambdaConfigurations:
+            -
+              Event: "s3:ObjectCreated:*"
+              Function:
+                "Fn::GetAtt":
+                  - EmailDashtokenDashconfigLambdaFunction
+                  - Arn
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
+          BlockPublicPolicy: false
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
+
+    EmailDashTokenDashConfigLambdaPermissionEmailKeysS3:
+      Type: "AWS::Lambda::Permission"
+      Properties:
+        FunctionName:
+          "Fn::GetAtt":
+            - EmailDashtokenDashconfigLambdaFunction
+            - Arn
+        Principal: "s3.amazonaws.com"
+        Action: "lambda:InvokeFunction"
+        SourceAccount:
+          Ref: AWS::AccountId
+        SourceArn:
+          Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - ${self:custom.s3BucketEmailKeysName}
+
+    S3BucketEmailKeysPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: S3BucketEmailKeys
+        PolicyDocument:
+          Statement:
+          - Sid: GetObject
+            Effect: Allow
+            Principal: "*"
+            Action:
+            - s3:GetObject
+            Resource:
+              Fn::Join:
+              - ""
+              - - "arn:aws:s3:::"
+                - ${self:custom.s3BucketEmailKeysName}
+                - "/*"
+
+    AccessTokenDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+        -
+          AttributeName: email
+          AttributeType: S
+        KeySchema:
+        -
+          AttributeName: email
+          KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.ACCESS_TOKEN_TABLE}
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
+
+
+  Outputs:
+#     NewOutput:
+#       Description: "Description for the output"
+#       Value: "Some output value"
+
