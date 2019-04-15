@@ -75,7 +75,7 @@ provider:
 #    variable1: value1
   environment:
     ACCESS_TOKEN_TABLE: ${self:provider.stage}-cloud-crm-access-token
-
+    S3_BUCKET_EMAIL_KEYS_NAME: ${self:custom.s3BucketEmailKeysName}
 
 # you can add packaging information here
 #package:
