@@ -62,13 +62,23 @@ provider:
 
   - Effect: "Allow"
     Action:
-    - "s3:GetBucketNotification"
-    - "s3:PutBucketNotification"
+      - s3:GetObject
     Resource:
       Fn::Join:
-      - ""
-      - - "arn:aws:s3:::*"
+        - ""
+        - - "arn:aws:s3:::"
+          - ${self:custom.s3BucketEmailKeysName}
+          - "/*"
 
+  -
+    Effect: Allow
+    Action:
+      - dynamodb:GetItem
+      - dynamodb:PutItem
+      - dynamodb:UpdateItem
+      - dynamodb:DeleteItem
+    Resource:
+      - { "Fn::GetAtt": ["AccessTokenDynamoDBTable", "Arn" ] }
 
 # you can define service wide environment variables here
 #  environment:
@@ -183,8 +193,8 @@ resources:
                   - EmailDashtokenDashconfigLambdaFunction
                   - Arn
         PublicAccessBlockConfiguration:
-          BlockPublicAcls: false
-          BlockPublicPolicy: false
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
           IgnorePublicAcls: true
           RestrictPublicBuckets: true
 
@@ -205,24 +215,24 @@ resources:
           - - "arn:aws:s3:::"
             - ${self:custom.s3BucketEmailKeysName}
 
-    S3BucketEmailKeysPolicy:
-      Type: AWS::S3::BucketPolicy
-      Properties:
-        Bucket:
-          Ref: S3BucketEmailKeys
-        PolicyDocument:
-          Statement:
-          - Sid: GetObject
-            Effect: Allow
-            Principal: "*"
-            Action:
-            - s3:GetObject
-            Resource:
-              Fn::Join:
-              - ""
-              - - "arn:aws:s3:::"
-                - ${self:custom.s3BucketEmailKeysName}
-                - "/*"
+#    S3BucketEmailKeysPolicy:
+#      Type: AWS::S3::BucketPolicy
+#      Properties:
+#        Bucket:
+#          Ref: S3BucketEmailKeys
+#        PolicyDocument:
+#          Statement:
+#          - Sid: GetObject
+#            Effect: Allow
+#            Principal: "*"
+#            Action:
+#            - s3:GetObject
+#            Resource:
+#              Fn::Join:
+#              - ""
+#              - - "arn:aws:s3:::"
+#                - ${self:custom.s3BucketEmailKeysName}
+#                - "/*"
 
     AccessTokenDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
@@ -241,7 +251,9 @@ resources:
         TableName: ${self:provider.environment.ACCESS_TOKEN_TABLE}
         StreamSpecification:
           StreamViewType: NEW_IMAGE
-
+        TimeToLiveSpecification:
+          AttributeName: expiry_date
+          Enabled: true
 
   Outputs:
 #     NewOutput:
