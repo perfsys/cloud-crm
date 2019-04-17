@@ -3,12 +3,10 @@ const s3Utils = require('../libs/s3utils')
 const gmailUtils = require('../libs/gmailUtils')
 const dblUtils = require('../libs/dbUtils')
 
-
 exports.handler = (event, context, callback) => {
   console.log('Email-token-get - starting')
 
   event.Records.filter(item => item.eventName === 'REMOVE').forEach((record) => {
-
     console.log(record)
 
     let req = {}
@@ -21,7 +19,6 @@ exports.handler = (event, context, callback) => {
       .catch(error => {
         console.log(error)
       })
-
   })
   callback(null, 'Success')
 }

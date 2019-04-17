@@ -16,7 +16,7 @@ exports.saveToken = (req) => {
       Item: {
         email: email,
         tokens: tokens,
-        expiry_date: tokens.expiry_date/1000
+        expiry_date: tokens.expiry_date / 1000
       }
     }
 
@@ -32,4 +32,25 @@ exports.saveToken = (req) => {
   })
 }
 
+exports.getToken = (req) => {
+  return new Promise(function (resolve, reject) {
+    console.log('getToken - starting')
 
+    const params = {
+      TableName: ACCESS_TOKEN_TABLE,
+      Limit: 1
+    }
+
+    dynamoDb.scan(params, (error, data) => {
+      if (error) {
+        console.log('getToken - error')
+        reject(error)
+      } else {
+        console.log(data)
+        req.dbToken = data.Items[0]
+
+        resolve(req)
+      }
+    })
+  })
+}
