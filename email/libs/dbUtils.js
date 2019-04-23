@@ -1,4 +1,5 @@
-const ACCESS_TOKEN_TABLE = process.env.ACCESS_TOKEN_TABLE
+const CONFIG_TABLE = process.env.CONFIG_TABLE
+const MAIL_MESSAGES_TABLE = process.env.MAIL_MESSAGES_TABLE
 
 const
   AWS = require('aws-sdk')
@@ -12,11 +13,12 @@ exports.saveToken = (req) => {
     console.log(req)
     let {email, tokens} = req
     const params = {
-      TableName: ACCESS_TOKEN_TABLE,
+      TableName: CONFIG_TABLE,
       Item: {
         email: email,
         tokens: tokens,
-        expiry_date: tokens.expiry_date / 1000
+        expiry_date: tokens.expiry_date / 1000,
+        config_type: 'GMAIL_ACCESS_TOKEN'
       }
     }
 
@@ -32,23 +34,107 @@ exports.saveToken = (req) => {
   })
 }
 
-exports.getToken = (req) => {
+exports.saveHistoryId = (req) => {
   return new Promise(function (resolve, reject) {
-    console.log('getToken - starting')
+    console.log('saveHistoryId - starting')
+
+    console.log(req)
+    let {email, newHistoryId} = req
+    const params = {
+      TableName: CONFIG_TABLE,
+      Item: {
+        email: email,
+        historyId: newHistoryId,
+        config_type: 'GMAIL_HISTORY_ID'
+      }
+    }
+
+    dynamoDb.put(params, (error, data) => {
+      if (error) {
+        console.log('saveHistoryId - error')
+        reject(error)
+      } else {
+        console.log(data)
+        resolve(req)
+      }
+    })
+  })
+}
+
+exports.getGmailAccessToken = (req) => {
+  return new Promise(function (resolve, reject) {
+    console.log('getGmailAccessToken - starting')
 
     const params = {
-      TableName: ACCESS_TOKEN_TABLE,
-      Limit: 1
+      TableName: CONFIG_TABLE,
+      ExpressionAttributeValues: {
+        ':t': 'GMAIL_ACCESS_TOKEN'
+      },
+      FilterExpression: 'config_type = :t'
     }
 
     dynamoDb.scan(params, (error, data) => {
       if (error) {
-        console.log('getToken - error')
+        console.log('getGmailAccessToken - error')
         reject(error)
       } else {
         console.log(data)
         req.dbToken = data.Items[0]
+        resolve(req)
+      }
+    })
+  })
+}
 
+exports.getGmailHistoryId = (req) => {
+  return new Promise(function (resolve, reject) {
+    console.log('getGmailHistoryId - starting')
+
+    const params = {
+      TableName: CONFIG_TABLE,
+      ExpressionAttributeValues: {
+        ':t': 'GMAIL_HISTORY_ID'
+      },
+      FilterExpression: 'config_type = :t'
+    }
+
+    dynamoDb.scan(params, (error, data) => {
+      if (error) {
+        console.log('getGmailHistoryId - error')
+        reject(error)
+      } else {
+        console.log(data)
+        if (data.Items.length > 0) {
+          req.dbHistoryId = data.Items[0]
+        }
+        resolve(req)
+      }
+    })
+  })
+}
+
+exports.saveGmailMessage = (req) => {
+  return new Promise(function (resolve, reject) {
+    console.log('saveGmailMessage - starting')
+
+    console.log(req)
+    let {id, message} = req
+    const params = {
+      TableName: MAIL_MESSAGES_TABLE,
+      Item: {
+        id: id,
+        message: JSON.stringify(message)
+      }
+    }
+
+    console.log(params)
+
+    dynamoDb.put(params, (error, data) => {
+      if (error) {
+        console.log('saveGmailMessage - error')
+        reject(error)
+      } else {
+        console.log(data)
         resolve(req)
       }
     })

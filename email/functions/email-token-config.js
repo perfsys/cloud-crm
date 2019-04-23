@@ -1,7 +1,7 @@
 'use strict'
 
 const s3Utils = require('../libs/s3utils')
-const gmailUtils = require('../libs/gmailUtils')
+const authUtils = require('../libs/googleAuthUtils')
 const dblUtils = require('../libs/dbUtils')
 
 exports.handler = (event, context, callback) => {
@@ -25,7 +25,7 @@ exports.handler = (event, context, callback) => {
     // get object from bucket
     s3Utils.getKeysFromBucket(req)
     // authorize to gmail
-      .then(gmailUtils.authorizeGmail)
+      .then(authUtils.authorizeGmail)
     // put token to db
       .then(dblUtils.saveToken)
       .catch(error => {

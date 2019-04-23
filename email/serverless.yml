@@ -79,13 +79,15 @@ provider:
       - dynamodb:DeleteItem
       - dynamodb:Scan
     Resource:
-      - { "Fn::GetAtt": ["AccessTokenDynamoDBTable", "Arn" ] }
+      - { "Fn::GetAtt": ["ConfigDynamoDBTable", "Arn" ] }
+      - { "Fn::GetAtt": ["MailMessagesDBTable", "Arn" ] }
 
 # you can define service wide environment variables here
 #  environment:
 #    variable1: value1
   environment:
-    ACCESS_TOKEN_TABLE: ${self:provider.stage}-cloud-crm-access-token
+    CONFIG_TABLE: ${self:provider.stage}-cloud-crm-config
+    MAIL_MESSAGES_TABLE: ${self:provider.stage}-cloud-crm-mail-messages
     S3_BUCKET_EMAIL_KEYS_NAME: ${self:custom.s3BucketEmailKeysName}
 
 # you can add packaging information here
@@ -157,7 +159,7 @@ functions:
           type: dynamodb
           arn:
             "Fn::GetAtt":
-               - AccessTokenDynamoDBTable
+               - ConfigDynamoDBTable
                - StreamArn
 
   email-get:
@@ -235,26 +237,66 @@ resources:
 #                - ${self:custom.s3BucketEmailKeysName}
 #                - "/*"
 
-    AccessTokenDynamoDBTable:
+#    AccessTokenDynamoDBTable:
+#      Type: 'AWS::DynamoDB::Table'
+#      Properties:
+#        AttributeDefinitions:
+#        -
+#          AttributeName: email
+#          AttributeType: S
+#        KeySchema:
+#        -
+#          AttributeName: email
+#          KeyType: HASH
+#
+#        ProvisionedThroughput:
+#          ReadCapacityUnits: 1
+#          WriteCapacityUnits: 1
+#        TableName: ${self:provider.environment.ACCESS_TOKEN_TABLE}
+#        StreamSpecification:
+#          StreamViewType: NEW_IMAGE
+#        TimeToLiveSpecification:
+#          AttributeName: expiry_date
+#          Enabled: true
+#
+
+    ConfigDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
       Properties:
         AttributeDefinitions:
         -
-          AttributeName: email
+          AttributeName: config_type
           AttributeType: S
         KeySchema:
         -
-          AttributeName: email
+          AttributeName: config_type
+          KeyType: HASH
+
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.CONFIG_TABLE}
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+        TimeToLiveSpecification:
+          AttributeName: expiry_date
+          Enabled: true
+
+    MailMessagesDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+        -
+          AttributeName: id
+          AttributeType: S
+        KeySchema:
+        -
+          AttributeName: id
           KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.ACCESS_TOKEN_TABLE}
-        StreamSpecification:
-          StreamViewType: NEW_IMAGE
-        TimeToLiveSpecification:
-          AttributeName: expiry_date
-          Enabled: true
+        TableName: ${self:provider.environment.MAIL_MESSAGES_TABLE}
 
   Outputs:
 #     NewOutput:
