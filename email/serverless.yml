@@ -169,6 +169,17 @@ functions:
           rate: rate(10 minutes)
           enabled: true
 
+  find-contact:
+    handler: functions/find-contacts.handler
+    events:
+    - stream:
+        type: dynamodb
+        arn:
+          "Fn::GetAtt":
+          - MailMessagesDBTable
+          - StreamArn
+
+
 
 # you can add CloudFormation resource templates here
 #resources:
@@ -297,6 +308,8 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.MAIL_MESSAGES_TABLE}
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
 
   Outputs:
 #     NewOutput:
