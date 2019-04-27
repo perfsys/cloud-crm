@@ -117,6 +117,27 @@ provider:
       Action:
         - SNS:Publish
 
+#    -
+#      Effect: Allow
+#      Action:
+#        - sqs:ReceiveMessage
+#        - sqs:DeleteMessage
+#        - sqs:GetQueueAttributes
+#        - sqs:SendMessage
+#      Resource:
+#        - { "Fn::GetAtt": ["EmailsAddressesQueue", "Arn" ] }
+#        - { "Fn::GetAtt": ["ContactsIdsQueue", "Arn" ] }
+#
+#
+##    -
+##      Effect: Allow
+##      Action:
+##      - sqs:SendMessage
+##      - sqs:GetQueueAttributes
+##      Resource:
+##      - { "Fn::GetAtt": ["ContactsIdsQueue", "Arn" ] }
+
+
 # you can define service wide environment variables here
 #  environment:
 #    variable1: value1
@@ -129,6 +150,8 @@ provider:
     AUTOMATIC_NOTIFICATIONS_TOPIC_ARN:
       Ref: ContactManagementTopic
     WEB_UI_BASE_URL: perfsys-cloud-crm-ui-${self:provider.stage}.s3-website-${self:provider.region}.amazonaws.com
+#    EMAIL_ADDRESSES_QUEUE: ${self:provider.stage}-cloud-crm-email-addresses
+#    CONTACTS_IDS_QUEUE: ${self:provider.stage}-cloud-crm-contact-ids
 
 # you can add packaging information here
 #package:
@@ -410,6 +433,36 @@ functions:
           method: delete
           cors: true
 
+  get-google-email:
+    handler: index.handler
+    events:
+    - http:
+        path: '/email'
+        method: get
+        cors: true
+
+#  find-contacs-by-emal:
+#    handler: functions/find-contacts.handler
+#    events:
+#    - sqs:
+#        arn:
+#          Fn::GetAtt:
+#          - EmailsAddressesQueue
+#          - Arn
+
+#  emailTokenConfig:
+#    handler: functions/email-token-config.handler
+#    events:
+#    - s3: EmailKeys
+#
+#  emailTokenGet:
+#    handler: functions/email-token-get.handler
+#    events:
+#
+#  email-get:
+#    handler: functions/email-get.handler
+#    events:
+
 
 # you can add CloudFormation resource templates here
 #resources:
@@ -626,6 +679,19 @@ resources:
             - UnAuthCognitoIdentityPoolUnauthenticatedRole
             - Arn
 
+#    EmailsAddressesQueue:
+#      Type: AWS::SQS::Queue
+#      Properties:
+##        FifoQueue:
+#        QueueName: ${self:provider.environment.EMAIL_ADDRESSES_QUEUE}
+#
+#    ContactsIdsQueue:
+#      Type: AWS::SQS::Queue
+#      Properties:
+#        #        FifoQueue:
+#        QueueName: ${self:provider.environment.CONTACTS_IDS_QUEUE}
+
+
   Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
@@ -636,6 +702,26 @@ resources:
         Fn::GetAtt:
             - ContactsDynamoDBTable
             - Arn
+      Export:
+        Name:
+          "Fn::Join":
+          - ':'
+          - - Ref: 'AWS::StackName'
+            - 'ContactsDynamoDBTable'
+
+    ContactsTableName:
+      Description: Table of Cloud CRM contacts list
+      Value:
+        "Ref": ContactsDynamoDBTable
+      Export:
+        Name:
+          "Fn::Join":
+          - ':'
+          - - Ref: 'AWS::StackName'
+            - 'ContactsDynamoDBTableName'
+
+
+
     ContactsTableCompanyIndex:
       Description: Company Index of Contacts table
       Value:
@@ -697,4 +783,50 @@ resources:
             - Ref: 'AWS::StackName'
             - 'S3DataUploadBucketName'
 
-
+#    EmailAddressesQueue:
+#      Description: Oueue of emails adderess and corresponding contacts
+#      Value:
+#        Fn::GetAtt:
+#        - EmailAddressesQueue
+#        - Arn
+#      Export:
+#        Name:
+#          "Fn::Join":
+#          - ':'
+#          - - Ref: 'AWS::StackName'
+#            - 'EmailAddressesQueue'
+#
+#    EmailAddressesQueueName:
+#      Description: Oueue's name of emails adderess
+#      Value:
+#        "Ref": EmailAddressesQueue
+#      Export:
+#        Name:
+#          "Fn::Join":
+#          - ':'
+#          - - Ref: 'AWS::StackName'
+#            - 'EmailAddressesQueueName'
+#
+#    ContactsIdsQueue:
+#      Description: Oueue of corresponding contacts's ids
+#      Value:
+#        Fn::GetAtt:
+#        - ContactsIdsQueue
+#        - Arn
+#      Export:
+#        Name:
+#          "Fn::Join":
+#          - ':'
+#          - - Ref: 'AWS::StackName'
+#            - 'ContactsIdsQueue'
+#
+#    ContactsIdsQueueName:
+#      Description: Oueue's name of emails adderess
+#      Value:
+#        "Ref": ContactsIdsQueue
+#      Export:
+#        Name:
+#          "Fn::Join":
+#          - ':'
+#          - - Ref: 'AWS::StackName'
+#            - 'ContactsIdsQueueName'

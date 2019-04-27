@@ -140,3 +140,32 @@ exports.saveGmailMessage = (req) => {
     })
   })
 }
+
+exports.getGmailMessage = (req) => {
+  return new Promise(function (resolve, reject) {
+    console.log('getGmailMessage - starting')
+
+    console.log(req)
+    let {gmailId} = req
+    const params = {
+      TableName: MAIL_MESSAGES_TABLE,
+
+      Key: {
+        "id": gmailId
+        }
+    }
+
+    console.log(params)
+
+    dynamoDb.get(params, (error, data) => {
+      if (error) {
+        console.log('getGmailMessage - error')
+        reject(error)
+      } else {
+        console.log(data)
+        req.gmailMessage = data.Item
+        resolve(req)
+      }
+    })
+  })
+}

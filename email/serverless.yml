@@ -17,9 +17,17 @@ service: perfsys-cloud-crm-email # NOTE: update this with your service name
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
+plugins:
+- serverless-prune-plugin
+
 custom:
 
   s3BucketEmailKeysName: perfsys-cloud-crm-email-keys-${opt:stage, 'dev'}
+  apiStackName: perfsys-cloud-crm-api-${opt:stage, 'dev'}
+  additionStackName: perfsys-cloud-crm-server-addition-${opt:stage, 'dev'}
+  prune:
+    automatic: true
+    number: 3
 
 provider:
   name: aws
@@ -38,6 +46,7 @@ provider:
     throttle:
       burstLimit: 10
       rateLimit: 1
+
 
 # you can overwrite defaults here
 #  stage: dev
@@ -82,13 +91,62 @@ provider:
       - { "Fn::GetAtt": ["ConfigDynamoDBTable", "Arn" ] }
       - { "Fn::GetAtt": ["MailMessagesDBTable", "Arn" ] }
 
-# you can define service wide environment variables here
+  -
+    Effect: Allow
+    Action:
+      - sqs:ReceiveMessage
+      - sqs:DeleteMessage
+      - sqs:GetQueueAttributes
+    Resource:
+      - 'Fn::ImportValue':
+          "Fn::Join":
+          - ':'
+          - - ${self:custom.additionStackName}
+            - 'ContactsIdsQueue'
+
+  -
+    Effect: Allow
+    Action:
+      - sqs:SendMessage
+      - sqs:GetQueueAttributes
+    Resource:
+    - 'Fn::ImportValue':
+        "Fn::Join":
+        - ':'
+        - - ${self:custom.additionStackName}
+          - 'EmailAddressesQueue'
+
+
+  # you can define service wide environment variables here
 #  environment:
 #    variable1: value1
   environment:
     CONFIG_TABLE: ${self:provider.stage}-cloud-crm-config
     MAIL_MESSAGES_TABLE: ${self:provider.stage}-cloud-crm-mail-messages
     S3_BUCKET_EMAIL_KEYS_NAME: ${self:custom.s3BucketEmailKeysName}
+    EMAIL_ADDRESSES_QUEUE:
+      'Fn::ImportValue':
+        "Fn::Join":
+          - ':'
+          - - ${self:custom.additionStackName}
+            - 'EmailAddressesQueueName'
+
+    CONTACTS_IDS_QUEUE:
+      'Fn::ImportValue':
+        "Fn::Join":
+        - ':'
+        - - ${self:custom.additionStackName}
+          - 'ContactsIdsQueueName'
+
+    CONTACTS_IDS_QUEUE_ARN:
+      'Fn::ImportValue':
+        "Fn::Join":
+        - ':'
+        - - ${self:custom.additionStackName}
+          - 'ContactsIdsQueue'
+
+
+
 
 # you can add packaging information here
 #package:
@@ -179,9 +237,22 @@ functions:
           - MailMessagesDBTable
           - StreamArn
 
+  email-update-contact:
+    handler: functions/email-uodate-contact.handler
+    events:
+#      - sqs: arn:aws:sqs:eu-west-1:334057996933:dev-cloud-crm-email-handle
+#        "Fn::ImportValue": 'perfsys-cloud-crm-api-dev:EmailHandleQueue'
+     - sqs:
+         arn:
+           Fn::ImportValue: ${self:custom.additionStackName}:ContactsIdsQueue
+#        arn:${self:provider.environment.CONTACTS_IDS_QUEUE_ARN}
+##        Fn::ImportValue:
+#          Fn::Join:
+#            - ':'
+#            - - ${self:custom.additionStackName}
+#              - 'ContactsIdsQueue'
 
-
-# you can add CloudFormation resource templates here
+  # you can add CloudFormation resource templates here
 #resources:
 #  Resources:
 #    NewResource:
@@ -228,48 +299,6 @@ resources:
           - ""
           - - "arn:aws:s3:::"
             - ${self:custom.s3BucketEmailKeysName}
-
-#    S3BucketEmailKeysPolicy:
-#      Type: AWS::S3::BucketPolicy
-#      Properties:
-#        Bucket:
-#          Ref: S3BucketEmailKeys
-#        PolicyDocument:
-#          Statement:
-#          - Sid: GetObject
-#            Effect: Allow
-#            Principal: "*"
-#            Action:
-#            - s3:GetObject
-#            Resource:
-#              Fn::Join:
-#              - ""
-#              - - "arn:aws:s3:::"
-#                - ${self:custom.s3BucketEmailKeysName}
-#                - "/*"
-
-#    AccessTokenDynamoDBTable:
-#      Type: 'AWS::DynamoDB::Table'
-#      Properties:
-#        AttributeDefinitions:
-#        -
-#          AttributeName: email
-#          AttributeType: S
-#        KeySchema:
-#        -
-#          AttributeName: email
-#          KeyType: HASH
-#
-#        ProvisionedThroughput:
-#          ReadCapacityUnits: 1
-#          WriteCapacityUnits: 1
-#        TableName: ${self:provider.environment.ACCESS_TOKEN_TABLE}
-#        StreamSpecification:
-#          StreamViewType: NEW_IMAGE
-#        TimeToLiveSpecification:
-#          AttributeName: expiry_date
-#          Enabled: true
-#
 
     ConfigDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'

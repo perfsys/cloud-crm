@@ -37,7 +37,6 @@ exports.handler = (event, context, callback) => {
       if (!req.dbHistoryId || !req.dbHistoryId.historyId) return null
       req.historyId = req.dbHistoryId.historyId
       // get added messages ids
-      // await getGmailHistory(req)
 
       req.addedIds = []
       let res = await gmailUtils.getGmailHistory(req)
