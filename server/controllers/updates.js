@@ -183,7 +183,7 @@ router.post('', function (req, res) {
       item.id = randomstring.generate(7)
       item.create_dt = new Date().toISOString()
       item.type = type
-      if (type === 'TEXT') {
+      if (type === 'TEXT' || 'GMAIL') {
         item.text = req.body.text
       } else if (type === 'FILE') {
         item.key = req.body.key

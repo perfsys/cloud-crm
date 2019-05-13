@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "jovial-current-237009",
+  "private_key_id": "7017ae6758097c2af131f0913a0a25ae629ca0f8",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC2wbni2QExviAy\nI/w6t8Fa5uskQ62f6xEIenRmMUJtriZeqUVvOUwQPDBeMULIVkGuW8HoS857SENe\npIOmqfJ1muCOI5CO8z6//bjRoG8cK3OYmcsrIGjlI/Hx4OKvnUYxq29LXJixJ/9Z\n7oEEMHWCC/SHdtwhCmoVoQiZvSF7N4RDmWegEzJ9MkKn99I2P1IsTjb3k+64yRjZ\niucI7TvL1W3ZHhwAKo6iRg7JgQoq8+wwmm62FVrbveY03JNWtOc9Pf/65X1+ay0o\npWjFlmc5eoaIJMnVJLjNfugB6cgdbv4M6u1BfV7H6MT4qDeLot5aqS7ODetMs6/z\naaEWkTFzAgMBAAECggEACCcJL0Tl6D2mewYe7NGgpvjxGVuJhb47MskfoyVkZLcl\nkAh2B/mi2oCM2c7Rv1UVtfzy3/VtvxMgqjqlgsxG/BcOGFkezDmunWrokTVab4PC\nstZ9eS2HcF1ToCobgqD97h5LJy34w8JYgj8A81pkC4qT/G0BcdnglJlr5EvLEA99\nGzOZv2QijFZHYTo11wuy9eiA3vJjH1PYKSA+Z/WBWFcfz7RsKOg3krJBtMwQWBxn\nXEH2jE3QQ8om8Mmt6F5qw/poCrgtnd4ESQQSmQWHgCP2z/KDjQ7BHg5x1BcN2qXX\ny5OG9TfgROgjqSenlpRxR+YgfA1mlbxeXrJKpuJsuQKBgQDk9e8uJ99UpMmYZdEF\nTmDPqtedq67X1Kz6P/D5GkuUKXCsvkw/XRyaNDc/CzIpkCWCgbpxmKZlAnanj3CD\nOdLB8Q09scC327DJNN02ZU8Il16ysfAGDxDi2ZYW7OWczlFd+UVicA/DsNQIpf32\nmXwG9aIMp9cWd4Kx/dnsI08XuwKBgQDMVu3JTEEulXrFtbss8Yq1VBtq+m+GkCL+\nmN2HHJFXQxSS+OlBALeo9JMWwUL/8Clljai1J+jj7rIOLvptt4pvscCVtBYprRfP\nb+A5SRs7/GSC+h+eHS3fE4PzUUWsc50VP1uW7K0BQVb5Pkc9HcHNVqGcSd0bkwoE\nChTdWL2lqQKBgQCfLehSg3/9/e72F9tAwCQIXLM4uBJ/lSmJdgjXdpOS91iRkF+8\nMcTf5GuAVg1S3hdl60EvFrygPx01E0FaykmfcjINcVYVvRPkXu9okPhodaxtuc2w\nuKq5vCJf3+Umpj3lgpbdgCFFoNtZA+ZTmpOi1wUJnWqpAP+JNX5bcJTdXwKBgCQT\n2Qnod7200KdlrbWCs/3N6sVZkCVO/466CKrZRWQFyPUmE3DRopunCu1ClATCL1zp\nxPavJDRSKYfNjZOfi0arOJh14k/bas/KLemPWcqehlSFut1cw4OWW36zQ7zt8LcW\np6IfCXCmS6fX8hX9UgFiIUiJ1gsPS/5olUR7bYh5AoGAVT2AOZpHhDSHHlksDNSt\n+shuRnOxbmRz3jNgw4p6pKoHbSy4XUpjL+9e1bNZ24+00OorfnUKoTMwqCRoFpme\nTUVL14YnNdX6ld28xadh6sAQfB6IDgtK/yxDUX+8FNHIPfCvOL1FnPj7xLw4QErs\nQq3+qcUdGJ5e11rio/p2FKA=\n-----END PRIVATE KEY-----\n",
+  "client_email": "cloud-crm@jovial-current-237009.iam.gserviceaccount.com",
+  "client_id": "108635334992924019656",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cloud-crm%40jovial-current-237009.iam.gserviceaccount.com"
+}

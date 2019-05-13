@@ -65,15 +65,23 @@ provider:
     EMAIL_ADDRESSES_QUEUE: ${self:provider.stage}-cloud-crm-email-addresses
     CONTACTS_IDS_QUEUE: ${self:provider.stage}-cloud-crm-contact-ids
 
+    CONTACTS_IDS_QUEUE_URL:
+      "Fn::Join":
+        - ''
+        - - 'https://sqs.'
+          - ${self:provider.region}
+          - '.amazonaws.com'
+          - '/'
+          - Ref: 'AWS::AccountId'
+          - '/'
+          - ${self:provider.stage}-cloud-crm-contact-ids
+
     CONTACTS_TABLE:
       'Fn::ImportValue':
         "Fn::Join":
           - ':'
           - - ${self:custom.apiStackName}
             - 'ContactsDynamoDBTableName'
-
-
-
 functions:
 
   find-contacs-by-emal:
@@ -85,11 +93,8 @@ functions:
           - EmailAddressesQueue
           - Arn
 
-
-
 resources:
   Resources:
-
     EmailAddressesQueue:
       Type: AWS::SQS::Queue
       Properties:
@@ -102,8 +107,6 @@ resources:
 
 
   Outputs:
-
-
     EmailAddressesQueue:
       Description: Oueue of emails adderess and corresponding contacts
       Value:

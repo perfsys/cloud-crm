@@ -1,8 +1,7 @@
 const CONFIG_TABLE = process.env.CONFIG_TABLE
 const MAIL_MESSAGES_TABLE = process.env.MAIL_MESSAGES_TABLE
 
-const
-  AWS = require('aws-sdk')
+const AWS = require('aws-sdk')
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
 
@@ -151,8 +150,8 @@ exports.getGmailMessage = (req) => {
       TableName: MAIL_MESSAGES_TABLE,
 
       Key: {
-        "id": gmailId
-        }
+        'id': gmailId
+      }
     }
 
     console.log(params)
@@ -163,7 +162,7 @@ exports.getGmailMessage = (req) => {
         reject(error)
       } else {
         console.log(data)
-        req.gmailMessage = data.Item
+        req.gmailMessage = JSON.parse(data.Item.message).textPlain
         resolve(req)
       }
     })
