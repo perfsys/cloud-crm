@@ -6,10 +6,10 @@ phases:
       - npm i -g serverless
       - cd ./server
       - npm i
-      - sls deploy -s prod_in -v
+      - sls deploy -s prod-in -v
       - cd ..
       - cd ./client
       - npm i
-      - sls deploy -s prod_in -v
+      - sls deploy -s prod-in -v
 
 
