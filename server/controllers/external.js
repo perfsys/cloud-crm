@@ -98,6 +98,7 @@ const constructUpdateItem = function (req) {
     item.create_dt = new Date().toISOString()
 
     item.text = text + `\n --- \n name: ${name} \n phone: ${phone} \n email: ${email}`
+    item.type = 'TEXT'
     req.updateItem = item
     resolve(req)
   })

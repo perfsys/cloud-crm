@@ -1,0 +1,15 @@
+version: 0.2
+
+phases:
+  post_build:
+    commands:
+      - npm i -g serverless
+      - cd ./server
+      - npm i
+      - sls deploy -s n8h4nn -v
+      - cd ..
+      - cd ./client
+      - npm i
+      - sls deploy -s n8h4nn -v
+
+
