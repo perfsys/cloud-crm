@@ -10,6 +10,10 @@
 </div>
 
 <div class="md-layout-item md-size-15">
+  <md-button  class="md-icon-button md-primary">
+    <md-icon></md-icon>
+  </md-button>
+
   <md-button  class="md-icon-button md-accent" @click.stop="updatesDeleteOne(item)">
   <md-icon>delete</md-icon>
   </md-button>
