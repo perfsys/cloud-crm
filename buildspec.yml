@@ -8,6 +8,7 @@ phases:
       - npm i
       - cd ..
       - cd ./server-addition
+      - pwd
       - npm i
       - cd ..
       - cd ./email

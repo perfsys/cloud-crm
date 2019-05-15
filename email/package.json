@@ -1,5 +1,5 @@
 {
-  "name": "io.perfsys.cloud-crm.api",
+  "name": "io.perfsys.cloud-crm.email",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
