@@ -94,11 +94,14 @@ exports.getGmailMessageById = (req, id) => {
       auth: req.jwtClient
     })
 
-    const res = await gmail.users.messages.get({userId: 'me', id: id})
-
-    console.log(res.data)
-    // req.data = res.data
-
-    resolve(res.data)
+    try {
+      const res = await gmail.users.messages.get({userId: 'me', id: id})
+      console.log(res.data)
+      // req.data = res.data
+      resolve(res.data)
+    } catch (err) {
+      console.log(err)
+      resolve(null)
+    }
   })
 }

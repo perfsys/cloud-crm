@@ -54,10 +54,13 @@ exports.handler = (event, context, callback) => {
         console.log(id)
 
         let data = await gmailUtils.getGmailMessageById(req, id)
-        // parse data
-        console.log(parseMessage(data))
-        // save to db
-        await dblUtils.saveGmailMessage({id: data.id, message: parseMessage(data)})
+
+        if (data) {
+          // parse data
+          console.log(parseMessage(data))
+          // save to db
+          await dblUtils.saveGmailMessage({id: data.id, message: parseMessage(data)})
+        }
       }
 
       console.log('partialSync - completed')
