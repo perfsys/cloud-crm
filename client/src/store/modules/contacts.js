@@ -7,7 +7,6 @@ const state = {
 
 // getters
 const getters = {
-
   contactsAll: state => state.all,
 
   routeContactName (state, getters, rootState) {
@@ -26,15 +25,24 @@ const actions = {
         return b1.getTime() - a1.getTime()
       })
     }
+    const numeringFunc = (contacts) => {
+      let i = 1
+      return contacts.map(contact => {
+        contact.number = i
+        i = i + 1
+        return contact
+      })
+    }
+
     if (rootState.route.params.group) {
       api.getAllInGroup(rootState.route.params.group)
         .then(contacts => {
-          commit('setContacts', sortFunc(contacts))
+          commit('setContacts', numeringFunc(sortFunc(contacts)))
         })
     } else {
       api.getAll()
         .then(contacts => {
-          commit('setContacts', sortFunc(contacts))
+          commit('setContacts', numeringFunc(sortFunc(contacts)))
         })
     }
   },
