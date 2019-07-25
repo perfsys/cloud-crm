@@ -1,6 +1,6 @@
 <template>
 
-  <md-table v-model="contacts" md-card @md-selected="onSelect" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder" :md-sort-fn="customSort">
+  <md-table v-model="contacts"  @md-selected="onSelect" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder" :md-sort-fn="customSort">
 
     <md-table-toolbar>
       <h1 class="md-title" v-show="!allContacts">All Contacts in {{groupName}}</h1>

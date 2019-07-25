@@ -117,10 +117,17 @@
             <md-button class="md-primary" type="submit">Save</md-button>
           </md-dialog-actions>
 
-          <md-dialog-alert
+          <md-snackbar
             :md-active.sync="successSnackbar"
-            md-content="Contact was updated"
-            md-confirm-text="Close"/>
+            md-position="center"
+            md-persistent
+            @md-closed="snackbarClosed">
+            <span>Contact was updated!</span>
+            <md-button
+              class="md-primary"
+              @click="successSnackbar = false">Close
+            </md-button>
+          </md-snackbar>
 
           <md-dialog-alert
             :md-active.sync="failedSnackbar"
@@ -247,9 +254,7 @@ export default {
 
       this.$store.dispatch('contactsUpdateOne', R.merge(this.contact, this.links))
         .then(() => {
-          // _self.reset()
           _self.successSnackbar = true
-          _self.refresh()
         })
         .catch((err) => {
           if (err.response && err.response.data) {
@@ -263,8 +268,13 @@ export default {
       this.$router.go(-1)
     },
     reset () {
+    },
+    snackbarClosed () {
+      this.$router.push({
+        name: 'contacts-group',
+        params: {group: this.group}
+      })
     }
-
   }
 }
 </script>
