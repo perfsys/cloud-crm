@@ -270,6 +270,14 @@ functions:
           method: get
           cors: true
 
+  locations-list:
+    handler: index.handler
+    events:
+    - http:
+        path: '/locations'
+        method: get
+        cors: true
+
   groups-list:
     handler: index.handler
     events:
