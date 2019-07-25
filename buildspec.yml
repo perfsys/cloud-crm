@@ -7,6 +7,13 @@ phases:
       - cd ./server
       - npm i
       - cd ..
+      - cd ./server-addition
+      - pwd
+      - npm i
+      - cd ..
+      - cd ./email
+      - npm i
+      - cd ..
       - cd ./client
       - npm i
     finally:
@@ -18,6 +25,12 @@ phases:
       - npm run test
       - cd ..
       - cd ./server
+      - npm run
+      - cd ..
+      - cd ./server-addition
+      - npm run lint
+      - cd ..
+      - cd ./email
       - npm run lint
     finally:
       - cd ..
@@ -28,6 +41,12 @@ phases:
       - cd ..
       - cd ./server
 #      - sls remove -v
+      - sls deploy -v
+      - cd ..
+      - cd ./server-addition
+      - sls deploy -v
+      - cd ..
+      - cd ./email
       - sls deploy -v
       - cd ..
       - cd ./client

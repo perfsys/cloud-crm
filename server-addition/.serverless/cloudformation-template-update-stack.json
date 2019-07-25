@@ -1,0 +1,363 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "The AWS CloudFormation template for this Serverless application",
+  "Resources": {
+    "ServerlessDeploymentBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "FindDashcontacsDashbyDashemalLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/perfsys-cloud-crm-server-addition-dev-find-contacs-by-emal"
+      }
+    },
+    "IamRoleLambdaExecution": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": {
+              "Fn::Join": [
+                "-",
+                [
+                  "dev",
+                  "perfsys-cloud-crm-server-addition",
+                  "lambda"
+                ]
+              ]
+            },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogStream"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/perfsys-cloud-crm-server-addition-dev-find-contacs-by-emal:*"
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/perfsys-cloud-crm-server-addition-dev-find-contacs-by-emal:*:*"
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "sqs:ReceiveMessage",
+                    "sqs:DeleteMessage",
+                    "sqs:GetQueueAttributes"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::GetAtt": [
+                        "EmailAddressesQueue",
+                        "Arn"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "sqs:SendMessage",
+                    "sqs:GetQueueAttributes"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::GetAtt": [
+                        "ContactsIdsQueue",
+                        "Arn"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:Query",
+                    "dynamodb:Scan"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::ImportValue": {
+                        "Fn::Join": [
+                          ":",
+                          [
+                            "perfsys-cloud-crm-api-dev",
+                            "ContactsDynamoDBTable"
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "sqs:ReceiveMessage",
+                    "sqs:DeleteMessage",
+                    "sqs:GetQueueAttributes"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::GetAtt": [
+                        "EmailAddressesQueue",
+                        "Arn"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Path": "/",
+        "RoleName": {
+          "Fn::Join": [
+            "-",
+            [
+              "perfsys-cloud-crm-server-addition",
+              "dev",
+              "eu-west-1",
+              "lambdaRole"
+            ]
+          ]
+        }
+      }
+    },
+    "FindDashcontacsDashbyDashemalLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/perfsys-cloud-crm-server-addition/dev/1557746392592-2019-05-13T11:19:52.592Z/perfsys-cloud-crm-server-addition.zip"
+        },
+        "FunctionName": "perfsys-cloud-crm-server-addition-dev-find-contacs-by-emal",
+        "Handler": "functions/find-contacts.handler",
+        "MemorySize": 1024,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "EMAIL_ADDRESSES_QUEUE": "dev-cloud-crm-email-addresses",
+            "CONTACTS_IDS_QUEUE": "dev-cloud-crm-contact-ids",
+            "CONTACTS_IDS_QUEUE_URL": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://sqs.",
+                  "eu-west-1",
+                  ".amazonaws.com",
+                  "/",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  "/",
+                  "dev-cloud-crm-contact-ids"
+                ]
+              ]
+            },
+            "CONTACTS_TABLE": {
+              "Fn::ImportValue": {
+                "Fn::Join": [
+                  ":",
+                  [
+                    "perfsys-cloud-crm-api-dev",
+                    "ContactsDynamoDBTableName"
+                  ]
+                ]
+              }
+            }
+          }
+        }
+      },
+      "DependsOn": [
+        "FindDashcontacsDashbyDashemalLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "FindDashcontacsDashbyDashemalLambdaVersionY6PtHo5nxB2vw9EMfJHCmI9nxwy7wl7Gaeb2FPsNdis": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "FindDashcontacsDashbyDashemalLambdaFunction"
+        },
+        "CodeSha256": "Otd9Y8va3WzdIG4wwUzpq1IZylHtwCuxV+Sa8vopPp4="
+      }
+    },
+    "FindDashcontacsDashbyDashemalEventSourceMappingSQSEmailAddressesQueue": {
+      "Type": "AWS::Lambda::EventSourceMapping",
+      "DependsOn": "IamRoleLambdaExecution",
+      "Properties": {
+        "BatchSize": 10,
+        "EventSourceArn": {
+          "Fn::GetAtt": [
+            "EmailAddressesQueue",
+            "Arn"
+          ]
+        },
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "FindDashcontacsDashbyDashemalLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Enabled": "True"
+      }
+    },
+    "EmailAddressesQueue": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": "dev-cloud-crm-email-addresses"
+      }
+    },
+    "ContactsIdsQueue": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": "dev-cloud-crm-contact-ids"
+      }
+    }
+  },
+  "Outputs": {
+    "ServerlessDeploymentBucketName": {
+      "Value": {
+        "Ref": "ServerlessDeploymentBucket"
+      }
+    },
+    "FindDashcontacsDashbyDashemalLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "FindDashcontacsDashbyDashemalLambdaVersionY6PtHo5nxB2vw9EMfJHCmI9nxwy7wl7Gaeb2FPsNdis"
+      }
+    },
+    "EmailAddressesQueue": {
+      "Description": "Oueue of emails adderess and corresponding contacts",
+      "Value": {
+        "Fn::GetAtt": [
+          "EmailAddressesQueue",
+          "Arn"
+        ]
+      },
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            ":",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "EmailAddressesQueue"
+            ]
+          ]
+        }
+      }
+    },
+    "EmailAddressesQueueName": {
+      "Description": "Oueue's name of emails adderess",
+      "Value": {
+        "Ref": "EmailAddressesQueue"
+      },
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            ":",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "EmailAddressesQueueName"
+            ]
+          ]
+        }
+      }
+    },
+    "ContactsIdsQueue": {
+      "Description": "Oueue of corresponding contacts's ids",
+      "Value": {
+        "Fn::GetAtt": [
+          "ContactsIdsQueue",
+          "Arn"
+        ]
+      },
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            ":",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "ContactsIdsQueue"
+            ]
+          ]
+        }
+      }
+    },
+    "ContactsIdsQueueName": {
+      "Description": "Oueue's name of emails adderess",
+      "Value": {
+        "Ref": "ContactsIdsQueue"
+      },
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            ":",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "ContactsIdsQueueName"
+            ]
+          ]
+        }
+      }
+    }
+  }
+}
