@@ -5,6 +5,7 @@ import contacts from './modules/contacts'
 import groups from './modules/groups'
 import countries from './modules/countries'
 import sources from './modules/sources'
+import locations from './modules/locations'
 import types from './modules/types'
 import statuses from './modules/statuses'
 import updates from './modules/updates'
@@ -22,6 +23,7 @@ export default new Vuex.Store({
     groups,
     countries,
     sources,
+    locations,
     types,
     statuses,
     updates,

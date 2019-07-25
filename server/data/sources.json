@@ -1,4 +1,4 @@
-[
+{"sources" : [
   {
     "id": "FACEBOOK",
     "name": "Facebook"
@@ -15,4 +15,6 @@
     "id": "UPWORK",
     "name": "Upwork"
   }
-]
+],
+  "default" : "LINKEDIN"
+}
