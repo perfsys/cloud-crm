@@ -250,8 +250,7 @@ const constructContactItem = function (req) {
       first_name,
       last_name,
       source_id,
-      status_id,
-      location_id
+      status_id
     } = req.body
 
     const item = {}
