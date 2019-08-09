@@ -4,6 +4,9 @@ phases:
   install:
     commands:
       - npm i -g serverless
+      - cd ./server-resources
+      - npm i
+      - cd ..
       - cd ./server
       - npm i
       - cd ..
@@ -24,8 +27,11 @@ phases:
       - npm run lint
       - npm run test
       - cd ..
+      - cd ./server-resources
+      - npm run lint
+      - cd ..
       - cd ./server
-      - npm run
+      - npm run lint
       - cd ..
       - cd ./server-addition
       - npm run lint
@@ -38,6 +44,10 @@ phases:
     commands:
       - cd ./client
       - sls remove -v
+      - cd ..
+      - cd ./server-resources
+      #      - sls remove -v
+      - sls deploy -v
       - cd ..
       - cd ./server
 #      - sls remove -v

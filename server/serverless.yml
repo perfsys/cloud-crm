@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: perfsys-cloud-crm-api # NOTE: update this with your service name
+service: perfsys-cloud-crm-functions-api # NOTE: update this with your service name
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -24,9 +24,12 @@ plugins:
 custom:
   dataUploadBucketName: perfsys-cloud-crm-updates-data-${opt:stage, 'dev'}
   identityProviderName:  ${file(./deployUtils.js):getCleanString}_CloudCrm
+  yamlStage: ${opt:stage, 'dev'}
   prune:
     automatic: true
     number: 3
+  persistence: perfsys-cloud-crm-api-${self:custom.yamlStage}
+
 
 provider:
   name: aws
@@ -78,14 +81,39 @@ provider:
         - dynamodb:BatchWriteItem
         - dynamodb:BatchGetItem
       Resource:
-        - { "Fn::GetAtt": ["ContactUpdatesDynamoDBTable", "Arn" ] }
-        - { "Fn::GetAtt": ["GroupsDynamoDBTable", "Arn" ] }
-        - { "Fn::GetAtt": ["CompaniesDynamoDBTable", "Arn" ] }
+        - 'Fn::ImportValue':
+            "Fn::Join":
+            - ':'
+            - - ${self:custom.persistence}
+              - 'ContactUpdatesDynamoDBTable'
+
+        - 'Fn::ImportValue':
+            "Fn::Join":
+            - ':'
+            - - ${self:custom.persistence}
+              - 'GroupsDynamoDBTable'
+
+        - 'Fn::ImportValue':
+            "Fn::Join":
+            - ':'
+            - - ${self:custom.persistence}
+              - 'CompaniesDynamoDBTable'
+
+
+#        - { "Fn::GetAtt": ["ContactUpdatesDynamoDBTable", "Arn" ] }
+#        - { "Fn::GetAtt": ["GroupsDynamoDBTable", "Arn" ] }
+#        - { "Fn::GetAtt": ["CompaniesDynamoDBTable", "Arn" ] }
     -
       Resource:
-        - Fn::GetAtt:
-            - ContactsDynamoDBTable
-            - Arn
+      - 'Fn::ImportValue':
+          "Fn::Join":
+          - ':'
+          - - ${self:custom.persistence}
+            - 'ContactsDynamoDBTable'
+
+      #        - Fn::GetAtt:
+#            - ContactsDynamoDBTable
+#            - Arn
       Effect: Allow
       Action:
         - dynamodb:Query
@@ -102,20 +130,26 @@ provider:
         - dynamodb:ListStreams
     -
        Resource:
-         Fn::Join:
-           - ''
-           -
-             - "Fn::GetAtt": ["ContactsDynamoDBTable", "Arn" ]
-             - '/index/CompanyIndex'
+       - 'Fn::ImportValue':
+           "Fn::Join":
+           - ':'
+           - - ${self:custom.persistence}
+             - 'ContactsDynamoDBTableCompanyIndex'
+
+      #         Fn::Join:
+#           - ''
+#           -
+#             - "Fn::GetAtt": ["ContactsDynamoDBTable", "Arn" ]
+#             - '/index/CompanyIndex'
        Effect: Allow
        Action:
          - dynamodb:Query
-    -
-      Resource:
-        - Ref: ContactManagementTopic
-      Effect: Allow
-      Action:
-        - SNS:Publish
+#    -
+#      Resource:
+#        - Ref: ContactManagementTopic
+#      Effect: Allow
+#      Action:
+#        - SNS:Publish
 
 #    -
 #      Effect: Allow
@@ -142,16 +176,68 @@ provider:
 #  environment:
 #    variable1: value1
   environment:
-    CONTACTS_TABLE: ${self:provider.stage}-cloud-crm-contacts
-    GROUPS_TABLE: ${self:provider.stage}-cloud-crm-groups
-    CONTACT_UPDATES_TABLE: ${self:provider.stage}-cloud-crm-contact-updates
-    COMPANIES_TABLE: ${self:provider.stage}-cloud-crm-companies
-    AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE: ${self:provider.stage}-cloud-crm-automatic-notifications
+#    CONTACTS_TABLE: ${self:provider.stage}-cloud-crm-contacts
+    CONTACTS_TABLE:
+      'Fn::ImportValue':
+        "Fn::Join":
+        - ':'
+        - - ${self:custom.persistence}
+          - 'ContactsDynamoDBTableName'
+
+    #    GROUPS_TABLE: ${self:provider.stage}-cloud-crm-groups
+    GROUPS_TABLE:
+      'Fn::ImportValue':
+        "Fn::Join":
+        - ':'
+        - - ${self:custom.persistence}
+          - 'GroupsDynamoDBTableName'
+
+
+    #    CONTACT_UPDATES_TABLE: ${self:provider.stage}-cloud-crm-contact-updates
+    CONTACT_UPDATES_TABLE:
+      'Fn::ImportValue':
+        "Fn::Join":
+        - ':'
+        - - ${self:custom.persistence}
+          - 'ContactUpdatesDynamoDBTableName'
+
+
+
+    #    COMPANIES_TABLE: ${self:provider.stage}-cloud-crm-companies
+
+    COMPANIES_TABLE:
+      'Fn::ImportValue':
+        "Fn::Join":
+        - ':'
+        - - ${self:custom.persistence}
+          - 'CompaniesDynamoDBTableName'
+
+    #    AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE: ${self:provider.stage}-cloud-crm-automatic-notifications
+    AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE:
+      'Fn::ImportValue':
+        "Fn::Join":
+        - ':'
+        - - ${self:custom.persistence}
+          - 'ContactManagementTopicName'
+
+
+    #    AUTOMATIC_NOTIFICATIONS_TOPIC_ARN:
     AUTOMATIC_NOTIFICATIONS_TOPIC_ARN:
-      Ref: ContactManagementTopic
+      'Fn::ImportValue':
+        "Fn::Join":
+        - ':'
+        - - ${self:custom.persistence}
+          - 'ContactManagementTopic'
+
+
+#      Ref: ContactManagementTopic
     WEB_UI_BASE_URL: perfsys-cloud-crm-ui-${self:provider.stage}.s3-website-${self:provider.region}.amazonaws.com
-#    EMAIL_ADDRESSES_QUEUE: ${self:provider.stage}-cloud-crm-email-addresses
-#    CONTACTS_IDS_QUEUE: ${self:provider.stage}-cloud-crm-contact-ids
+
+
+
+
+
+
 
 # you can add packaging information here
 #package:
@@ -238,9 +324,11 @@ functions:
       - stream:
           type: dynamodb
           arn:
-            Fn::GetAtt:
-              - ContactsDynamoDBTable
-              - StreamArn
+            Fn::ImportValue: ${self:custom.persistence}:ContactsDynamoDBTableStreamArn
+
+  #            Fn::GetAtt:
+#              - ContactsDynamoDBTable
+#              - StreamArn
 
   companies-table-controller:
     handler: dynamoDBStreamListeners.companiesTableController
@@ -248,9 +336,11 @@ functions:
       - stream:
           type: dynamodb
           arn:
-            Fn::GetAtt:
-              - ContactsDynamoDBTable
-              - StreamArn
+            Fn::ImportValue: ${self:custom.persistence}:ContactsDynamoDBTableStreamArn
+
+#            Fn::GetAtt:
+#              - ContactsDynamoDBTable
+#              - StreamArn
 
   external-contacts-create:
     handler: index.handler
@@ -398,9 +488,6 @@ functions:
          method: get
          cors: true
 
-  initGroups:
-    handler: functions/init-groups.handler
-
   updates-contact-list:
     handler: index.handler
     events:
@@ -449,392 +536,7 @@ functions:
         method: get
         cors: true
 
-#  find-contacs-by-emal:
-#    handler: functions/find-contacts.handler
-#    events:
-#    - sqs:
-#        arn:
-#          Fn::GetAtt:
-#          - EmailsAddressesQueue
-#          - Arn
-
-#  emailTokenConfig:
-#    handler: functions/email-token-config.handler
-#    events:
-#    - s3: EmailKeys
-#
-#  emailTokenGet:
-#    handler: functions/email-token-get.handler
-#    events:
-#
-#  email-get:
-#    handler: functions/email-get.handler
-#    events:
-
-
-# you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
 resources:
   Resources:
-    ContactsDynamoDBTable:
-      Type: 'AWS::DynamoDB::Table'
-      Properties:
-        AttributeDefinitions:
-          -
-            AttributeName: group_id
-            AttributeType: S
-          -
-            AttributeName: name
-            AttributeType: S
-          -
-            AttributeName: company_normalized
-            AttributeType: S
-        KeySchema:
-          -
-            AttributeName: group_id
-            KeyType: HASH
-          -
-            AttributeName: name
-            KeyType: RANGE
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.CONTACTS_TABLE}
-        StreamSpecification:
-          StreamViewType: NEW_AND_OLD_IMAGES
-        GlobalSecondaryIndexes:
-          - IndexName: CompanyIndex
-            KeySchema:
-              - AttributeName: company_normalized
-                KeyType: HASH
-            Projection:
-              NonKeyAttributes:
-                - group_name
-                - name
-                - status_name
-                - position
-              ProjectionType: INCLUDE
-            ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
-
-    ContactUpdatesDynamoDBTable:
-      Type: 'AWS::DynamoDB::Table'
-      Properties:
-        AttributeDefinitions:
-          -
-            AttributeName: id
-            AttributeType: S
-        KeySchema:
-          -
-            AttributeName: id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.CONTACT_UPDATES_TABLE}
-
-    GroupsDynamoDBTable:
-      Type: 'AWS::DynamoDB::Table'
-      Properties:
-        AttributeDefinitions:
-          -
-            AttributeName: id
-            AttributeType: S
-
-        KeySchema:
-          -
-            AttributeName: id
-            KeyType: HASH
-
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.GROUPS_TABLE}
-
-    InitGroupsCustomResource:
-      Type: Custom::InitGroupsCustomResource
-      DependsOn: GroupsDynamoDBTable
-      Properties:
-        ServiceToken:
-          Fn::GetAtt: [InitGroupsLambdaFunction, Arn]
-        Table: ${self:provider.environment.GROUPS_TABLE}
-        Version: 1
-
-    CompaniesDynamoDBTable:
-      Type: 'AWS::DynamoDB::Table'
-      Properties:
-        AttributeDefinitions:
-          -
-            AttributeName: company_normalized
-            AttributeType: S
-        KeySchema:
-          -
-            AttributeName: company_normalized
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.COMPANIES_TABLE}
-
-    ContactManagementTopic:
-      Type: AWS::SNS::Topic
-      Properties:
-        DisplayName: Cloud CRM automatic notifications
-        TopicName: ${self:provider.environment.AUTOMATIC_NOTIFICATIONS_TOPIC_TITLE}
-
-    S3DataUploadBucket:
-      Type: AWS::S3::Bucket
-      DeletionPolicy: Retain
-      Properties:
-        AccessControl: PublicRead
-        BucketName: ${self:custom.dataUploadBucketName}
-        CorsConfiguration:
-          CorsRules:
-            - AllowedHeaders:
-              - "*"
-              AllowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - HEAD
-              AllowedOrigins:
-              - "*"
-        PublicAccessBlockConfiguration:
-          BlockPublicAcls: true
-          BlockPublicPolicy: false
-          IgnorePublicAcls: true
-          RestrictPublicBuckets: false
-
-    S3DataUploadBucketBucketPolicy:
-      Type: AWS::S3::BucketPolicy
-      Properties:
-        Bucket:
-          Ref: S3DataUploadBucket
-        PolicyDocument:
-          Statement:
-          - Sid: PublicGetObject
-            Effect: Allow
-            Principal: "*"
-            Action:
-            - s3:GetObject
-            Resource:
-              Fn::Join:
-              - ""
-              - - "arn:aws:s3:::"
-                - Ref: S3DataUploadBucket
-                - "/*"
-
-    UnAuthCognitoIdentityPool:
-      Type: AWS::Cognito::IdentityPool
-      Properties:
-        IdentityPoolName: ${self:custom.identityProviderName}
-        AllowUnauthenticatedIdentities: true
-
-    UnAuthCognitoIdentityPoolUnauthenticatedRole:
-      Type: AWS::IAM::Role
-      Properties:
-        RoleName: UnAuthCognitoIdentityPoolRole-${self:provider.stage}
-        AssumeRolePolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-          -
-            Effect: "Allow"
-            Principal:
-              Federated: "cognito-identity.amazonaws.com"
-            Action:
-              - "sts:AssumeRoleWithWebIdentity"
-            Condition:
-              StringEquals:
-                "cognito-identity.amazonaws.com:aud":
-                  Ref: UnAuthCognitoIdentityPool
-              "ForAnyValue:StringLike":
-                "cognito-identity.amazonaws.com:amr": unauthenticated
-        Policies:
-          - PolicyName: "UnAuthCognitoPolicy"
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-              - Effect: "Allow"
-                Action:
-                - "mobileanalytics:PutEvents"
-                - "cognito-sync:*"
-                Resource: "*"
-              - Effect: Allow
-                Action:
-                  - s3:GetObject
-                  - s3:PutObject
-                  - s3:DeleteObject
-                Resource:
-                 - "Fn::Join":
-                    - '/'
-                    - - "Fn::GetAtt": ["S3DataUploadBucket", "Arn" ]
-                      - '*'
-
-    UnAuthCognitoIdentityPoolRoleAttachment:
-      Type: AWS::Cognito::IdentityPoolRoleAttachment
-      Properties:
-        IdentityPoolId: !Ref UnAuthCognitoIdentityPool
-        Roles:
-          "unauthenticated":
-            Fn::GetAtt:
-            - UnAuthCognitoIdentityPoolUnauthenticatedRole
-            - Arn
-
-#    EmailsAddressesQueue:
-#      Type: AWS::SQS::Queue
-#      Properties:
-##        FifoQueue:
-#        QueueName: ${self:provider.environment.EMAIL_ADDRESSES_QUEUE}
-#
-#    ContactsIdsQueue:
-#      Type: AWS::SQS::Queue
-#      Properties:
-#        #        FifoQueue:
-#        QueueName: ${self:provider.environment.CONTACTS_IDS_QUEUE}
-
 
   Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
-    ContactsTable:
-      Description: Table of Cloud CRM contacts list
-      Value:
-        Fn::GetAtt:
-            - ContactsDynamoDBTable
-            - Arn
-      Export:
-        Name:
-          "Fn::Join":
-          - ':'
-          - - Ref: 'AWS::StackName'
-            - 'ContactsDynamoDBTable'
-
-    ContactsTableName:
-      Description: Table of Cloud CRM contacts list
-      Value:
-        "Ref": ContactsDynamoDBTable
-      Export:
-        Name:
-          "Fn::Join":
-          - ':'
-          - - Ref: 'AWS::StackName'
-            - 'ContactsDynamoDBTableName'
-
-
-
-    ContactsTableCompanyIndex:
-      Description: Company Index of Contacts table
-      Value:
-        Fn::Join:
-          - ''
-          -
-            - "Fn::GetAtt": ["ContactsDynamoDBTable", "Arn" ]
-            - '/index/CompanyIndex'
-    UpdatesTable:
-      Description: Table of Cloud CRM contacts updates
-      Value:
-        Fn::GetAtt:
-            - ContactUpdatesDynamoDBTable
-            - Arn
-    GroupsTable:
-      Description: Table of Cloud CRM groups list
-      Value:
-        Fn::GetAtt:
-            - GroupsDynamoDBTable
-            - Arn
-    CompaniesTable:
-      Description: Table of Cloud CRM companies list
-      Value:
-        Fn::GetAtt:
-            - CompaniesDynamoDBTable
-            - Arn
-
-    UnAuthCognitoIdentityPool:
-      Description: Identity Poll for Unauthenticated users
-      Value:
-        "Ref": "UnAuthCognitoIdentityPool"
-      Export:
-        Name:
-          "Fn::Join":
-            - ':'
-            - - Ref: 'AWS::StackName'
-              - 'UnAuthCognitoIdentityPool'
-
-    S3DataUploadBucket:
-      Description: Data upload bucket arn
-      Value:
-        "Fn::GetAtt": ["S3DataUploadBucket", "Arn" ]
-      Export:
-        Name:
-          "Fn::Join":
-          - ':'
-          -
-            - Ref: 'AWS::StackName'
-            - 'S3DataUploadBucket'
-
-    S3DataUploadBucketName:
-      Description: Data upload bucket name
-      Value: ${self:custom.dataUploadBucketName}
-      Export:
-        Name:
-          "Fn::Join":
-          - ':'
-          -
-            - Ref: 'AWS::StackName'
-            - 'S3DataUploadBucketName'
-
-#    EmailAddressesQueue:
-#      Description: Oueue of emails adderess and corresponding contacts
-#      Value:
-#        Fn::GetAtt:
-#        - EmailAddressesQueue
-#        - Arn
-#      Export:
-#        Name:
-#          "Fn::Join":
-#          - ':'
-#          - - Ref: 'AWS::StackName'
-#            - 'EmailAddressesQueue'
-#
-#    EmailAddressesQueueName:
-#      Description: Oueue's name of emails adderess
-#      Value:
-#        "Ref": EmailAddressesQueue
-#      Export:
-#        Name:
-#          "Fn::Join":
-#          - ':'
-#          - - Ref: 'AWS::StackName'
-#            - 'EmailAddressesQueueName'
-#
-#    ContactsIdsQueue:
-#      Description: Oueue of corresponding contacts's ids
-#      Value:
-#        Fn::GetAtt:
-#        - ContactsIdsQueue
-#        - Arn
-#      Export:
-#        Name:
-#          "Fn::Join":
-#          - ':'
-#          - - Ref: 'AWS::StackName'
-#            - 'ContactsIdsQueue'
-#
-#    ContactsIdsQueueName:
-#      Description: Oueue's name of emails adderess
-#      Value:
-#        "Ref": ContactsIdsQueue
-#      Export:
-#        Name:
-#          "Fn::Join":
-#          - ':'
-#          - - Ref: 'AWS::StackName'
-#            - 'ContactsIdsQueueName'
