@@ -71,7 +71,7 @@ const populateContactItem = function (req) {
     types = require('../data/types.json')
 
   const sources = require('../data/sources.json')
-  const locations = require('../data/locationsLinkedin.json')
+  const locations = require('../data/locations.json')
 
   const countries = require('../data/country-by-abbreviation.json')
 
