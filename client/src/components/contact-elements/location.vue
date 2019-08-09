@@ -11,42 +11,42 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex'
 
-  export default {
-    name: 'location-element',
-    props:
-      ['value'],
+export default {
+  name: 'location-element',
+  props:
+    ['value'],
 
-    data () {
-      return {
-        location_id: this.value
-      }
-    },
-    computed:
-      mapGetters({
-        locations: 'locationsAll'
-      }),
-    created () {
-      this.$store.dispatch('locationsGetAll')
-    },
-    watch: {
-      location_id () {
-        this.sendBack()
-      },
-
-      value () {
-        this.location_id = this.value
-      }
-
+  data () {
+    return {
+      location_id: this.value
+    }
+  },
+  computed:
+    mapGetters({
+      locations: 'locationsAll'
+    }),
+  created () {
+    this.$store.dispatch('locationsGetAll')
+  },
+  watch: {
+    location_id () {
+      this.sendBack()
     },
 
-    methods: {
-      sendBack: function () {
-        this.$emit('input', this.location_id)
-      }
+    value () {
+      this.location_id = this.value
+    }
+
+  },
+
+  methods: {
+    sendBack: function () {
+      this.$emit('input', this.location_id)
     }
   }
+}
 </script>
 
 <style scoped>

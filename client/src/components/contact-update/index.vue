@@ -56,7 +56,11 @@
                     </md-field>
                     </div>
 
-                    <div class="md-layout-item md-small-size-100">
+                  <div class="md-layout-item md-small-size-100">
+                    <location_el v-model="contact.location_id"/>
+                  </div>
+
+                  <div class="md-layout-item md-small-size-100">
                       <source_el v-model="contact.source_id"/>
                     </div>
 
@@ -152,6 +156,7 @@ import type_el from '@/components/contact-elements/type.vue'
 import country_el from '@/components/contact-elements/country.vue'
 import links_el from '@/components/contact-elements/links.vue'
 import labels_el from '@/components/contact-elements/labels.vue'
+import location_el from '@/components/contact-elements/location.vue'
 
 const R = require('ramda')
 
@@ -178,6 +183,7 @@ export default {
         country_code: null,
         type_id: null,
         status_id: null,
+        location_id: null,
 
         labels: null,
 
@@ -204,7 +210,8 @@ export default {
     'type_el': type_el,
     'country_el': country_el,
     'links_el': links_el,
-    'labels_el': labels_el
+    'labels_el': labels_el,
+    'location_el': location_el
   },
 
   created () {
@@ -225,6 +232,7 @@ export default {
             _self.contact.first_name = data.first_name
             _self.contact.last_name = data.last_name
 
+            _self.contact.location_id = data.location_id
             _self.contact.position = data.position
             _self.contact.type_id = data.type_id
             _self.contact.source_id = data.source_id

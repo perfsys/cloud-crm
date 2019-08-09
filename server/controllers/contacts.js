@@ -71,6 +71,7 @@ const populateContactItem = function (req) {
     types = require('../data/types.json')
 
   const sources = require('../data/sources.json')
+  const locations = require('../data/locationsLinkedin.json')
 
   const countries = require('../data/country-by-abbreviation.json')
 
@@ -87,6 +88,7 @@ const populateContactItem = function (req) {
       country_code,
       type_id,
       status_id,
+      location_id,
 
       company_name,
       company_www,
@@ -114,11 +116,26 @@ const populateContactItem = function (req) {
 
         // get name
         R.prop('name')
-      )(sources)
+      )(sources.sources)
 
       if (source_name) {
         item.source_id = source_id
         item.source_name = source_name
+      }
+    }
+
+    if (location_id && typeof location_id === 'string') {
+      let location_name = R.pipe(
+        // find
+        R.find(R.propEq('id', location_id)),
+
+        // get name
+        R.prop('name')
+      )(locations)
+
+      if (location_name) {
+        item.location_id = location_id
+        item.location_name = location_name
       }
     }
 
@@ -233,7 +250,8 @@ const constructContactItem = function (req) {
       first_name,
       last_name,
       source_id,
-      status_id
+      status_id,
+      location_id
     } = req.body
 
     const item = {}
