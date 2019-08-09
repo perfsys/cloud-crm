@@ -42,9 +42,9 @@ phases:
       - cd ..
   build:
     commands:
-      - cd ./client
-      - sls remove -v
-      - cd ..
+#      - cd ./client
+#      - sls remove -v
+#      - cd ..
       - cd ./server-resources
       #      - sls remove -v
       - sls deploy -v
