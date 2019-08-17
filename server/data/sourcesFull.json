@@ -1,0 +1,20 @@
+{"sources" : [
+  {
+    "id": "FACEBOOK",
+    "name": "Facebook"
+  },
+  {
+    "id": "LINKEDIN",
+    "name": "LinkedIn"
+  },
+  {
+    "id": "WWW_CONTACT_FORM",
+    "name": "Web Contact Form"
+  },
+  {
+    "id": "UPWORK",
+    "name": "Upwork"
+  }
+],
+  "default" : ""
+}

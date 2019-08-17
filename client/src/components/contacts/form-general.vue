@@ -1,5 +1,4 @@
 <template>
-
   <div>
     <div class="md-layout md-gutter">
       <div class="md-layout-item md-small-size-100">
@@ -30,29 +29,14 @@
     </div>
 
     <div class="md-layout md-gutter">
-      <div class="md-layout-item md-small-size-100 md-medium-size-25">
+      <div class="md-layout-item md-small-size-100">
         <source_el v-model="source_id"/>
       </div>
 
-      <div class="md-layout-item md-small-size-100 md-medium-size-25">
+      <div class="md-layout-item md-small-size-100">
         <location_el v-model="location_id"/>
       </div>
-
-      <div class="md-layout-item md-small-size-100 md-medium-size-50">
-        <type_el v-model="type_id"/>
-      </div>
     </div>
-
-    <div class="md-layout md-gutter">
-      <div class="md-layout-item md-small-size-100" v-if="showLabels">
-        <labels_el v-model="labels"/>
-      </div>
-
-      <div class="md-layout-item md-small-size-100" >
-        <status_el v-model="status_id" v-if="showStatuses"/>
-      </div>
-    </div>
-
   </div>
 </template>
 
@@ -125,13 +109,7 @@ export default {
     position () {
       this.sendBack()
     },
-    type_id () {
-      this.sendBack()
-    },
     status_id () {
-      this.sendBack()
-    },
-    labels () {
       this.sendBack()
     }
   },
@@ -139,17 +117,14 @@ export default {
     sendBack: function () {
       this.$emit('input', {
         group_id: this.group_id,
-        name: this.name.trim(),
+        name: this.name ? this.name.trim() : null,
         source_id: this.source_id,
         location_id: this.location_id,
-        company_name: this.company_name.trim(),
+        company_name: this.company_name ? this.company_name.trim() : null,
         position: this.position,
-        type_id: this.type_id,
-        status_id: this.status_id,
-        labels: this.labels
+        status_id: this.status_id
       })
     }
-
   }
 }
 </script>

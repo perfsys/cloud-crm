@@ -7,8 +7,9 @@
 
     <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single">
       <md-table-cell md-label="Company name">{{item.company_name}}</md-table-cell>
-      <md-table-cell md-label="Companies count">{{item.conpanies_count}}</md-table-cell>
+      <md-table-cell md-label="Contacts">{{item.conpanies_count}}</md-table-cell>
 
+      <md-table-cell md-label="Founder">{{item.founder}}</md-table-cell>
       <md-table-cell md-label="CEO">{{ceo(item)}}</md-table-cell>
       <md-table-cell md-label="CTO">{{cto(item)}}</md-table-cell>
 
@@ -47,11 +48,13 @@ export default {
       })
     },
     ceo (item) {
-      return (item && item.contacts && item && item.contacts.CEO) ? '+' : ''
+      // return (item && item.contacts && item && item.contacts.CEO) ? '+' : ''
+      return (item && item.contacts && item && item.contacts.CEO) ? item.contacts.CEO : item.ceo
     },
 
     cto (item) {
-      return (item && item.contacts && item && item.contacts.CTO) ? '+' : ''
+      // return (item && item.contacts && item && item.contacts.CTO) ? '+' : ''
+      return (item && item.contacts && item && item.contacts.CTO) ? item.contacts.CTO : item.cto
     }
   },
   computed: {

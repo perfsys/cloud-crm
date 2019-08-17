@@ -21,8 +21,7 @@ router.get('/', function (request, response) {
           }
         },
         TableName: CONTACTS_TABLE,
-        IndexName: 'CompanyIndex',
-        Select: 'COUNT'
+        IndexName: 'CompanyIndex'
       }
 
       DynamoDB.query(params, function (err, data) {
@@ -31,15 +30,42 @@ router.get('/', function (request, response) {
           reject(err)
         } else {
           item.conpanies_count = data.Count
+          item.conpanies_contacts = data.Items
           return resolve(item)
         }
       })
     })
   }
 
-  const fillContactsCount = async (data) => {
+  const getPersonsDetails = (item) => {
+    return new Promise(function (resolve, reject) {
+      console.log('getPersonsDetails - starting')
+      for (let i = 0; i < item.conpanies_contacts.length; i++) {
+        let position = (item.conpanies_contacts[i].position) ? item.conpanies_contacts[i].position.toLowerCase() : null
+
+        switch (position) {
+          case 'ceo':
+            item.ceo = item.conpanies_contacts[i].name
+            break
+          case 'cto':
+            item.cto = item.conpanies_contacts[i].name
+            break
+          case 'founder':
+            item.founder = item.conpanies_contacts[i].name
+            break
+        }
+        console.log(item)
+      }
+      delete item.conpanies_contacts
+
+      resolve(item)
+    })
+  }
+
+  const fillCompanyDetails = async (data) => {
     for (let i = 0; i < data.length; i++) {
       await getContactsCount(data[i])
+      await getPersonsDetails(data[i])
     }
     return data
   }
@@ -61,7 +87,7 @@ router.get('/', function (request, response) {
   }
 
   getCompanies()
-    .then(fillContactsCount)
+    .then(fillCompanyDetails)
     .then(data => {
       console.log('after all')
       console.log(data)

@@ -9,7 +9,7 @@
     </md-table-toolbar>
 
       <md-table-row slot="md-table-row" slot-scope="{ item }" md-selectable="single">
-      <md-table-cell md-label="Number" md-sort-by="number">{{ item.number }}</md-table-cell>
+      <md-table-cell md-label="#" md-sort-by="number">{{ item.number }}</md-table-cell>
       <md-table-cell md-label="Group" md-sort-by="group_name" >{{ item.group_name }}</md-table-cell>
       <md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
       <md-table-cell md-label="Company" md-sort-by="company_name">{{ item.company_name }}</md-table-cell>
