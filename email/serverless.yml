@@ -35,9 +35,6 @@ provider:
 #  versionFunctions: false
   stage: ${opt:stage, 'dev'}
   region: eu-west-1
-  apiKeys:
-    - ${opt:stage, 'dev'}-cloudCrmApiKey-v02
-    - ${opt:stage, 'dev'}-cloudCrmApiKey-v03
   usagePlan:
     quota:
       limit: 10
@@ -236,7 +233,7 @@ functions:
           - StreamArn
 
   email-update-contact:
-    handler: functions/email-uodate-contact.handler
+    handler: functions/email-update-contact.handler
     events:
      - sqs:
          arn:
