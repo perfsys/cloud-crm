@@ -69,11 +69,17 @@
       <md-button class="md-primary" @click.stop="onSave">Save</md-button>
     </md-dialog-actions>
 
-    <md-dialog-alert
-      :md-active.sync="sccDialog"
-      md-content="Company card was updated"
-      md-confirm-text="Close"
-    />
+    <md-snackbar
+      :md-active.sync="successSnackbar"
+      md-position="center"
+      md-persistent
+      @md-closed="snackbarClosed">
+      <span>Company card was updated!</span>
+      <md-button
+        class="md-primary"
+        @click="successSnackbar = false">Close
+      </md-button>
+    </md-snackbar>
     <md-dialog-alert
       :md-active.sync="errDialog"
       md-content="Unable to update company card"
@@ -103,8 +109,11 @@ export default {
           CTO: null
         }
       },
-      sccDialog: false,
-      errDialog: false
+      // sccDialog: false,
+      errDialog: false,
+      successSnackbar: false,
+      failedSnackbar: false,
+      failedSnackbarReason: 'Failed to create a contact'
     }
   },
   created: function () {
@@ -122,7 +131,8 @@ export default {
       let _self = this
       this.$store.dispatch('updateCompanyInfo', this.company)
         .then(function (data) {
-          _self.sccDialog = true
+          // _self.sccDialog = true
+          _self.successSnackbar = true
           _self.refresh()
         }, function () {
           _self.errDialog = true
@@ -130,6 +140,9 @@ export default {
         })
     },
     onCancel: function () {
+      this.$router.go(-1)
+    },
+    snackbarClosed () {
       this.$router.go(-1)
     }
   }
