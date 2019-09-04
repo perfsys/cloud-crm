@@ -114,14 +114,16 @@ Gmail Addition
 Check mail box using Gmail API , receive mails and insert letters as update to contact
 
 1. Create (if it's not existed) gmail box.
+2. Go https://console.developers.google.com and create new project.
+3.
 2. Create Service account key
     https://developers.google.com/gmail/api/auth/web-server
     https://cloud.google.com/iam/docs/service-accounts?_ga=2.59759149.-1830424876.1554369852
-
+    https://developers.google.com/admin-sdk/directory/v1/guides/delegation 
+    (p. Create the service account and credentials)
+    
 3. Add scope 	../auth/gmail.readonly
              ../auth/gmail.metadata
-             ../auth/gmail.modify
-             https://mail.google.com/
              ../auth/gmail.labels
 4. Download json file with credentials.
  {
@@ -137,8 +139,12 @@ Check mail box using Gmail API , receive mails and insert letters as update to c
    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/xxxx"
  }
 
-5. Delegate domain-wide authority to your service account
-    https://developers.google.com/admin-sdk/directory/v1/guides/delegation
+5. The task has to be performed by an administrator of the G Suite domain.
+   Delegate domain-wide authority to your service account
+   https://developers.google.com/admin-sdk/directory/v1/guides/delegation 
+   (p. Delegate domain-wide authority to your service account)
+    The comma separated string of scopes must be put 
+    https://www.googleapis.com/auth/gmail.labels,https://www.googleapis.com/auth/gmail.readonly,https://www.googleapis.com/auth/gmail.metadata
 
 6. Deploy server-addition
     ```bash
