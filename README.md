@@ -64,7 +64,7 @@ npm install
 sls deploy -v
 ```
 
-Step 3: Verfiy and Enjoy
+Step 3: Verify and Enjoy
 ----------------------
 
 1. **Go to folder with a client code:**
