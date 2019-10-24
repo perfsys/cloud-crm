@@ -41,7 +41,7 @@ router.get('/', function (request, response) {
     return new Promise(function (resolve, reject) {
       console.log('getPersonsDetails - starting')
       for (let i = 0; i < item.conpanies_contacts.length; i++) {
-        let position = (item.conpanies_contacts[i].position) ? item.conpanies_contacts[i].position.toLowerCase().replace('-', '').replace(/\s/g, '') : null
+        let position = (item.conpanies_contacts[i].position_normalized) ? item.conpanies_contacts[i].position_normalized.replace('_', '') : null
 
         switch (position) {
           case 'ceo':

@@ -193,6 +193,12 @@ const populateContactItem = function (req) {
 
     if (position) {
       item.position = position
+      item.position_normalized = R.pipe(
+        R.trim(),
+        R.replace(' ', '_'),
+        R.replace('-', '_'),
+        R.toLower()
+      )(position)
     }
 
     if (email && isemail.validate(email)) {
