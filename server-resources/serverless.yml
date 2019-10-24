@@ -34,9 +34,6 @@ provider:
 #  versionFunctions: false
   stage: ${opt:stage, 'dev'}
   region: eu-west-1
-#  apiKeys:
-#    - ${opt:stage, 'dev'}-cloudCrmApiKey-v02
-#    - ${opt:stage, 'dev'}-cloudCrmApiKey-v03
   usagePlan:
     quota:
       limit: 10
@@ -50,21 +47,7 @@ provider:
 #  stage: dev
 #  region: us-east-1
 
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
+
   iamRoleStatements:
     -
       Effect: Allow
@@ -72,62 +55,12 @@ provider:
         - dynamodb:BatchWriteItem
       Resource:
         - { "Fn::GetAtt": ["GroupsDynamoDBTable", "Arn" ] }
-#    -
-#      Resource:
-#        - Fn::GetAtt:
-#            - ContactsDynamoDBTable
-#            - Arn
-#      Effect: Allow
-#      Action:
-#        - dynamodb:Query
-#        - dynamodb:Scan
-#        - dynamodb:GetItem
-#        - dynamodb:PutItem
-#        - dynamodb:UpdateItem
-#        - dynamodb:DeleteItem
-#        - dynamodb:BatchWriteItem
-#        - dynamodb:BatchGetItem
-#        - dynamodb:GetRecords
-#        - dynamodb:GetShardIterator
-#        - dynamodb:DescribeStream
-#        - dynamodb:ListStreams
-#    -
-#       Resource:
-#         Fn::Join:
-#           - ''
-#           -
-#             - "Fn::GetAtt": ["ContactsDynamoDBTable", "Arn" ]
-#             - '/index/CompanyIndex'
-#       Effect: Allow
-#       Action:
-#         - dynamodb:Query
     -
       Resource:
         - Ref: ContactManagementTopic
       Effect: Allow
       Action:
         - SNS:Publish
-
-#    -
-#      Effect: Allow
-#      Action:
-#        - sqs:ReceiveMessage
-#        - sqs:DeleteMessage
-#        - sqs:GetQueueAttributes
-#        - sqs:SendMessage
-#      Resource:
-#        - { "Fn::GetAtt": ["EmailsAddressesQueue", "Arn" ] }
-#        - { "Fn::GetAtt": ["ContactsIdsQueue", "Arn" ] }
-#
-#
-##    -
-##      Effect: Allow
-##      Action:
-##      - sqs:SendMessage
-##      - sqs:GetQueueAttributes
-##      Resource:
-##      - { "Fn::GetAtt": ["ContactsIdsQueue", "Arn" ] }
-
 
 # you can define service wide environment variables here
 #  environment:
@@ -364,23 +297,8 @@ resources:
             - UnAuthCognitoIdentityPoolUnauthenticatedRole
             - Arn
 
-#    EmailsAddressesQueue:
-#      Type: AWS::SQS::Queue
-#      Properties:
-##        FifoQueue:
-#        QueueName: ${self:provider.environment.EMAIL_ADDRESSES_QUEUE}
-#
-#    ContactsIdsQueue:
-#      Type: AWS::SQS::Queue
-#      Properties:
-#        #        FifoQueue:
-#        QueueName: ${self:provider.environment.CONTACTS_IDS_QUEUE}
-
 
   Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
     ContactsTable:
       Description: Table of Cloud CRM contacts list
       Value:
@@ -433,8 +351,6 @@ resources:
           - - Ref: 'AWS::StackName'
             - 'ContactsDynamoDBTableCompanyIndex'
 
-
-
     UpdatesTable:
       Description: Table of Cloud CRM contacts updates
       Value:
@@ -459,9 +375,6 @@ resources:
           - - Ref: 'AWS::StackName'
             - 'ContactUpdatesDynamoDBTableName'
 
-
-
-
     GroupsTable:
       Description: Table of Cloud CRM groups list
       Value:
@@ -485,9 +398,6 @@ resources:
           - ':'
           - - Ref: 'AWS::StackName'
             - 'GroupsDynamoDBTableName'
-
-
-
 
     CompaniesTable:
       Description: Table of Cloud CRM companies list
@@ -573,50 +483,3 @@ resources:
             - 'ContactManagementTopicName'
 
 
-#    EmailAddressesQueue:
-#      Description: Oueue of emails adderess and corresponding contacts
-#      Value:
-#        Fn::GetAtt:
-#        - EmailAddressesQueue
-#        - Arn
-#      Export:
-#        Name:
-#          "Fn::Join":
-#          - ':'
-#          - - Ref: 'AWS::StackName'
-#            - 'EmailAddressesQueue'
-#
-#    EmailAddressesQueueName:
-#      Description: Oueue's name of emails adderess
-#      Value:
-#        "Ref": EmailAddressesQueue
-#      Export:
-#        Name:
-#          "Fn::Join":
-#          - ':'
-#          - - Ref: 'AWS::StackName'
-#            - 'EmailAddressesQueueName'
-#
-#    ContactsIdsQueue:
-#      Description: Oueue of corresponding contacts's ids
-#      Value:
-#        Fn::GetAtt:
-#        - ContactsIdsQueue
-#        - Arn
-#      Export:
-#        Name:
-#          "Fn::Join":
-#          - ':'
-#          - - Ref: 'AWS::StackName'
-#            - 'ContactsIdsQueue'
-#
-#    ContactsIdsQueueName:
-#      Description: Oueue's name of emails adderess
-#      Value:
-#        "Ref": ContactsIdsQueue
-#      Export:
-#        Name:
-#          "Fn::Join":
-#          - ':'
-#          - - Ref: 'AWS::StackName'
-#            - 'ContactsIdsQueueName'

@@ -24,7 +24,7 @@ custom:
 
   s3BucketEmailKeysName: perfsys-cloud-crm-email-keys-${opt:stage, 'dev'}
   apiStackName: perfsys-cloud-crm-api-${opt:stage, 'dev'}
-  additionStackName: perfsys-cloud-crm-server-addition-${opt:stage, 'dev'}
+  additionStackName: perfsys-cloud-crm-server-libs-${opt:stage, 'dev'}
   prune:
     automatic: true
     number: 3

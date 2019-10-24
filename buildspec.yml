@@ -10,7 +10,7 @@ phases:
       - cd ./server
       - npm i
       - cd ..
-      - cd ./server-addition
+      - cd ./server-libs
       - pwd
       - npm i
       - cd ..
@@ -33,7 +33,7 @@ phases:
       - cd ./server
       - npm run lint
       - cd ..
-      - cd ./server-addition
+      - cd ./server-libs
       - npm run lint
       - cd ..
       - cd ./email
@@ -53,7 +53,7 @@ phases:
 #      - sls remove -v
       - sls deploy -v
       - cd ..
-      - cd ./server-addition
+      - cd ./server-libs
       - sls deploy -v
       - cd ..
       - cd ./email

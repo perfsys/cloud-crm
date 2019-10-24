@@ -1,4 +1,4 @@
-service: perfsys-cloud-crm-server-addition
+service: perfsys-cloud-crm-server-libs
 
 plugins:
 - serverless-prune-plugin
