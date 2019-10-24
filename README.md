@@ -146,9 +146,9 @@ Check mail box using Gmail API , receive mails and insert letters as update to c
     The comma separated string of scopes must be put 
     https://www.googleapis.com/auth/gmail.labels,https://www.googleapis.com/auth/gmail.readonly,https://www.googleapis.com/auth/gmail.metadata
 
-6. Deploy server-addition
+6. Deploy server-libs
     ```bash
-    cd server-addition/
+    cd server-libs/
     npm install
     sls deploy -v
     ```
