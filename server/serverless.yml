@@ -30,7 +30,6 @@ custom:
     number: 3
   persistence: perfsys-cloud-crm-api-${self:custom.yamlStage}
 
-
 provider:
   name: aws
   runtime: nodejs8.10
@@ -42,7 +41,7 @@ provider:
     - ${opt:stage, 'dev'}-cloudCrmApiKey-v03
   usagePlan:
     quota:
-      limit: 10
+      limit: 100
       offset: 0
       period: DAY
     throttle:

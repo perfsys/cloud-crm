@@ -35,14 +35,6 @@ provider:
 #  versionFunctions: false
   stage: ${opt:stage, 'dev'}
   region: eu-west-1
-  usagePlan:
-    quota:
-      limit: 10
-      offset: 0
-      period: DAY
-    throttle:
-      burstLimit: 10
-      rateLimit: 1
 
 
 # you can overwrite defaults here
