@@ -25,18 +25,25 @@ export default {
   },
   computed:
     mapGetters({
-      sources: 'sourcesAll'
+      sources: 'sourcesAll',
+      defaultId: 'sourceDefault'
+
     }),
   created () {
     this.$store.dispatch('sourcesGetAll')
+    this.source_id = this.value ? this.value : this.defaultId
   },
   watch: {
     source_id () {
       this.sendBack()
     },
 
+    defaultId () {
+      this.source_id = this.value ? this.value : this.defaultId
+    },
+
     value () {
-      this.source_id = this.value
+      this.source_id = this.value ? this.value : this.defaultId
     }
 
   },

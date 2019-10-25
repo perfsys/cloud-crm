@@ -51,8 +51,8 @@
 
         <div class="md-layout-item">
           <md-list class="md-double-line">
-          <md-subheader v-if="company.socials.facebook || company.socials.linkedIn">Social media</md-subheader>
-          <md-list-item v-if="company.socials.facebook">
+            <md-subheader v-if="company.socials.facebook || company.socials.linkedIn">Social media</md-subheader>
+            <md-list-item v-if="company.socials.facebook">
             <div class="md-list-item-text" >
               <p>{{company.socials.facebook}}</p>
               <p>Facebook</p>

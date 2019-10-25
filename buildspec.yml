@@ -4,7 +4,17 @@ phases:
   install:
     commands:
       - npm i -g serverless
+      - cd ./server-resources
+      - npm i
+      - cd ..
       - cd ./server
+      - npm i
+      - cd ..
+      - cd ./server-libs
+      - pwd
+      - npm i
+      - cd ..
+      - cd ./email
       - npm i
       - cd ..
       - cd ./client
@@ -17,17 +27,36 @@ phases:
       - npm run lint
       - npm run test
       - cd ..
+      - cd ./server-resources
+      - npm run lint
+      - cd ..
       - cd ./server
+      - npm run lint
+      - cd ..
+      - cd ./server-libs
+      - npm run lint
+      - cd ..
+      - cd ./email
       - npm run lint
     finally:
       - cd ..
   build:
     commands:
-      - cd ./client
-      - sls remove -v
+#      - cd ./client
+#      - sls remove -v
+#      - cd ..
+      - cd ./server-resources
+      #      - sls remove -v
+      - sls deploy -v
       - cd ..
       - cd ./server
 #      - sls remove -v
+      - sls deploy -v
+      - cd ..
+      - cd ./server-libs
+      - sls deploy -v
+      - cd ..
+      - cd ./email
       - sls deploy -v
       - cd ..
       - cd ./client

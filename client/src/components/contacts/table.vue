@@ -1,14 +1,16 @@
 <template>
 
-  <md-table v-model="contacts" md-card @md-selected="onSelect" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder" :md-sort-fn="customSort">
+  <md-table v-model="contacts"  @md-selected="onSelect" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder" :md-sort-fn="customSort">
 
     <md-table-toolbar>
       <h1 class="md-title" v-show="!allContacts">All Contacts in {{groupName}}</h1>
+      <h1 class="md-title" v-show="!allContacts"></h1>
       <h1 class="md-title" v-show="allContacts">All Contacts</h1>
       <slot name="form"></slot>
     </md-table-toolbar>
 
-    <md-table-row slot="md-table-row" slot-scope="{ item }" md-selectable="single">
+      <md-table-row slot="md-table-row" slot-scope="{ item }" md-selectable="single">
+      <md-table-cell md-label="#" md-sort-by="number">{{ item.number }}</md-table-cell>
       <md-table-cell md-label="Group" md-sort-by="group_name" >{{ item.group_name }}</md-table-cell>
       <md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
       <md-table-cell md-label="Company" md-sort-by="company_name">{{ item.company_name }}</md-table-cell>
@@ -114,9 +116,9 @@ export default {
       return value.sort((a, b) => {
         const sortBy = this.currentSort
         if (this.currentSortOrder === 'desc') {
-          return toString(b[sortBy]).localeCompare(toString(a[sortBy]))
+          return this.currentSort === 'number' ? b[sortBy] - a[sortBy] : toString(b[sortBy]).localeCompare(toString(a[sortBy]))
         }
-        return toString(a[sortBy]).localeCompare(toString(b[sortBy]))
+        return this.currentSort === 'number' ? a[sortBy] - b[sortBy] : toString(a[sortBy]).localeCompare(toString(b[sortBy]))
       })
     }
   }

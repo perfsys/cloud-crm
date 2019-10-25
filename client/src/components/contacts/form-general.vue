@@ -1,5 +1,4 @@
 <template>
-
   <div>
     <div class="md-layout md-gutter">
       <div class="md-layout-item md-small-size-100">
@@ -21,7 +20,7 @@
         </md-field>
       </div>
 
-      <div class="md-layout-item md-small-size-100">
+      <div class="md-layout-item md-small-size-100 ">
         <md-field>
           <label for="position">Position</label>
           <md-input name="position" id="position" autocomplete="position" v-model="position"/>
@@ -35,26 +34,16 @@
       </div>
 
       <div class="md-layout-item md-small-size-100">
-        <type_el v-model="type_id"/>
+        <location_el v-model="location_id"/>
       </div>
     </div>
-
-    <div class="md-layout md-gutter">
-      <div class="md-layout-item md-small-size-100" v-if="showLabels">
-        <labels_el v-model="labels"/>
-      </div>
-
-      <div class="md-layout-item md-small-size-100" >
-        <status_el v-model="status_id" v-if="showStatuses"/>
-      </div>
-    </div>
-
   </div>
 </template>
 
 <script>
 import group_el from '@/components/contact-elements/group.vue'
 import source_el from '@/components/contact-elements/source.vue'
+import location_el from '@/components/contact-elements/location.vue'
 import status_el from '@/components/contact-elements/status1.vue'
 import type_el from '@/components/contact-elements/type.vue'
 import labels_el from '@/components/contact-elements/labels.vue'
@@ -75,6 +64,7 @@ export default {
       company_name: null,
       position: null,
       type_id: null,
+      location_id: null,
       status_id: 'NEW',
       labels: null,
 
@@ -88,7 +78,8 @@ export default {
     'source_el': source_el,
     'status_el': status_el,
     'type_el': type_el,
-    'labels_el': labels_el
+    'labels_el': labels_el,
+    'location_el': location_el
   },
 
   created () {
@@ -109,19 +100,16 @@ export default {
     source_id () {
       this.sendBack()
     },
+    location_id () {
+      this.sendBack()
+    },
     company_name () {
       this.sendBack()
     },
     position () {
       this.sendBack()
     },
-    type_id () {
-      this.sendBack()
-    },
     status_id () {
-      this.sendBack()
-    },
-    labels () {
       this.sendBack()
     }
   },
@@ -129,16 +117,14 @@ export default {
     sendBack: function () {
       this.$emit('input', {
         group_id: this.group_id,
-        name: this.name.trim(),
+        name: this.name ? this.name.trim() : null,
         source_id: this.source_id,
-        company_name: this.company_name.trim(),
+        location_id: this.location_id,
+        company_name: this.company_name ? this.company_name.trim() : null,
         position: this.position,
-        type_id: this.type_id,
-        status_id: this.status_id,
-        labels: this.labels
+        status_id: this.status_id
       })
     }
-
   }
 }
 </script>

@@ -1,0 +1,150 @@
+service: perfsys-cloud-crm-server-libs
+
+plugins:
+- serverless-prune-plugin
+
+
+custom:
+  apiStackName: perfsys-cloud-crm-api-${opt:stage, 'dev'}
+  prune:
+    automatic: true
+    number: 3
+
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  #  versionFunctions: false
+  stage: ${opt:stage, 'dev'}
+  region: eu-west-1
+
+  iamRoleStatements:
+    -
+      Effect: Allow
+      Action:
+        - sqs:ReceiveMessage
+        - sqs:DeleteMessage
+        - sqs:GetQueueAttributes
+      Resource:
+        - { "Fn::GetAtt": ["EmailAddressesQueue", "Arn" ] }
+
+    -
+      Effect: Allow
+      Action:
+        - sqs:SendMessage
+        - sqs:GetQueueAttributes
+      Resource:
+        - { "Fn::GetAtt": ["ContactsIdsQueue", "Arn" ] }
+
+    -
+      Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+      Resource:
+      - 'Fn::ImportValue':
+          "Fn::Join":
+          - ':'
+          - - ${self:custom.apiStackName}
+            - 'ContactsDynamoDBTable'
+
+
+  environment:
+
+    EMAIL_ADDRESSES_QUEUE: ${self:provider.stage}-cloud-crm-email-addresses
+    CONTACTS_IDS_QUEUE: ${self:provider.stage}-cloud-crm-contact-ids
+
+    CONTACTS_IDS_QUEUE_URL:
+      "Fn::Join":
+        - ''
+        - - 'https://sqs.'
+          - ${self:provider.region}
+          - '.amazonaws.com'
+          - '/'
+          - Ref: 'AWS::AccountId'
+          - '/'
+          - ${self:provider.stage}-cloud-crm-contact-ids
+
+    CONTACTS_TABLE:
+      'Fn::ImportValue':
+        "Fn::Join":
+          - ':'
+          - - ${self:custom.apiStackName}
+            - 'ContactsDynamoDBTableName'
+functions:
+
+  find-contacs-by-emal:
+    handler: functions/find-contacts.handler
+    events:
+    - sqs:
+        arn:
+          Fn::GetAtt:
+          - EmailAddressesQueue
+          - Arn
+
+resources:
+  Resources:
+    EmailAddressesQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:provider.environment.EMAIL_ADDRESSES_QUEUE}
+
+    ContactsIdsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:provider.environment.CONTACTS_IDS_QUEUE}
+
+
+  Outputs:
+    EmailAddressesQueue:
+      Description: Oueue of emails adderess and corresponding contacts
+      Value:
+        Fn::GetAtt:
+        - EmailAddressesQueue
+        - Arn
+      Export:
+        Name:
+          "Fn::Join":
+          - ':'
+          - - Ref: 'AWS::StackName'
+            - 'EmailAddressesQueue'
+
+    EmailAddressesQueueName:
+      Description: Oueue's name of emails adderess
+      Value:
+        "Ref": EmailAddressesQueue
+      Export:
+        Name:
+          "Fn::Join":
+          - ':'
+          - - Ref: 'AWS::StackName'
+            - 'EmailAddressesQueueName'
+
+    ContactsIdsQueue:
+      Description: Oueue of corresponding contacts's ids
+      Value:
+        Fn::GetAtt:
+        - ContactsIdsQueue
+        - Arn
+      Export:
+        Name:
+          "Fn::Join":
+          - ':'
+          - - Ref: 'AWS::StackName'
+            - 'ContactsIdsQueue'
+
+    ContactsIdsQueueName:
+      Description: Oueue's name of emails adderess
+      Value:
+        "Ref": ContactsIdsQueue
+      Export:
+        Name:
+          "Fn::Join":
+          - ':'
+          - - Ref: 'AWS::StackName'
+            - 'ContactsIdsQueueName'
+
+
+
+
+

@@ -46,6 +46,15 @@
 
             <md-list-item>
               <div class="md-list-item-text">
+
+                <span>{{contact.location_name}}</span>
+                <span>Location</span>
+              </div>
+
+            </md-list-item>
+
+            <md-list-item>
+              <div class="md-list-item-text">
                 <span>{{contact.type_name}}</span>
                 <span>Type</span>
               </div>
@@ -186,6 +195,9 @@ export default {
 
         source_id: null,
         source_name: null,
+        location_id: null,
+        location_name: null,
+
         country_code: null,
         country: null,
         type_id: null,
@@ -217,6 +229,7 @@ export default {
         this.contact.create_dt = data.create_dt
 
         this.contact.source_name = data.source_name
+        this.contact.location_name = data.location_name
         this.contact.type_name = data.type_name
 
         this.contact.country_name = data.country_name
