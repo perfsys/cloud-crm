@@ -4,6 +4,7 @@
 
     <md-table-toolbar>
       <h1 class="md-title" v-show="!allContacts">All Contacts in {{groupName}}</h1>
+      <h1 class="md-title" v-show="!allContacts"></h1>
       <h1 class="md-title" v-show="allContacts">All Contacts</h1>
       <slot name="form"></slot>
     </md-table-toolbar>
