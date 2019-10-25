@@ -4,7 +4,19 @@ phases:
   post_build:
     commands:
       - npm i -g serverless
+      - cd ./server-resources
+      - npm i
+      - sls deploy -s prod -v
+      - cd ..
       - cd ./server
+      - npm i
+      - sls deploy -s prod -v
+      - cd ..
+      - cd ./server-libs
+      - npm i
+      - sls deploy -s prod -v
+      - cd ..
+      - cd ./email
       - npm i
       - sls deploy -s prod -v
       - cd ..
