@@ -1,6 +1,4 @@
 <template>
-
-
   <md-table v-model="contacts"  @md-selected="onSelect" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder" :md-sort-fn="customSort">
     <dev></dev> <!-- Don't remove the line!. It's hook to show  md-table-toolbar -->
     <md-table-toolbar>
