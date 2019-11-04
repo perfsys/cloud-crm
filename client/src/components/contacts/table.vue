@@ -20,23 +20,23 @@
       <md-table-cell md-label="Source" md-sort-by="source_name" >{{ item.source_name }}</md-table-cell>
       <md-table-cell>
         <div class="md-layout md-gutter">
-          <div class="md-layout-item md-size-25 md-medium-size-30">
+          <div class="md-layout-item md-size-25 md-medium-size-30  md-large-size-30  md-small-size-30">
             <md-button class="md-icon-button md-primary" @click.stop=""  v-show="item.facebook_link">
               <a v-bind:href = item.facebook_link  target="blank"  >
                  <i class="fa fa-facebook fa-lg"></i>
               </a>
             </md-button>
           </div>
-          <div class="md-layout-item md-size-25  md-medium-size-30">
+          <div class="md-layout-item md-size-25  md-medium-size-30 md-large-size-30  md-small-size-30">
             <md-button class="md-icon-button md-primary fa-lg" @click.stop="" v-show="item.twitter_link">
-              <a v-bind:href = item.twitter_link  target="blank"  >
+              <a v-bind:href = item.twitter_link  target="blank">
                  <i class="fa fa-twitter fa-lg" aria-hidden="true"></i>
               </a>
             </md-button>
           </div>
-          <div class="md-layout-item md-size-25  md-medium-size-30">
+          <div class="md-layout-item md-size-25  md-medium-size-30 md-large-size-30  md-small-size-30">
             <md-button class="md-icon-button md-primary" @click.stop="" v-show="item.linkedin_link">
-              <a v-bind:href = item.linkedin_link  target="blank"  >
+              <a v-bind:href = item.linkedin_link  target="blank">
                  <i class="fa fa-linkedin  fa-lg" aria-hidden="true"></i>
               </a>
             </md-button>
