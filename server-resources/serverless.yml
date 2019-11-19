@@ -47,12 +47,6 @@ provider:
         - dynamodb:BatchWriteItem
       Resource:
         - { "Fn::GetAtt": ["GroupsDynamoDBTable", "Arn" ] }
-    -
-      Resource:
-        - Ref: ContactManagementTopic
-      Effect: Allow
-      Action:
-        - SNS:Publish
 
 # you can define service wide environment variables here
 #  environment:
