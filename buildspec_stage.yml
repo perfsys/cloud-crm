@@ -1,9 +1,5 @@
 version: 0.2
 
-env:
-  variables:
-    STAGE: "n8h4nn"
-
 phases:
   pre_build:
     commands:
