@@ -10,11 +10,13 @@ phases:
 # server-resources
       - cd ./server-resources
       - npm i
+      - echo "Deploying server-resources..."
       - sls deploy -s $STAGE -v
       - cd ..
 # server
       - cd ./server
       - npm i
+      - echo "Deploying server..."
       - sls deploy -s $STAGE -v
       - cd ..
 # server-libs
@@ -26,6 +28,7 @@ phases:
 # client
       - cd ./client
       - npm i
+      - echo "Deploying client..."
       - sls deploy -s $STAGE -v
 
     post_build:
