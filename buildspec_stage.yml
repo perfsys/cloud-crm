@@ -1,0 +1,39 @@
+version: 0.2
+
+env:
+  variables:
+    STAGE: "n8h4nn"
+
+phases:
+  pre_build:
+    commands:
+      - npm i -g serverless
+
+  build:
+    commands:
+# server-resources
+      - cd ./server-resources
+      - npm i
+      - sls deploy -s $STAGE -v
+      - cd ..
+# server
+      - cd ./server
+      - npm i
+      - sls deploy -s $STAGE -v
+      - cd ..
+# server-libs
+      - cd ./server-libs
+      - npm i
+      - sls deploy -s $STAGE -v
+      - cd ..
+# email will not be deployed
+# client
+      - cd ./client
+      - npm i
+      - sls deploy -s $STAGE -v
+
+    post_build:
+      commands:
+        sls info -s $STAGE -v
+
+

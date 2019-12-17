@@ -1,3 +1,9 @@
+codebuild_build.sh
+artifacts
+how_run_codebuild_locally.md
+
+
+
 # Logs
 logs
 *.log
