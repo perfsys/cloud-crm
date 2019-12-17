@@ -103,22 +103,22 @@ resources:
         TableName: ${self:provider.environment.CONTACTS_TABLE}
         StreamSpecification:
           StreamViewType: NEW_AND_OLD_IMAGES
-        GlobalSecondaryIndexes:
-          - IndexName: CompanyIndex
-            KeySchema:
-              - AttributeName: company_normalized
-                KeyType: HASH
-            Projection:
-              NonKeyAttributes:
-                - group_name
-                - name
-                - status_name
-                - position
-                - position_normalized
-              ProjectionType: INCLUDE
-            ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
+#        GlobalSecondaryIndexes:
+#          - IndexName: CompanyIndex
+#            KeySchema:
+#              - AttributeName: company_normalized
+#                KeyType: HASH
+#            Projection:
+#              NonKeyAttributes:
+#                - group_name
+#                - name
+#                - status_name
+#                - position
+#                - position_normalized
+#              ProjectionType: INCLUDE
+#            ProvisionedThroughput:
+#              ReadCapacityUnits: 1
+#              WriteCapacityUnits: 1
 
     ContactUpdatesDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
