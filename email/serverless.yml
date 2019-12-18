@@ -110,7 +110,7 @@ provider:
 #  environment:
 #    variable1: value1
   environment:
-    API_BASE_URL: ${cf:perfsys-cloud-crm-functions-api-${opt:stage, 'dev'}.ServiceEndpoint}
+    API_BASE_URL: ${cf:perfsys-cloud-crm-server-${opt:stage, 'dev'}.ServiceEndpoint}
     CONFIG_TABLE: ${self:provider.stage}-cloud-crm-config
     MAIL_MESSAGES_TABLE: ${self:provider.stage}-cloud-crm-mail-messages
     S3_BUCKET_EMAIL_KEYS_NAME: ${self:custom.s3BucketEmailKeysName}

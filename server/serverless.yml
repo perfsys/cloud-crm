@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: perfsys-cloud-crm-functions-api # NOTE: update this with your service name
+service: perfsys-cloud-crm-server # NOTE: update this with your service name
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -37,8 +37,8 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: eu-west-1
   apiKeys:
-    - ${opt:stage, 'dev'}-cloudCrmApiKey-v02
-    - ${opt:stage, 'dev'}-cloudCrmApiKey-v03
+    - ${opt:stage, 'dev'}-${self:service}-cloudCrmApiKey
+#    - ${opt:stage, 'dev'}-cloudCrmApiKey-v03
   usagePlan:
     quota:
       limit: 100
