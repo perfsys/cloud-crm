@@ -172,3 +172,9 @@ Check mail box using Gmail API , receive mails and insert letters as update to c
 Serverless is licensed under the [MIT License](./LICENSE).
 
 All files located in the node_modules and external directories are externally maintained libraries used by this software which have their own licenses; we recommend you read them, as their terms may differ from the terms in the MIT License.
+
+## Sponsors
+
+[AWS Consulting & Cloud Engineering for Startups - Perfsys](https://perfsys.com)
+
+
