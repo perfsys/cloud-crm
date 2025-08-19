@@ -11,7 +11,7 @@
     "aws-sdk": "^2.259.1",
     "cfn-response": "^1.0.1",
     "npm": "^6.10.2",
-    "serverless": "^1.48.4"
+    "serverless": "^3.25.1"
   },
   "devDependencies": {
     "eslint": "^5.2.0",
